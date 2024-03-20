@@ -1,27 +1,28 @@
 <template>
   <div class="flex h-full flex-col max-h-full justify-between space-y-4">
     <div
-      class="max-h-full h-full overflow-y-scroll hidden-scrollbar space-y-[1px]"
+      class="p-2 bg-indigo-600 text-gray-100 rounded-t-[10px] last:rounded-b-[10px] flex items-center space-x-2"
     >
       <div
-        class="p-2 bg-indigo-600 text-gray-100 rounded-t-[10px] last:rounded-b-[10px] flex items-center space-x-2"
+        v-for="(item, index) in Object.keys(schema)"
+        :key="index"
+        :class="{
+          'w-[5%]': index === 0,
+          'w-[30%]': index === 1,
+          'flex-1': index !== 0 && index !== 1,
+        }"
       >
-        <div
-          v-for="(item, index) in Object.keys(schema)"
-          :key="index"
-          :class="{
-            'w-[5%]': index === 0,
-            'w-[30%]': index === 1,
-            'flex-1': index !== 0 && index !== 1,
-          }"
-        >
-          {{ item }}
-        </div>
+        {{ item }}
       </div>
-      <div
+    </div>
+    <div
+      class="max-h-full h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px]"
+    >
+      <NuxtLink
         v-for="list in lists"
         :key="list._id"
         class="p-2 bg-gray-100 last:rounded-b-[10px] flex items-center space-x-2 hover:bg-gray-200 duration-100"
+        :to="`/route/${route.params.pre}/${route.params.post}/${list._id}`"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"
@@ -35,7 +36,7 @@
         >
           {{ list[key] }}
         </div>
-      </div>
+      </NuxtLink>
     </div>
     <div class="flex space-x-2 items-center text-[14px]">
       <NuxtLink
@@ -68,8 +69,8 @@
             : undefined
         "
         :class="{
-          'bg-indigo-600 bg-opacity-90': item === currentPage,
-          'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 duration-200':
+          'bg-indigo-600 bg-opacity-90 text-gray-100': item === currentPage,
+          'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 hover:text-gray-100 duration-200':
             typeof item === 'number',
           'text-gray-100': typeof item !== 'number',
         }"
@@ -106,6 +107,7 @@ const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const schema = ref<any>(null);
+const loading = useState("loading");
 
 async function getList() {
   const params = {
@@ -126,23 +128,38 @@ async function getSchema() {
   schema.value = result;
 }
 
-watchEffect(async () => {
-  currentPage.value = Number(route.query.page);
-  if (!route.query.page) currentPage.value = 1;
-  await getList();
+watchEffect(async () => {});
 
-  usePaginate(
-    {
-      totalPages: totalPages.value,
-      currentPage: currentPage.value,
-      range: 2,
-    },
-    (paginate: (string | number)[]) => {
-      pagination.value = paginate;
-    }
-  );
-});
+watch(
+  () => route.query.page,
+  async (newValue) => {
+    currentPage.value = Number(newValue);
+    if (!route.query.page) currentPage.value = 1;
+    loading.value = true;
 
-await getSchema();
-await getList();
+    await getList();
+    usePaginate(
+      {
+        totalPages: totalPages.value,
+        currentPage: currentPage.value,
+        range: 2,
+      },
+      (paginate: (string | number)[]) => {
+        pagination.value = paginate;
+      }
+    );
+    loading.value = false;
+  },
+  {
+    immediate: true,
+  }
+);
+
+async function fetchAll() {
+  loading.value = true;
+  await Promise.all([getSchema(), getList()]);
+  loading.value = false;
+}
+
+await fetchAll();
 </script>

@@ -43,8 +43,6 @@ export default function usePagnate(
   },
   callback: Function
 ) {
-  watchEffect(() => {
-    const pages = paginate(obj.totalPages, obj.currentPage, obj.range);
-    callback(pages);
-  });
+  const pages = paginate(obj.totalPages, obj.currentPage, obj.range);
+  callback(pages);
 }

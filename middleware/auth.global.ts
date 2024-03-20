@@ -1,6 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const access_token = useCookie("access_token");
-  const { user, getUser, logout } = useAuth();
+  const { user, getUser } = useAuth();
+
   if (access_token && !user.value) {
     await getUser();
   }
@@ -9,6 +10,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo("/", { replace: true });
   }
 
-  if (to.name === "index" && !user.value)
+  if (to.name !== "login" && !user.value)
     return navigateTo("/login", { replace: true });
 });
