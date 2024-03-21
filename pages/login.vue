@@ -9,9 +9,9 @@
     <div class="space-y-4">
       <div>
         <div
-          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center"
+          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center duration-200"
           :class="{
-            'border-red-500': loginError.email,
+            '!border-red-500': loginError.email || failed,
           }"
         >
           <IconUser />
@@ -31,9 +31,9 @@
       </div>
       <div>
         <div
-          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center"
+          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center duration-200"
           :class="{
-            'border-red-500': loginError.password,
+            '!border-red-500': loginError.password || failed,
           }"
         >
           <IconPassword />
@@ -52,7 +52,15 @@
         </div>
       </div>
     </div>
-    <div class="mt-8">
+    <div class="w-full text-red-300 text-[12px] ml-4 !my-2" v-if="failed">
+      Email hoặc mật khẩu không đúng!
+    </div>
+    <div
+      class="mt-8"
+      :class="{
+        '!mt-2': failed,
+      }"
+    >
       <button class="btn btn-white w-full flex items-center space-x-2">
         <span>LOGIN</span> <span class="gg-spinner" v-if="loading"></span>
       </button>
@@ -61,6 +69,7 @@
 </template>
 <script setup lang="ts">
 const { login } = useAuth();
+const failed = ref(false);
 const loginInfo = ref({
   email: "",
   password: "",
@@ -110,7 +119,8 @@ const isValid = computed(() => {
 const handleLoginSubmit = async () => {
   if (!isValid.value) return;
   loading.value = true;
-  await login(loginInfo.value);
+  const user = await login(loginInfo.value);
+  if (!user) failed.value = true;
   loading.value = false;
 };
 

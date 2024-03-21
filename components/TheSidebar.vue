@@ -2,9 +2,7 @@
   <div
     class="w-full max-h-full flex flex-col justify-between p-8 text-gray-200 space-y-6"
   >
-    <div class="uppercase text-center text-[28px]" @click="handleFetchRoute">
-      admin dashboard
-    </div>
+    <div class="uppercase text-center text-[20px]">admin dashboard</div>
     <div
       class="space-y-8 max-h-full w-full h-full overflow-y-scroll hidden-scrollbar"
     >
@@ -26,7 +24,7 @@
         <div class="text-[14px]">Settings</div>
         <div class="space-y-3 ml-2">
           <NuxtLink
-            :to="'/'"
+            :to="'/me'"
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
           >
@@ -69,7 +67,17 @@
 </template>
 <script setup lang="ts">
 const { user, logout } = useAuth();
-const excludeRoute = ["assets", "mail", "setting", "me"];
+const excludeRoute = [
+  "assets",
+  "mail",
+  "setting",
+  "me",
+  "upload",
+  "schema",
+  "refreshtoken",
+  "api/permission",
+  "api/route",
+];
 const routes = ref<
   {
     _id: string;

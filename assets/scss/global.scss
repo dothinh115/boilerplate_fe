@@ -4,8 +4,14 @@
 @import "./components/button";
 @import "./components/spinner";
 @import "./components/scrollbar";
+@import "./components/input";
+@import "./components/box";
 
 @layer base {
+}
+
+body {
+  font-size: 14px;
 }
 
 .fade-enter-active,

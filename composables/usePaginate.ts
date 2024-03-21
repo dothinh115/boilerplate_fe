@@ -12,8 +12,8 @@ const paginate = (
   }
 
   const startRange = Math.max(2, currentPage - range);
-  const endRange = Math.min(currentPage + range + 1, totalPages);
 
+  const endRange = Math.min(currentPage + range + 1, totalPages);
   for (let i = startRange; i < currentPage; i++) {
     pages.push(i);
   }

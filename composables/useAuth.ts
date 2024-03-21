@@ -20,19 +20,14 @@ export default function useAuth() {
   };
 
   const login = async (data: TLogin) => {
-    let result: any;
-    try {
-      result = await useApi("/login", {
-        method: "POST",
-        body: data,
-      });
-      accessTokenCookie.value = result?.accessToken;
-      refreshTokenCookie.value = result?.refreshToken;
-      const fetchUser = await getUser();
-      if (fetchUser) navigateTo("/");
-    } catch (error) {
-      result = false;
-    }
+    const result: any = await useApi("/login", {
+      method: "POST",
+      body: data,
+    });
+    accessTokenCookie.value = result?.accessToken;
+    refreshTokenCookie.value = result?.refreshToken;
+    const fetchUser = await getUser();
+    if (fetchUser) navigateTo("/");
     return result;
   };
 
