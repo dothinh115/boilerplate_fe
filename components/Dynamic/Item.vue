@@ -37,7 +37,11 @@
                   <input
                     v-if="schema[item].input !== 'richText'"
                     :type="schema[item].input === 'number' ? 'number' : 'text'"
-                    class="input input-blue w-full"
+                    class="input w-full"
+                    :class="{
+                      'input-red': error[item],
+                      'input-blue': !error[item],
+                    }"
                     :disabled="
                       schema[item].disabled || schema[item].ref ? true : false
                     "
