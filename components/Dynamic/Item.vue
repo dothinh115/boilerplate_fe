@@ -135,6 +135,7 @@ function getEditorInit(item: string) {
 
 const isValid = computed(() => {
   for (const [key, value] of Object.entries(schema.value)) {
+    if (key === "password") continue;
     if ((value as any).required) {
       if (!data.value[key]) {
         return false;
@@ -161,6 +162,7 @@ function errorCheck() {
 
 async function handleConfirm() {
   errorCheck();
+  console.log(error.value);
   if (!isValid.value) return;
 
   useApi(

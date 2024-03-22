@@ -16,9 +16,10 @@
               class="w-[15%] h-full flex items-center space-x-2 justify-center"
             >
               <button
-                class="block h-[35px] aspect-1 bg-white rounded-full text-red-600 flex items-center justify-center"
+                class="h-[35px] aspect-1 bg-white rounded-full text-red-600 flex items-center justify-center"
+                @click="cancel"
               >
-                <i class="fa-solid fa-xmark" @click="cancel"></i>
+                <i class="fa-solid fa-xmark"></i>
               </button>
               <button
                 class="bg-white p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center"
