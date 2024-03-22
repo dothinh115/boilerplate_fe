@@ -207,6 +207,7 @@ async function getData() {
     meta: "*",
     limit: perPage,
     page: currentPage.value,
+    sort: "-_id",
   };
   const result: any = await useApi(api, { params });
   data.value = result.data;

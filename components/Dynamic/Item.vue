@@ -106,7 +106,6 @@ const error = ref<{
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const toastData = useState<TToastData>("toastData");
-const toastModel = useState("toast");
 const refData = ref<{
   ref: string;
   type: "text" | "number" | "array";
@@ -185,14 +184,12 @@ async function handleConfirm() {
         type: "success",
       });
       router.back();
-      toastModel.value = true;
     })
     .catch((error: any) => {
       toastData.value.push({
         message: error.data.message,
         type: "error",
       });
-      toastModel.value = true;
     });
 }
 
@@ -211,7 +208,6 @@ async function handleDelete() {
       message: "Thành công",
       type: "success",
     });
-    toastModel.value = true;
   } catch (error: any) {
     toastData.value.push({
       message: error.data.message,

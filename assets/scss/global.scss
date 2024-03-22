@@ -22,14 +22,3 @@ body {
 .fade-leave-to {
   opacity: 0;
 }
-
-.slide-enter-from,
-.slide-leave-to,
-.slide-leave-active {
-  transform: translateX(500px);
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s ease;
-}

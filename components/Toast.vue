@@ -1,9 +1,9 @@
 <template>
   <Teleport to="body">
     <div
-      class="fixed top-[2%] right-[-20%] p-2 rounded-[10px] bg-gray-100 shadow-[0px_0px_2px_1px] shadow-gray-400 duration-500"
+      class="fixed top-[2%] right-[2%] opacity-0 p-2 rounded-[10px] bg-gray-100 shadow-[0px_0px_2px_1px] shadow-gray-400 duration-500"
       :class="{
-        '!right-[2%]': mounted,
+        'opacity-100': mounted,
       }"
     >
       <div class="flex justify-between w-[300px] min-h-[80px]">
@@ -67,7 +67,9 @@ onMounted(() => {
 
 const props = defineProps<TProps>();
 const emits = defineEmits(["update:modelValue"]);
-const close = () => {
+const close = async () => {
+  mounted.value = false;
+  await new Promise((resolve) => setTimeout(resolve, 500));
   emits("update:modelValue", props.index);
 };
 </script>

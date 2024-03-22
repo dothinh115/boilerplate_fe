@@ -45,17 +45,28 @@ export type TToastData = {
 }[];
 const loading = useState("loading");
 const toastData = useState<TToastData>("toastData", () => []);
-const toastModel = useState("toast", () => false);
-
+const toastTimeout = ref();
 const closeToast = (index: number) => {
   toastData.value.splice(index, 1);
 };
 
-watchEffect(() => {
-  if (toastData.value.length > 0)
-    setTimeout(() => {
-      toastData.value = toastData.value.slice(1);
-    }, 6000);
-  else toastModel.value = false;
-});
+// watchEffect(() => {
+//   if (toastData.value.length > 0)
+//     setTimeout(() => {
+//       toastData.value = toastData.value.slice(1);
+//     }, 6000);
+//   else toastModel.value = false;
+// });
+
+watch(
+  () => toastData.value.length,
+  () => {
+    if (toastData.value.length > 0) {
+      clearTimeout(toastTimeout.value);
+      toastTimeout.value = setTimeout(() => {
+        toastData.value = toastData.value.slice(1);
+      }, 6000);
+    }
+  }
+);
 </script>

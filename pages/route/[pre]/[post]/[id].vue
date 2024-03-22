@@ -12,10 +12,11 @@ const { id, pre, post } = route.params;
 const loading = useState("loading");
 const schemaApi = `/schema/${route.params.post}`;
 const dataApi = `/${pre}/${post}`;
-const schema = ref<any>({});
+const schema = useState<any>(schemaApi, () => {});
 const data = ref<any>({});
 
 async function getSchema() {
+  if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }
@@ -30,8 +31,8 @@ async function getData() {
 
 async function fetchData() {
   loading.value = true;
-  await getSchema();
-  await getData();
+  const promises = [getSchema(), getData()];
+  await Promise.all(promises);
   loading.value = false;
 }
 

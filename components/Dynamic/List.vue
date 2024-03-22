@@ -136,13 +136,13 @@ const props = defineProps<TProps>();
 const route = useRoute();
 const listApi = props.api.listApi;
 const schemaApi = props.api.schemaApi;
-const lists = ref<any>([]);
 const currentPage = ref(Number(route.query.page) || 1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const schema = ref<any>(null);
 const loading = useState("loading");
+const lists = ref<any>(null);
+const schema = useState<any>(schemaApi);
 
 async function getList() {
   const params = {
@@ -160,6 +160,7 @@ async function getList() {
 }
 
 async function getSchema() {
+  if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }
@@ -185,10 +186,6 @@ watch(
     loading.value = false;
   }
 );
-
-onBeforeRouteUpdate(async () => {
-  await getList();
-});
 
 async function fetchAll() {
   loading.value = true;
