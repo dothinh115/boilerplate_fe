@@ -31,7 +31,7 @@
           </div>
           <div>
             <div
-              class="flex space-x-2 odd:bg-gray-100 p-2"
+              class="flex space-x-2 odd:bg-gray-100 px-2 py-2 items-center text-[15px]"
               v-for="item in data"
               :key="item._id"
             >
@@ -40,12 +40,12 @@
               <div class="flex-1">
                 <button @click="handleSelect(item)">
                   <i
-                    class="text-[16px] text-blue-900"
+                    class="text-[24px]"
                     :class="{
-                      'fa-regular fa-square': Array.isArray(selectedArr) ? !selectedArr
+                      'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
                         .map((x:any) => x._id)
                         .includes(item._id) : selectedArr?._id !== item._id,
-                      'fa-solid fa-square-check': Array.isArray(selectedArr) ? selectedArr
+                      'fa-solid fa-circle-check text-indigo-800': Array.isArray(selectedArr) ? selectedArr
                         .map((x:any) => x._id)
                         .includes(item._id) : selectedArr?._id === item._id,
                     }"
