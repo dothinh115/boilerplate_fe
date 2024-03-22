@@ -10,7 +10,7 @@
         @click="close"
       ></i>
     </div>
-    <div class="w-full max-h-[95%] h-[95%]">
+    <div class="w-full max-h-[95%] h-[95%] flex items-center">
       <slot />
     </div>
   </div>

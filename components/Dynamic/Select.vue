@@ -20,7 +20,7 @@
             <i class="fa-solid fa-check"></i>
           </button>
         </div>
-        <div class="min-w-full overflow-x-scroll !mt-0">
+        <div class="min-w-full overflow-x-scroll !mt-0 hidden-scrollbar">
           <div
             class="flex space-x-2 border-gray-200 border-b text-[16px] px-2 py-4 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
           >

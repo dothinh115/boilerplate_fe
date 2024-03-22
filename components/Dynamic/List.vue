@@ -4,7 +4,7 @@
       class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px]"
     >
       <div
-        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max"
+        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"
