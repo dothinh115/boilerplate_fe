@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70 overflow-y-scroll hidden-scrollbar"
+    class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70"
     v-if="props.modelValue"
     @click.self="close"
   >
@@ -10,7 +10,7 @@
         @click="close"
       ></i>
     </div>
-    <div class="w-full max-h-[95%]">
+    <div class="w-full max-h-[95%] h-[95%]">
       <slot />
     </div>
   </div>

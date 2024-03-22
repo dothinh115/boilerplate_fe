@@ -1,8 +1,10 @@
 <template>
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="showModal = false">
-      <div class="space-y-8 lg:w-[50%] mx-auto">
-        <div class="box">
+      <div
+        class="space-y-8 lg:w-[50%] mx-auto max-h-full overflow-auto hidden-scrollbar"
+      >
+        <div class="box max-h-full">
           <div class="flex items-center justify-between space-x-2 title !py-2">
             <i
               class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
@@ -21,7 +23,7 @@
               ></i>
             </div>
           </div>
-          <div class="grid p-4 space-y-5 bg-gray-100">
+          <div class="p-4 space-y-5 bg-gray-100 max-h-full">
             <template v-for="(item, index) in Object.keys(schema)" :key="index">
               <div class="space-y-1">
                 <div class="text-gray-900">
@@ -166,7 +168,6 @@ function errorCheck() {
 
 async function handleConfirm() {
   errorCheck();
-  console.log(error.value);
   if (!isValid.value) return;
 
   useApi(

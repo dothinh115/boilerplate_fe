@@ -2,43 +2,55 @@
   <Teleport to="body">
     <Modal v-model="modalValue">
       <div
-        class="flex flex-col space-y-4 h-full bg-gray-50 w-[30%] fixed right-0 top-0"
+        class="flex flex-col space-y-4 h-full bg-gray-50 w-[40%] fixed right-0 top-0"
       >
-        <div>
-          <div
-            class="flex space-x-2 border-gray-200 border-b text-[16px] px-2 py-4 bg-indigo-600 text-gray-50 items-center"
+        <div
+          class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
+        >
+          <button
+            class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
+            @click="cancel"
           >
-            <div class="w-[5%]">_id</div>
-            <div class="w-[80%]">
-              {{ (schema.title && "title") || (schema.name && "name") }}
-            </div>
-            <div
-              class="w-[15%] h-full flex items-center space-x-2 justify-center"
-            >
-              <button
-                class="h-[35px] aspect-1 bg-white rounded-full text-red-600 flex items-center justify-center"
-                @click="cancel"
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <button
+            class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
+            @click="confirm"
+          >
+            <i class="fa-solid fa-check"></i>
+          </button>
+        </div>
+        <div class="min-w-full overflow-x-scroll !mt-0">
+          <div
+            class="flex space-x-2 border-gray-200 border-b text-[16px] px-2 py-4 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+          >
+            <div class="min-w-[50px]"></div>
+            <div class="flex space-x-3">
+              <div
+                v-for="(key, index) in Object.keys(schema)"
+                :key="index"
+                :class="{
+                  'w-[50px]': key === '_id',
+                  'w-[200px]':
+                    schema[key].input === 'text' ||
+                    schema[key].input === 'richText',
+                  'w-[100px]':
+                    schema[key].input === 'number' ||
+                    schema[key].input === 'array',
+                }"
               >
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-              <button
-                class="bg-white p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center"
-                @click="confirm"
-              >
-                <i class="fa-solid fa-check"></i>
-              </button>
+                {{ key }}
+              </div>
             </div>
           </div>
           <div>
             <div
-              class="flex space-x-2 odd:bg-gray-100 px-2 py-2 items-center text-[15px]"
+              class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
               v-for="item in data"
               :key="item._id"
             >
-              <div class="w-[5%] truncate">{{ item._id }}</div>
-              <div class="w-[80%] truncate">{{ item.title || item.name }}</div>
-              <div class="flex-1">
-                <button @click="handleSelect(item)">
+              <div class="flex justify-center items-center min-w-[50px]">
+                <button @click="handleSelect(item)" class="flex items-center">
                   <i
                     class="text-[24px]"
                     :class="{
@@ -52,42 +64,57 @@
                   ></i>
                 </button>
               </div>
+              <div
+                v-for="(key, index) in Object.keys(schema)"
+                :key="index"
+                :class="{
+                  'w-[50px]': key === '_id',
+                  'w-[200px]':
+                    schema[key].input === 'text' ||
+                    schema[key].input === 'richText',
+                  'w-[100px]':
+                    schema[key].input === 'number' ||
+                    schema[key].input === 'array',
+                }"
+                class="truncate flex-shrink-0"
+              >
+                {{ item[key] }}
+              </div>
             </div>
           </div>
-          <div class="flex space-x-2 items-center text-[14px] p-2">
-            <button
-              @click="currentPage !== 1 && (currentPage -= 1)"
-              class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-100 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
-              :class="{
-                'opacity-50': currentPage === 1,
-              }"
-            >
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button
-              v-for="(item, index) in pagination"
-              :key="index"
-              @click="typeof item === 'number' && (currentPage = Number(item))"
-              :class="{
-                'bg-indigo-600 bg-opacity-90 text-gray-100':
-                  item === currentPage,
-                'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 hover:text-gray-100 duration-200':
-                  typeof item === 'number',
-                'text-gray-800': typeof item !== 'number',
-              }"
-            >
-              {{ item }}
-            </button>
-            <button
-              @click="currentPage !== totalPages && (currentPage += 1)"
-              class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-400 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
-              :class="{
-                'opacity-50': currentPage === totalPages,
-              }"
-            >
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </div>
+        </div>
+        <div class="flex space-x-2 items-center text-[14px] p-2">
+          <button
+            @click="currentPage !== 1 && (currentPage -= 1)"
+            class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-100 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+            :class="{
+              'opacity-50': currentPage === 1,
+            }"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button
+            v-for="(item, index) in pagination"
+            :key="index"
+            @click="typeof item === 'number' && (currentPage = Number(item))"
+            :class="{
+              'bg-indigo-600 bg-opacity-90 text-gray-100': item === currentPage,
+              'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 hover:text-gray-100 duration-200':
+                typeof item === 'number',
+              'text-gray-800': typeof item !== 'number',
+            }"
+          >
+            {{ item }}
+          </button>
+          <button
+            @click="currentPage !== totalPages && (currentPage += 1)"
+            class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-400 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+            :class="{
+              'opacity-50': currentPage === totalPages,
+            }"
+          >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
         </div>
         <div class="bg-indigo-600 text-gray-50 p-2">
           Đã chọn:

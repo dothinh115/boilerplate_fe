@@ -1,37 +1,49 @@
 <template>
   <div class="flex h-full flex-col max-h-full space-y-4">
     <div
-      class="p-2 bg-indigo-600 text-gray-100 rounded-t-[10px] flex items-center space-x-2"
+      class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px]"
     >
       <div
-        v-for="(item, index) in Object.keys(schema)"
-        :key="index"
-        :class="{
-          'w-[5%]': index === 0,
-          'w-[30%]': index === 1,
-          'flex-1': index !== 0 && index !== 1,
-        }"
+        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max"
       >
-        {{ item }}
+        <div
+          v-for="(key, index) in Object.keys(schema)"
+          :key="index"
+          :class="{
+            'w-[50px]': key === '_id',
+            'w-[400px]':
+              schema[key].input === 'text' || schema[key].input === 'richText',
+            'w-[200px]':
+              (schema[key].input === 'array' ||
+                schema[key].input === 'password') &&
+              key !== '_id',
+            'w-[100px]':
+              schema[key].input === 'number' || schema[key].input === 'boolean',
+          }"
+        >
+          {{ key }}
+        </div>
       </div>
-    </div>
-    <div
-      class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px]"
-    >
       <NuxtLink
         v-for="list in lists"
         :key="list._id"
-        class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px]"
+        class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
         :to="`/route/${route.params.pre}/${route.params.post}/${list._id}`"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"
           :key="index"
-          class="line-clamp-1"
+          class="line-clamp-1 truncate"
           :class="{
-            'w-[5%]': index === 0,
-            'w-[30%]': index === 1,
-            'flex-1': index !== 0 && index !== 1,
+            'w-[50px]': key === '_id',
+            'w-[400px]':
+              schema[key].input === 'text' || schema[key].input === 'richText',
+            'w-[200px]':
+              (schema[key].input === 'array' ||
+                schema[key].input === 'password') &&
+              key !== '_id',
+            'w-[100px]':
+              schema[key].input === 'number' || schema[key].input === 'boolean',
           }"
         >
           <p class="truncate">
