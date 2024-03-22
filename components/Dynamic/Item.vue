@@ -1,0 +1,242 @@
+<template>
+  <Teleport to="body">
+    <Modal v-model="showModal" @update:model-value="showModal = false">
+      <div class="space-y-8 lg:w-[50%] mx-auto">
+        <div class="box">
+          <div class="flex items-center justify-between space-x-2 title !py-2">
+            <i
+              class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
+              @click="router.back()"
+            ></i>
+
+            <div class="flex items-center space-x-2">
+              <i
+                class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600"
+                @click="deleteConfirmModal = true"
+                v-if="data._id"
+              ></i>
+              <i
+                class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600"
+                @click="handleConfirm"
+              ></i>
+            </div>
+          </div>
+          <div class="grid p-4 space-y-5 bg-gray-100">
+            <template v-for="(item, index) in Object.keys(schema)" :key="index">
+              <div class="space-y-1">
+                <div class="text-gray-900">
+                  {{ item }}
+                </div>
+                <Editor
+                  api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
+                  :init="getEditorInit(item)"
+                  :width="'100%'"
+                  v-if="schema[item].input === 'richText'"
+                />
+                <div class="flex items-center space-x-2">
+                  <input
+                    v-if="schema[item].input !== 'richText'"
+                    :type="schema[item].input === 'number' ? 'number' : 'text'"
+                    class="input input-blue w-full"
+                    :disabled="
+                      schema[item].disabled || schema[item].ref ? true : false
+                    "
+                    :value="data ? data[item] : ''"
+                    @input="updateData(item, $event.target as HTMLInputElement)"
+                  />
+                  <button
+                    class="text-teal-700 text-[40px]"
+                    v-if="schema[item].ref"
+                    @click="
+                      schema[item].ref &&
+                        handleRef(
+                          schema[item].ref,
+                          schema[item].input,
+                          data[item],
+                          item
+                        )
+                    "
+                  >
+                    <i class="fa-solid fa-square-arrow-up-right"></i>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  </Teleport>
+  <DeleteConfirm
+    :handle="handleDelete"
+    v-model="deleteConfirmModal"
+    @update:model-value="deleteConfirmModal = false"
+  />
+  <DynamicSelect
+    :refData="refData"
+    v-if="refData"
+    @close="refData = undefined"
+    @confirm="handleSelection"
+  />
+</template>
+<script setup lang="ts">
+import Editor from "@tinymce/tinymce-vue";
+import type { TToastData } from "~/layouts/default.vue";
+
+type TProps = {
+  info: {
+    schema: any;
+    data: any;
+  };
+};
+const route = useRoute();
+const props = defineProps<TProps>();
+const router = useRouter();
+const schema = ref<any>(props.info.schema);
+const data = ref<any>(props.info.data);
+const error = ref<{
+  [key: string]: string;
+}>({});
+const deleteConfirmModal = ref(false);
+const showModal = ref(true);
+const toastData = useState<TToastData>("toastData");
+const toastModel = useState("toast");
+const refData = ref<{
+  ref: string;
+  type: "text" | "number" | "array";
+  defaultValue: string | number | string[] | number[];
+  key: string;
+}>();
+
+if (Object.keys(data.value).length === 0) {
+  for (const key in schema.value) {
+    if (schema.value[key].default) {
+      data.value[key] = schema.value[key].default;
+    } else data.value[key] = "";
+  }
+}
+
+function getEditorInit(item: string) {
+  return {
+    menubar: false,
+    plugins: "lists link image emoticons",
+    toolbar:
+      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
+    setup(editor: any) {
+      editor.on("init", () => {
+        if (data.value) editor.setContent(data.value[item]);
+      });
+      editor.on("input", () => {
+        data.value[item] = editor.getContent();
+      });
+    },
+  };
+}
+
+const isValid = computed(() => {
+  for (const [key, value] of Object.entries(schema.value)) {
+    if ((value as any).required) {
+      if (!data.value[key]) {
+        return false;
+      }
+    }
+  }
+  return true;
+});
+
+function updateData(item: string, target: HTMLInputElement) {
+  const value = target.value;
+  data.value[item] = value;
+}
+
+function errorCheck() {
+  for (const [key, value] of Object.entries(schema.value)) {
+    if ((value as any).required) {
+      if (!data.value[key]) {
+        error.value[key] = "Không được để trống!";
+      } else error.value[key] = "";
+    }
+  }
+}
+
+async function handleConfirm() {
+  errorCheck();
+  if (!isValid.value) return;
+
+  useApi(
+    `/${route.params.pre}/${route.params.post}${
+      data.value._id ? "/" + data.value._id : ""
+    }`,
+    {
+      method: data.value._id ? "PATCH" : "POST",
+      body: data.value,
+    }
+  )
+    .then(() => {
+      toastData.value.push({
+        message: "Thành công",
+        type: "success",
+      });
+      router.back();
+      toastModel.value = true;
+    })
+    .catch((error: any) => {
+      toastData.value.push({
+        message: error.data.message,
+        type: "error",
+      });
+      toastModel.value = true;
+    });
+}
+
+async function handleDelete() {
+  if (!data.value) return;
+  try {
+    await useApi(
+      `/${route.params.pre}/${route.params.post}/${data.value._id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    router.back();
+    toastData.value.push({
+      message: "Thành công",
+      type: "success",
+    });
+    toastModel.value = true;
+  } catch (error: any) {
+    toastData.value.push({
+      message: error.data.message,
+      type: "error",
+    });
+  }
+}
+
+function handleRef(
+  ref: string,
+  type: "text" | "number" | "array",
+  defaultValue: string | number | string[] | number[],
+  key: string
+) {
+  ref = ref.toLowerCase();
+  refData.value = {
+    ref,
+    type,
+    defaultValue,
+    key,
+  };
+}
+
+function handleSelection({
+  selected,
+  key,
+}: {
+  selected: { _id: string | number } | { _id: string | number }[];
+  key: string;
+}) {
+  if (Array.isArray(selected)) {
+    data.value[key] = selected.map((x) => x._id);
+  } else data.value[key] = selected._id;
+}
+</script>

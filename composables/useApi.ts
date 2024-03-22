@@ -34,8 +34,6 @@ export default async function useApi<T>(request: string, options?: any) {
           authorization: "Bearer " + access_token.value,
         },
       }),
-    }).catch(async (error) => {
-      console.log(error.data);
     });
   };
 

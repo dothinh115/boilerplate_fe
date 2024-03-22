@@ -17,7 +17,6 @@ const paginate = (
   for (let i = startRange; i < currentPage; i++) {
     pages.push(i);
   }
-
   pages.push(currentPage);
 
   for (let i = currentPage + 1; i < endRange; i++) {
@@ -28,7 +27,7 @@ const paginate = (
     pages.push("...");
   }
 
-  if (totalPages !== 1 && totalPages !== currentPage) {
+  if (totalPages !== 1 && totalPages !== currentPage && totalPages !== 0) {
     pages.push(totalPages);
   }
 
@@ -43,6 +42,6 @@ export default function usePagnate(
   },
   callback: Function
 ) {
-  const pages = paginate(obj.totalPages, obj.currentPage, obj.range);
+  let pages = paginate(obj.totalPages, obj.currentPage, obj.range);
   callback(pages);
 }

@@ -2,7 +2,7 @@
   <div class="space-y-8 lg:w-[50%] mx-auto">
     <div class="box">
       <div class="flex items-center space-x-2 title">
-        <ion-icon name="person-outline"></ion-icon>
+        <i class="fa-solid fa-user"></i>
         <span> Thông tin cá nhân</span>
       </div>
       <div
@@ -37,7 +37,7 @@
     </div>
     <form class="box" @submit.prevent="handleChangePassword">
       <div class="title flex items-center space-x-2">
-        <ion-icon name="key-outline"></ion-icon>
+        <i class="fa-solid fa-key"></i>
         <span> Đổi mật khẩu</span>
       </div>
       <div class="space-y-4 mx-auto p-4 bg-gray-100">
@@ -84,7 +84,7 @@
             class="text-green-900 flex items-center space-x-1"
             v-if="changePasswordSuccess"
           >
-            <ion-icon name="checkmark-outline"></ion-icon>
+            <i class="fa-solid fa-check"></i>
             <span>Thành công</span>
           </span>
         </div>

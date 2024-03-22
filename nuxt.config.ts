@@ -10,17 +10,28 @@ export default defineNuxtConfig({
   ssr: false,
   app: {
     head: {
-      script: [
+      link: [
         {
-          src: "https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js",
-          type: "module",
+          href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css",
+          rel: "stylesheet",
         },
       ],
     },
   },
-  vue: {
-    compilerOptions: {
-      isCustomElement: (tag) => ["ion-icon"].includes(tag),
-    },
-  },
+  //loại bỏ tag name để sử dụng component
+  // vue: {
+  //   compilerOptions: {
+  //     isCustomElement: (tag) => ["ion-icon"].includes(tag),
+  //   },
+  // },
+  //khai báo name để sử dụng nested route
+  // hooks: {
+  //   "pages:extend"(pages) {
+  //     pages.push({
+  //       name: "route-pre-post",
+  //       path: "/route/:pre/:post/:id",
+  //       file: "~/pages/route/[pre]/[post]/[id].vue",
+  //     });
+  //   },
+  // },
 });

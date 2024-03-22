@@ -32,6 +32,9 @@ export default function useAuth() {
   };
 
   const logout = async () => {
+    await useApi("/logout", {
+      method: "POST",
+    });
     accessTokenCookie.value = null;
     refreshTokenCookie.value = null;
     window.location.reload();

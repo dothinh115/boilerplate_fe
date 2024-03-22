@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full max-h-full flex flex-col justify-between p-8 text-gray-200 space-y-6"
+    class="w-full max-h-full h-full flex flex-col justify-between p-8 text-gray-200 space-y-6"
   >
     <div class="uppercase text-center text-[20px]">admin dashboard</div>
     <div
@@ -16,7 +16,7 @@
               class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
               :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
             >
-              <ion-icon name="link-outline" size="large"></ion-icon>
+              <i class="fa-solid fa-link fa-lg"></i>
               <span>{{ route.path }}</span>
             </NuxtLink>
           </div>
@@ -28,7 +28,7 @@
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
           >
-            <ion-icon name="person-outline" size="large"></ion-icon>
+            <i class="fa-solid fa-user fa-lg"></i>
             <span>Account</span></NuxtLink
           >
           <NuxtLink
@@ -36,7 +36,7 @@
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
           >
-            <ion-icon name="cloud-upload-outline" size="large"></ion-icon>
+            <i class="fa-solid fa-upload fa-lg"></i>
             <span>Upload</span>
           </NuxtLink>
           <NuxtLink
@@ -44,7 +44,7 @@
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
           >
-            <ion-icon name="settings-outline" size="large"></ion-icon>
+            <i class="fa-solid fa-gear fa-lg"></i>
             <span>Setting</span>
           </NuxtLink>
         </div>
@@ -55,11 +55,7 @@
         @click.prevent="logout"
         class="flex items-center space-x-2 hover:text-gray-400 duration-300 cursor-pointer"
       >
-        <ion-icon
-          name="log-out-outline"
-          size="large"
-          class="rotate-180"
-        ></ion-icon>
+        <i class="fa-solid fa-right-from-bracket fa-lg rotate-180"></i>
         <span>Logout ({{ user.email }})</span>
       </div>
     </div>

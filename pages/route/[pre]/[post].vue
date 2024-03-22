@@ -1,10 +1,11 @@
 <template>
-  <TemplateDynamic
+  <DynamicList
     :api="{
       listApi,
       schemaApi,
     }"
   />
+  <NuxtPage />
 </template>
 <script setup lang="ts">
 const route = useRoute();
