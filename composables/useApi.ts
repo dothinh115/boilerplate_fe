@@ -28,18 +28,18 @@ export default async function useApi(request: string, options?: any) {
     if (!isValid) {
       try {
         await refreshToken();
-        return await $fetch(request, {
-          ...options,
-          ...(access_token.value && {
-            headers: {
-              authorization: "Bearer " + access_token.value,
-            },
-          }),
-        });
       } catch (error) {
         return await logout();
       }
     }
+    return await $fetch(request, {
+      ...options,
+      ...(access_token.value && {
+        headers: {
+          authorization: "Bearer " + access_token.value,
+        },
+      }),
+    });
   };
 
   const refreshToken = async () => {
