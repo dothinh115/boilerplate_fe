@@ -2,58 +2,59 @@
   <Teleport to="body">
     <Modal v-model="modalValue">
       <div
-        class="flex flex-col space-y-4 h-full bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0"
+        class="flex flex-col justify-between space-y-4 h-full bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0"
       >
-        <div
-          class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
-        >
-          <button
-            class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
-            @click="cancel"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <button
-            class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
-            @click="confirm"
-          >
-            <i class="fa-solid fa-check"></i>
-          </button>
-        </div>
-        <div class="min-w-full overflow-x-scroll !mt-0 hidden-scrollbar">
+        <div>
           <div
-            class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+            class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
           >
-            <div class="min-w-[50px]"></div>
-            <div class="flex space-x-3">
-              <div
-                v-for="(key, index) in Object.keys(schema)"
-                :key="index"
-                :class="{
-                  'w-[50px]': key === '_id',
-                  'w-[200px]':
-                    schema[key].input === 'text' ||
-                    schema[key].input === 'richText',
-                  'w-[100px]':
-                    schema[key].input === 'number' ||
-                    schema[key].input === 'array',
-                }"
-              >
-                {{ key }}
+            <button
+              class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
+              @click="cancel"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button
+              class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
+              @click="confirm"
+            >
+              <i class="fa-solid fa-check"></i>
+            </button>
+          </div>
+          <div class="min-w-full overflow-x-scroll !mt-0 hidden-scrollbar">
+            <div
+              class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+            >
+              <div class="min-w-[50px]"></div>
+              <div class="flex space-x-3">
+                <div
+                  v-for="(key, index) in Object.keys(schema)"
+                  :key="index"
+                  :class="{
+                    'w-[50px]': key === '_id',
+                    'w-[200px]':
+                      schema[key].input === 'text' ||
+                      schema[key].input === 'richText',
+                    'w-[100px]':
+                      schema[key].input === 'number' ||
+                      schema[key].input === 'array',
+                  }"
+                >
+                  {{ key }}
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <div
-              class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
-              v-for="item in data"
-              :key="item._id"
-            >
-              <div class="flex justify-center items-center min-w-[50px]">
-                <button @click="handleSelect(item)" class="flex items-center">
-                  <i
-                    class="text-[24px]"
-                    :class="{
+            <div>
+              <div
+                class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
+                v-for="item in data"
+                :key="item._id"
+              >
+                <div class="flex justify-center items-center min-w-[50px]">
+                  <button @click="handleSelect(item)" class="flex items-center">
+                    <i
+                      class="text-[24px]"
+                      :class="{
                       'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
                         .map((x:any) => x._id)
                         .includes(item._id) : selectedArr?._id !== item._id,
@@ -61,68 +62,72 @@
                         .map((x:any) => x._id)
                         .includes(item._id) : selectedArr?._id === item._id,
                     }"
-                  ></i>
-                </button>
-              </div>
-              <div
-                v-for="(key, index) in Object.keys(schema)"
-                :key="index"
-                :class="{
-                  'w-[50px]': key === '_id',
-                  'w-[200px]':
-                    schema[key].input === 'text' ||
-                    schema[key].input === 'richText',
-                  'w-[100px]':
-                    schema[key].input === 'number' ||
-                    schema[key].input === 'array',
-                }"
-                class="truncate flex-shrink-0"
-              >
-                {{ item[key] }}
+                    ></i>
+                  </button>
+                </div>
+                <div
+                  v-for="(key, index) in Object.keys(schema)"
+                  :key="index"
+                  :class="{
+                    'w-[50px]': key === '_id',
+                    'w-[200px]':
+                      schema[key].input === 'text' ||
+                      schema[key].input === 'richText',
+                    'w-[100px]':
+                      schema[key].input === 'number' ||
+                      schema[key].input === 'array',
+                  }"
+                  class="truncate flex-shrink-0"
+                >
+                  {{ item[key] }}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="flex space-x-2 items-center text-[14px] p-2">
-          <button
-            @click="currentPage !== 1 && (currentPage -= 1)"
-            class="paginate"
-            :class="{
-              'opacity-50': currentPage === 1,
-            }"
-          >
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <button
-            v-for="(item, index) in pagination"
-            :key="index"
-            @click="typeof item === 'number' && (currentPage = Number(item))"
-            :class="{
-              '!bg-indigo-600 bg-opacity-90 !text-gray-100':
-                item === currentPage,
-              paginate: typeof item === 'number',
-              'text-gray-800': typeof item !== 'number',
-            }"
-          >
-            {{ item }}
-          </button>
-          <button
-            @click="currentPage !== totalPages && (currentPage += 1)"
-            class="paginate"
-            :class="{
-              'opacity-50': currentPage === totalPages,
-            }"
-          >
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-        <div class="bg-indigo-600 text-gray-50 p-2">
-          Đã chọn:
-          {{
-            Array.isArray(selectedArr)
-              ? selectedArr.map((item: any) => item._id)
-              : selectedArr?._id
-          }}
+        <div>
+          <div class="flex space-x-2 items-center text-[14px] p-2">
+            <button
+              @click="currentPage !== 1 && (currentPage -= 1)"
+              class="paginate"
+              :class="{
+                'opacity-50': currentPage === 1,
+              }"
+            >
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button
+              v-for="(item, index) in pagination"
+              :key="index"
+              @click="typeof item === 'number' && (currentPage = Number(item))"
+              :class="{
+                '!bg-indigo-600 bg-opacity-90 !text-gray-100':
+                  item === currentPage,
+                paginate: typeof item === 'number',
+                'text-gray-800': typeof item !== 'number',
+              }"
+            >
+              {{ item }}
+            </button>
+            <button
+              @click="currentPage !== totalPages && (currentPage += 1)"
+              class="paginate"
+              :class="{
+                'opacity-50': currentPage === totalPages,
+              }"
+            >
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <div class="bg-indigo-600 text-gray-50 p-2">
+            Đã chọn:
+            {{
+              Array.isArray(selectedArr)
+                ? selectedArr.map((item: any) => item._id)
+                : selectedArr?._id
+            }}
+          </div>
         </div>
       </div>
     </Modal>

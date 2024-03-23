@@ -27,13 +27,8 @@ export default async function useApi(request: string, options?: any) {
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (!isValid) {
-      try {
-        await refreshToken();
-      } catch (error) {
-        return await logout();
-      }
-    }
+    if (!isValid) await refreshToken();
+
     return await $fetch(request, {
       ...options,
       ...(access_token.value && {
@@ -68,13 +63,8 @@ export default async function useApi(request: string, options?: any) {
           refreshToken: refresh_token.value,
         },
       });
-      if (
-        refreshTokenResponse.accessToken &&
-        refreshTokenResponse.refreshToken
-      ) {
-        access_token.value = refreshTokenResponse.accessToken;
-        refresh_token.value = refreshTokenResponse.refreshToken;
-      } else await logout();
+      access_token.value = refreshTokenResponse.accessToken;
+      refresh_token.value = refreshTokenResponse.refreshToken;
     } catch (error) {
       await logout();
     }

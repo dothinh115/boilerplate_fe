@@ -20,17 +20,39 @@
             'w-[100px]':
               schema[key].input === 'number' || schema[key].input === 'boolean',
           }"
+          class="flex space-x-2 group cursor-pointer items-center"
+          @click="handleSort(key)"
         >
-          {{ key }}
+          <span> {{ key }} </span>
+          <i
+            class="fa-solid fa-caret-down hidden items-center group-hover:inline-block"
+            :class="{
+              '!inline-block': sortBy === key || sortBy.slice(1) === key,
+              'rotate-180': (sortBy as string).startsWith('-') && sortBy.slice(1) === key
+            }"
+          ></i>
         </div>
       </div>
       <NuxtLink
         v-for="list in lists"
         :key="list._id"
         class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        :to="`/route/${
-          route.params.post ? route.params.pre : 'api/' + route.params.pre
-        }${route.params.post ? '/' + route.params.post : ''}/${list._id}`"
+        :to="{
+          name: 'route-pre-post-id',
+          params: {
+            ...(route.params.post
+              ? {
+                  pre: route.params.pre,
+                  post: route.params.post,
+                }
+              : {
+                  pre: 'api',
+                  post: route.params.pre,
+                }),
+            id: list._id,
+          },
+          query: route.query,
+        }"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"
@@ -73,6 +95,7 @@
             currentPage > 1
               ? {
                   query: {
+                    ...route.query,
                     page: currentPage - 1,
                   },
                 }
@@ -92,6 +115,7 @@
             typeof item === 'number'
               ? {
                   query: {
+                    ...route.query,
                     page: item,
                   },
                 }
@@ -111,6 +135,7 @@
             currentPage < totalPages
               ? {
                   query: {
+                    ...route.query,
                     page: currentPage + 1,
                   },
                 }
@@ -126,7 +151,20 @@
       </div>
       <div class="flex space-x-2 items-center">
         <NuxtLink
-          :to="`/route/${route.params.pre}/${route.params.post}/new`"
+          :to="{
+            name: 'route-pre-post-new',
+            params: {
+              ...(route.params.post
+                ? {
+                    pre: route.params.pre,
+                    post: route.params.post,
+                  }
+                : {
+                    pre: 'api',
+                    post: route.params.pre,
+                  }),
+            },
+          }"
           class="btn btn-green btn-icon"
         >
           <i class="fa-solid fa-plus"></i><span>Thêm mới</span>
@@ -147,6 +185,7 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const route = useRoute();
+const router = useRouter();
 const listApi = props.api.listApi;
 const schemaApi = props.api.schemaApi;
 const currentPage = ref(Number(route.query.page) || 1);
@@ -156,13 +195,14 @@ const pagination = ref<(string | number)[]>([]);
 const { loading, screenWidth } = useGetState();
 const lists = ref<any>(null);
 const schema = useState<any>(schemaApi);
+const sortBy = ref(route.query.sort || "-_id");
 
 async function getList() {
   const params = {
     limit: perPage,
     page: currentPage.value,
     meta: "*",
-    sort: "-_id",
+    sort: sortBy.value,
   };
   const result: any = await useApi(listApi, { params });
   totalPages.value = Math.ceil(
@@ -200,6 +240,45 @@ watch(
   }
 );
 
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.name !== from.name) {
+    loading.value = true;
+    await getList();
+    loading.value = false;
+  }
+});
+
+function handleSort(key: string) {
+  if (!sortBy.value) sortBy.value = "-_id";
+  if ((sortBy.value as string).startsWith("-")) {
+    router.replace({
+      query: {
+        ...route.query,
+        sort: key,
+      },
+    });
+  } else {
+    router.replace({
+      query: {
+        ...route.query,
+        sort: sortBy.value === key ? "-" + key : key,
+      },
+    });
+  }
+}
+
+watch(
+  () => route.query.sort,
+  async (newVal) => {
+    if (newVal) {
+      sortBy.value = newVal;
+      loading.value = true;
+      await getList();
+      loading.value = false;
+    }
+  }
+);
+
 async function fetchAll() {
   loading.value = true;
   await Promise.all([getSchema(), getList()]);
@@ -217,8 +296,4 @@ async function fetchAll() {
 }
 
 await fetchAll();
-
-onBeforeRouteUpdate(async (to, from) => {
-  if (to.path !== from.path && to.query !== from.query) await getList();
-});
 </script>

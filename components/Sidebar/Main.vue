@@ -44,8 +44,8 @@
             @click="handleHideSidebar"
           >
             <i class="fa-solid fa-user fa-lg"></i>
-            <span>Account</span></NuxtLink
-          >
+            <span>Account</span>
+          </NuxtLink>
           <NuxtLink
             :to="'/'"
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
