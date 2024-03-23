@@ -16,7 +16,10 @@
       </button>
     </div>
     <div class="flex justify-center">
-      <button class="text-gray-50 w-full aspect-1 bg-gray-500">
+      <button
+        class="text-gray-50 w-full aspect-1 bg-gray-500"
+        @click="logout()"
+      >
         <i class="fa-solid fa-right-from-bracket fa-lg rotate-180"></i>
       </button>
     </div>
@@ -24,7 +27,7 @@
 </template>
 <script setup lang="ts">
 const hideSidebar = useState("hideSidebar");
-
+const { logout } = useAuth();
 function handleHideSidebar() {
   hideSidebar.value = !hideSidebar.value;
 }
