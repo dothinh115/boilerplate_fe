@@ -1,7 +1,7 @@
 import settings from "../configs/settings.json";
 import { jwtDecode } from "jwt-decode";
 
-export default async function useApi<T>(request: string, options?: any) {
+export default async function useApi(request: string, options?: any) {
   const access_token = useCookie("access_token");
   const refresh_token = useCookie("refresh_token");
   const { logout } = useAuth();
@@ -25,7 +25,10 @@ export default async function useApi<T>(request: string, options?: any) {
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (!isValid) await refreshToken();
+    if (!isValid) {
+      const rt = await refreshToken();
+      if (!rt) return;
+    }
 
     return await $fetch(request, {
       ...options,
@@ -49,8 +52,10 @@ export default async function useApi<T>(request: string, options?: any) {
 
       access_token.value = refreshTokenResponse.accessToken;
       refresh_token.value = refreshTokenResponse.refreshToken;
+      return true;
     } catch (error) {
       await logout();
+      return false;
     }
   };
 
