@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="modalValue">
       <div
-        class="flex flex-col space-y-4 h-full bg-gray-50 w-[40%] fixed right-0 top-0"
+        class="flex flex-col space-y-4 h-full bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0"
       >
         <div
           class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
@@ -22,7 +22,7 @@
         </div>
         <div class="min-w-full overflow-x-scroll !mt-0 hidden-scrollbar">
           <div
-            class="flex space-x-2 border-gray-200 border-b text-[16px] px-2 py-4 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+            class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
           >
             <div class="min-w-[50px]"></div>
             <div class="flex space-x-3">
@@ -86,7 +86,7 @@
         <div class="flex space-x-2 items-center text-[14px] p-2">
           <button
             @click="currentPage !== 1 && (currentPage -= 1)"
-            class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-100 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+            class="paginate"
             :class="{
               'opacity-50': currentPage === 1,
             }"
@@ -98,9 +98,9 @@
             :key="index"
             @click="typeof item === 'number' && (currentPage = Number(item))"
             :class="{
-              'bg-indigo-600 bg-opacity-90 text-gray-100': item === currentPage,
-              'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 hover:text-gray-100 duration-200':
-                typeof item === 'number',
+              '!bg-indigo-600 bg-opacity-90 !text-gray-100':
+                item === currentPage,
+              paginate: typeof item === 'number',
               'text-gray-800': typeof item !== 'number',
             }"
           >
@@ -108,7 +108,7 @@
           </button>
           <button
             @click="currentPage !== totalPages && (currentPage += 1)"
-            class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-400 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+            class="paginate"
             :class="{
               'opacity-50': currentPage === totalPages,
             }"
@@ -151,6 +151,7 @@ const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const selectedArr = ref<any[] | any>([]);
+const screenWidth = useState<number>("screenWidth");
 
 function handleSelect(item: any) {
   if (props.refData.type === "array") {
@@ -193,7 +194,7 @@ watch(
       {
         totalPages: totalPages.value,
         currentPage: newValue,
-        range: 2,
+        range: screenWidth.value <= 768 ? 1 : 2,
       },
       (paginate: (string | number)[]) => {
         pagination.value = paginate;
@@ -230,7 +231,7 @@ async function fetchAll() {
     {
       totalPages: totalPages.value,
       currentPage: currentPage.value,
-      range: 2,
+      range: screenWidth.value <= 768 ? 1 : 2,
     },
     (paginate: (string | number)[]) => {
       pagination.value = paginate;

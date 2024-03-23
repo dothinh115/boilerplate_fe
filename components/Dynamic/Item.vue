@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="showModal = false">
       <div
-        class="space-y-8 lg:w-[50%] mx-auto max-h-full overflow-auto hidden-scrollbar"
+        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full overflow-auto hidden-scrollbar"
       >
         <div class="box max-h-full">
           <div class="flex items-center justify-between space-x-2 title !py-2">

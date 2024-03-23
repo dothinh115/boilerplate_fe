@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full max-h-full h-full flex flex-col justify-between p-8 text-gray-200 space-y-6"
+    class="w-full max-h-full h-full text-gray-200 space-y-6 pl-2 lg:py-8 md:py-6 py-4 max-lg:pr-2"
   >
     <div class="uppercase text-center text-[20px]">admin dashboard</div>
     <div
@@ -9,7 +9,11 @@
       <div class="space-y-4">
         <div class="text-[14px]">Routings</div>
         <div class="space-y-1 ml-2">
-          <div v-for="route in routes" :key="route._id">
+          <div
+            v-for="route in routes"
+            :key="route._id"
+            @click="handleHideSidebar"
+          >
             <NuxtLink
               :to="'/route/' + route.path"
               v-if="!excludeRoute.includes(route.path)"
@@ -27,6 +31,7 @@
             :to="'/me'"
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
+            @click="handleHideSidebar"
           >
             <i class="fa-solid fa-user fa-lg"></i>
             <span>Account</span></NuxtLink
@@ -35,6 +40,7 @@
             :to="'/'"
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
+            @click="handleHideSidebar"
           >
             <i class="fa-solid fa-upload fa-lg"></i>
             <span>Upload</span>
@@ -43,6 +49,7 @@
             :to="'/'"
             class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
             :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
+            @click="handleHideSidebar"
           >
             <i class="fa-solid fa-gear fa-lg"></i>
             <span>Setting</span>
@@ -50,19 +57,9 @@
         </div>
       </div>
     </div>
-    <div>
-      <div
-        @click.prevent="logout"
-        class="flex items-center space-x-2 hover:text-gray-400 duration-300 cursor-pointer"
-      >
-        <i class="fa-solid fa-right-from-bracket fa-lg rotate-180"></i>
-        <span>Logout ({{ user.email }})</span>
-      </div>
-    </div>
   </div>
 </template>
 <script setup lang="ts">
-const { user, logout } = useAuth();
 const excludeRoute = [
   "assets",
   "mail",
@@ -87,6 +84,8 @@ const routes = ref<
     }[];
   }[]
 >([]);
+const screenWidth = useState<number>("screenWidth");
+const hideSidebar = useState<boolean>("hideSidebar");
 const handleFetchRoute = async () => {
   const fieldArr = ["path", "permission.*"];
   const params = {
@@ -97,4 +96,8 @@ const handleFetchRoute = async () => {
   routes.value = fetchRoute.data;
 };
 await handleFetchRoute();
+
+function handleHideSidebar() {
+  if (screenWidth.value <= 768 && !hideSidebar.value) hideSidebar.value = true;
+}
 </script>

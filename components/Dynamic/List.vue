@@ -52,7 +52,9 @@
         </div>
       </NuxtLink>
     </div>
-    <div class="flex items-center justify-between w-full">
+    <div
+      class="flex items-center justify-between w-full flex-wrap max-sm:space-y-4"
+    >
       <div class="flex space-x-2 items-center text-[14px]">
         <NuxtLink
           :to="
@@ -64,7 +66,7 @@
                 }
               : undefined
           "
-          class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-100 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+          class="paginate"
           :class="{
             'opacity-50': currentPage === 1,
           }"
@@ -84,9 +86,8 @@
               : undefined
           "
           :class="{
-            'bg-indigo-600 bg-opacity-90 text-gray-100': item === currentPage,
-            'bg-indigo-200 p-1 rounded-[10px] min-w-[35px] h-[35px] flex justify-center border items-center hover:bg-indigo-600 hover:text-gray-100 duration-200':
-              typeof item === 'number',
+            '!bg-indigo-600 bg-opacity-90 !text-gray-100': item === currentPage,
+            paginate: typeof item === 'number',
             'text-gray-100': typeof item !== 'number',
           }"
         >
@@ -103,7 +104,7 @@
                 }
               : undefined
           "
-          class="bg-indigo-200 p-1 rounded-[10px] min-w-[35px] flex justify-center border border-indigo-400 h-[35px] items-center text-gray-800 hover:bg-indigo-600 hover:text-gray-100 duration-200"
+          class="paginate"
           :class="{
             'opacity-50': currentPage === totalPages,
           }"
@@ -143,6 +144,7 @@ const pagination = ref<(string | number)[]>([]);
 const loading = useState("loading");
 const lists = ref<any>(null);
 const schema = useState<any>(schemaApi);
+const screenWidth = useState<number>("screenWidth");
 
 async function getList() {
   const params = {
@@ -177,7 +179,7 @@ watch(
       {
         totalPages: totalPages.value,
         currentPage: currentPage.value,
-        range: 2,
+        range: screenWidth.value <= 768 ? 1 : 2,
       },
       (paginate: (string | number)[]) => {
         pagination.value = paginate;
@@ -195,7 +197,7 @@ async function fetchAll() {
     {
       totalPages: totalPages.value,
       currentPage: currentPage.value,
-      range: 2,
+      range: screenWidth.value <= 768 ? 1 : 2,
     },
     (paginate: (string | number)[]) => {
       pagination.value = paginate;
