@@ -27,16 +27,7 @@
         </div>
       </div>
     </div>
-    <Teleport :to="'body'">
-      <Transition name="fade">
-        <div
-          class="fixed w-full h-full top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center z-[1000]"
-          v-if="loading"
-        >
-          <span class="gg-spinner text-white"></span>
-        </div>
-      </Transition>
-    </Teleport>
+    <Loading />
     <Toast
       :message="item.message"
       :type="item.type"
@@ -49,7 +40,7 @@
 </template>
 <script setup lang="ts">
 const toastTimeout = ref();
-const { screenWidth, loading, toastData, hideSidebar } = useGetState();
+const { screenWidth, toastData, hideSidebar } = useGetState();
 const closeToast = (index: number) => {
   toastData.value.splice(index, 1);
 };
