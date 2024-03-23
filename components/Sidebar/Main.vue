@@ -77,7 +77,6 @@ const excludeRoute = [
   "me",
   "upload",
   "schema",
-  "refreshtoken",
   "api/route",
 ];
 const routes = ref<

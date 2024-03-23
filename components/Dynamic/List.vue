@@ -28,7 +28,9 @@
         v-for="list in lists"
         :key="list._id"
         class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        :to="`/route/${route.params.pre}/${route.params.post}/${list._id}`"
+        :to="`/route/${
+          route.params.post ? route.params.pre : 'api/' + route.params.pre
+        }${'/' + route.params.post || ''}/${list._id}`"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"

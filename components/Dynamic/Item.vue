@@ -56,7 +56,9 @@
                       'input-blue': !error[item],
                     }"
                     :disabled="
-                      user.rootUser
+                      item === '_id'
+                        ? true
+                        : user.rootUser
                         ? false
                         : schema[item].disabled || schema[item].ref
                         ? true
@@ -194,6 +196,7 @@ function errorCheck() {
 }
 
 async function handleConfirm() {
+  console.log(data.value);
   errorCheck();
   if (!isValid.value) return;
   const result = await useApi(
@@ -256,6 +259,6 @@ function handleSelection({
 }) {
   if (Array.isArray(selected)) {
     data.value[key] = selected.map((x) => x._id);
-  } else data.value[key] = selected._id;
+  } else data.value[key] = selected._id || null;
 }
 </script>
