@@ -48,19 +48,11 @@
   </main>
 </template>
 <script setup lang="ts">
-export type TToastData = {
-  message: string;
-  type: "success" | "error" | "warning" | "info";
-}[];
-const loading = useState("loading");
-const toastData = useState<TToastData>("toastData", () => []);
 const toastTimeout = ref();
-const screenWidth = useState("screenWidth", () => screen.width);
+const { screenWidth, loading, toastData, hideSidebar } = useGetState();
 const closeToast = (index: number) => {
   toastData.value.splice(index, 1);
 };
-
-const hideSidebar = useState("hideSidebar", () => false);
 
 window.addEventListener("resize", () => {
   screenWidth.value = screen.width;

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const modelValue = ref(true);
-const loading = useState("loading");
+const { loading } = useGetState();
 const data = ref<any>({});
 const schema = ref<any>();
 const schemaApi = `/schema/${route.params.post}`;

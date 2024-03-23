@@ -9,7 +9,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const { id, pre, post } = route.params;
-const loading = useState("loading");
+const { loading } = useGetState();
 const schemaApi = `/schema/${route.params.post}`;
 const dataApi = `/${pre}/${post}`;
 const schema = useState<any>(schemaApi, () => {});

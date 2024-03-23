@@ -95,7 +95,7 @@
 <script setup lang="ts">
 const { user } = useAuth();
 const schema = ref<any>();
-const loading = useState("loading");
+const { loading } = useGetState();
 const changePasswordInfo = ref<{
   [key: string]: string;
 }>({

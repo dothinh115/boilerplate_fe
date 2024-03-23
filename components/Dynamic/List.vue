@@ -47,7 +47,17 @@
           }"
         >
           <p class="truncate">
-            {{ key === "password" ? "********" : list[key] }}
+            <span
+              :class="{
+                'p-1 rounded-[10px]': schema[key].input === 'boolean',
+                'bg-red-400 text-gray-50':
+                  schema[key].input === 'boolean' && list[key] === false,
+                'bg-green-900 text-gray-50':
+                  schema[key].input === 'boolean' && list[key] === true,
+              }"
+            >
+              {{ key === "password" ? "********" : list[key] }}</span
+            >
           </p>
         </div>
       </NuxtLink>
@@ -141,10 +151,9 @@ const currentPage = ref(Number(route.query.page) || 1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const loading = useState("loading");
+const { loading, screenWidth } = useGetState();
 const lists = ref<any>(null);
 const schema = useState<any>(schemaApi);
-const screenWidth = useState<number>("screenWidth");
 
 async function getList() {
   const params = {
@@ -206,4 +215,8 @@ async function fetchAll() {
 }
 
 await fetchAll();
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.path !== from.path && to.query !== from.query) await getList();
+});
 </script>

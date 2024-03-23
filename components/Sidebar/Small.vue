@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const hideSidebar = useState("hideSidebar");
+const { hideSidebar } = useGetState();
 const { logout } = useAuth();
 function handleHideSidebar() {
   hideSidebar.value = !hideSidebar.value;

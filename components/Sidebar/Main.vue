@@ -14,15 +14,25 @@
             :key="route._id"
             @click="handleHideSidebar"
           >
-            <NuxtLink
-              :to="'/route/' + route.path"
-              v-if="!excludeRoute.includes(route.path)"
-              class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
-              :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
+            <template
+              v-if="
+                route.permission
+                  .filter((x) => x.method === 'get')
+                  .find((x) => x.roles.includes(user.role)) ||
+                route.permission.find((x) => x.public === true) ||
+                user.rootUser
+              "
             >
-              <i class="fa-solid fa-link fa-lg"></i>
-              <span>{{ route.path }}</span>
-            </NuxtLink>
+              <NuxtLink
+                :to="'/route/' + route.path"
+                v-if="!excludeRoute.includes(route.path)"
+                class="flex items-center space-x-2 hover:bg-blue-900 hover:bg-opacity-60 hover:rounded-[10px] hover:text-gray-100 duration-200 p-2"
+                :active-class="'bg-blue-900 rounded-[10px] text-gray-100 hover:text-gray-100'"
+              >
+                <i class="fa-solid fa-link fa-lg"></i>
+                <span>{{ route.path }}</span>
+              </NuxtLink>
+            </template>
           </div>
         </div>
         <div class="text-[14px]">Settings</div>
@@ -68,7 +78,6 @@ const excludeRoute = [
   "upload",
   "schema",
   "refreshtoken",
-  "api/permission",
   "api/route",
 ];
 const routes = ref<
@@ -84,7 +93,8 @@ const routes = ref<
     }[];
   }[]
 >([]);
-const screenWidth = useState<number>("screenWidth");
+const { user } = useAuth();
+const { screenWidth } = useGetState();
 const hideSidebar = useState<boolean>("hideSidebar");
 const handleFetchRoute = async () => {
   const fieldArr = ["path", "permission.*"];

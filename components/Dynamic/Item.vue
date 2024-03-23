@@ -25,19 +25,30 @@
           </div>
           <div class="p-4 space-y-5 bg-gray-100 max-h-full">
             <template v-for="(item, index) in Object.keys(schema)" :key="index">
-              <div class="space-y-1">
-                <div class="text-gray-900">
-                  {{ item }}
-                </div>
+              <div
+                :class="{
+                  'flex items-center space-x-4':
+                    schema[item].input === 'boolean',
+                  'space-y-1': schema[item].input !== 'boolean',
+                }"
+              >
+                <div class="text-gray-900">{{ item }}:</div>
                 <Editor
                   api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
                   :init="getEditorInit(item)"
                   :width="'100%'"
                   v-if="schema[item].input === 'richText'"
                 />
-                <div class="flex items-center space-x-2">
+                <div
+                  class="flex items-center space-x-2"
+                  v-else-if="
+                    schema[item].input === 'text' ||
+                    schema[item].input === 'number' ||
+                    schema[item].input === 'password' ||
+                    schema[item].input === 'array'
+                  "
+                >
                   <input
-                    v-if="schema[item].input !== 'richText'"
                     :type="schema[item].input === 'number' ? 'number' : 'text'"
                     class="input w-full"
                     :class="{
@@ -45,7 +56,11 @@
                       'input-blue': !error[item],
                     }"
                     :disabled="
-                      schema[item].disabled || schema[item].ref ? true : false
+                      user.rootUser
+                        ? false
+                        : schema[item].disabled || schema[item].ref
+                        ? true
+                        : false
                     "
                     :value="data ? data[item] : ''"
                     @input="updateData(item, $event.target as HTMLInputElement)"
@@ -65,6 +80,19 @@
                   >
                     <i class="fa-solid fa-square-arrow-up-right"></i>
                   </button>
+                </div>
+                <div v-else-if="schema[item].input === 'boolean'">
+                  <select
+                    v-model="data[item]"
+                    class="input"
+                    :class="{
+                      'input-red': error[item],
+                      'input-blue': !error[item],
+                    }"
+                  >
+                    <option :value="true">True</option>
+                    <option :value="false">False</option>
+                  </select>
                 </div>
               </div>
             </template>
@@ -87,7 +115,6 @@
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
-import type { TToastData } from "~/layouts/default.vue";
 
 type TProps = {
   info: {
@@ -96,6 +123,7 @@ type TProps = {
   };
 };
 const route = useRoute();
+const { user } = useAuth();
 const props = defineProps<TProps>();
 const router = useRouter();
 const schema = ref<any>(props.info.schema);
@@ -105,7 +133,7 @@ const error = ref<{
 }>({});
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
-const toastData = useState<TToastData>("toastData");
+const { toastData } = useGetState();
 const refData = ref<{
   ref: string;
   type: "text" | "number" | "array";
@@ -115,9 +143,9 @@ const refData = ref<{
 
 if (Object.keys(data.value).length === 0) {
   for (const key in schema.value) {
-    if (schema.value[key].default) {
+    if (schema.value[key].default !== undefined) {
       data.value[key] = schema.value[key].default;
-    } else data.value[key] = "";
+    } else if (key !== "_id") data.value[key] = "";
   }
 }
 
@@ -129,7 +157,7 @@ function getEditorInit(item: string) {
       "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
     setup(editor: any) {
       editor.on("init", () => {
-        if (data.value) editor.setContent(data.value[item]);
+        if (data.value[item]) editor.setContent(data.value[item]);
       });
       editor.on("input", () => {
         data.value[item] = editor.getContent();
@@ -168,8 +196,7 @@ function errorCheck() {
 async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
-
-  useApi(
+  const result = await useApi(
     `/${route.params.pre}/${route.params.post}${
       data.value._id ? "/" + data.value._id : ""
     }`,
@@ -177,42 +204,31 @@ async function handleConfirm() {
       method: data.value._id ? "PATCH" : "POST",
       body: data.value,
     }
-  )
-    .then(() => {
-      toastData.value.push({
-        message: "Thành công",
-        type: "success",
-      });
-      router.back();
-    })
-    .catch((error: any) => {
-      toastData.value.push({
-        message: error.data.message,
-        type: "error",
-      });
-    });
-}
-
-async function handleDelete() {
-  if (!data.value) return;
-  try {
-    await useApi(
-      `/${route.params.pre}/${route.params.post}/${data.value._id}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    router.back();
+  );
+  if (result) {
     toastData.value.push({
       message: "Thành công",
       type: "success",
     });
-  } catch (error: any) {
+    router.back();
+  }
+}
+
+async function handleDelete() {
+  if (!data.value) return;
+  const result = await useApi(
+    `/${route.params.pre}/${route.params.post}/${data.value._id}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  if (result) {
     toastData.value.push({
-      message: error.data.message,
-      type: "error",
+      message: "Thành công",
+      type: "success",
     });
+    router.back();
   }
 }
 

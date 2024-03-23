@@ -145,13 +145,12 @@ const data = ref<any>({});
 const schema = ref<any>({});
 const api = `/${route.params.pre}/${props.refData.ref}`;
 const schemaApi = `/schema/${props.refData.ref}`;
-const loading = useState("loading");
+const { loading, screenWidth } = useGetState();
 const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const selectedArr = ref<any[] | any>([]);
-const screenWidth = useState<number>("screenWidth");
 
 function handleSelect(item: any) {
   if (props.refData.type === "array") {
