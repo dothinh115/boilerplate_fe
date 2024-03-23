@@ -196,7 +196,6 @@ function errorCheck() {
 }
 
 async function handleConfirm() {
-  console.log(data.value);
   errorCheck();
   if (!isValid.value) return;
   const result = await useApi(
