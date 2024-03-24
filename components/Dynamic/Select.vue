@@ -20,7 +20,7 @@
             <i class="fa-solid fa-check"></i>
           </button>
         </div>
-        <div class="max-h-dvh overflow-auto">
+        <div class="max-h-dvh overflow-auto h-full">
           <div class="min-w-full !mt-0 max-h-full hidden-scrollbar">
             <div
               class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
@@ -44,7 +44,7 @@
                 </div>
               </div>
             </div>
-            <div class="">
+            <div class="h-full">
               <div
                 class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
                 v-for="item in data"
@@ -83,7 +83,7 @@
                 </div>
               </div>
               <div
-                class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
+                class="flex space-x-3 px-2 py-2 items-center text-[15px] min-w-max"
                 v-if="data.length === 0"
               >
                 Chưa có record nào!

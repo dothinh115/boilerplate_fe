@@ -93,7 +93,7 @@
       </div>
     </div>
     <div
-      class="flex items-center justify-between w-full flex-wrap max-sm:space-y-4"
+      class="flex items-center justify-between w-full flex-wrap max-md:space-y-4"
     >
       <div class="flex space-x-2 items-center text-[14px]">
         <NuxtLink
@@ -155,7 +155,7 @@
           <i class="fa-solid fa-chevron-right"></i>
         </NuxtLink>
       </div>
-      <div class="flex space-x-2 items-center">
+      <div class="flex space-x-2 items-center w-full">
         <NuxtLink
           :to="{
             name: 'route-pre-post-new',

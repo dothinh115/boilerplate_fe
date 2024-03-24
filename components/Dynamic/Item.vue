@@ -2,9 +2,11 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="showModal = false">
       <div
-        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full"
+        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full flex items-center"
       >
-        <div class="box max-h-full overflow-y-scroll hidden-scrollbar relative">
+        <div
+          class="box max-h-full overflow-y-scroll hidden-scrollbar relative w-full"
+        >
           <div
             class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
           >
@@ -68,7 +70,13 @@
                   "
                 >
                   <input
-                    :type="schema[item].input === 'number' ? 'number' : 'text'"
+                    :type="
+                      schema[item].input === 'number'
+                        ? 'number'
+                        : schema[item].input === 'password'
+                        ? 'password'
+                        : 'text'
+                    "
                     class="input w-full"
                     :class="{
                       'input-red': error[item],
