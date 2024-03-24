@@ -1,7 +1,7 @@
 <template>
   <DynamicList
     :api="{
-      listApi,
+      dataApi,
       schemaApi,
     }"
   />
@@ -9,6 +9,6 @@
 </template>
 <script setup lang="ts">
 const route = useRoute();
-const listApi = `/${route.params.pre}/${route.params.post}`;
+const dataApi = `/${route.params.pre}/${route.params.post}`;
 const schemaApi = `/schema/${route.params.post}`;
 </script>

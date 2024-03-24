@@ -123,14 +123,14 @@
 <script setup lang="ts">
 type TProps = {
   api: {
-    listApi: string;
+    dataApi: string;
     schemaApi: string;
   };
 };
 const props = defineProps<TProps>();
 const route = useRoute();
 const router = useRouter();
-const listApi = props.api.listApi;
+const dataApi = props.api.dataApi;
 const schemaApi = props.api.schemaApi;
 const currentPage = ref(Number(route.query.page) || 1);
 const perPage = 20;
@@ -148,7 +148,7 @@ async function getList() {
     meta: "*",
     sort: sortBy.value,
   };
-  const result: any = await useApi(listApi, { params });
+  const result: any = await useApi(dataApi, { params });
   totalPages.value = Math.ceil(
     (result.meta.total_count || result.meta.filter_count) / perPage
   );
