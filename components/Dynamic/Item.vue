@@ -45,86 +45,13 @@
             </div>
           </div>
           <div class="p-4 space-y-5 bg-gray-100 max-h-full">
-            <template v-for="(item, index) in Object.keys(schema)" :key="index">
-              <div
-                :class="{
-                  'flex items-center space-x-4':
-                    schema[item].input === 'boolean',
-                  'space-y-1': schema[item].input !== 'boolean',
-                }"
-              >
-                <div class="text-gray-900">{{ item }}:</div>
-                <Editor
-                  api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
-                  :init="getEditorInit(item)"
-                  :width="'100%'"
-                  v-if="schema[item].input === 'richText'"
-                />
-                <div
-                  class="flex items-center space-x-2"
-                  v-else-if="
-                    schema[item].input === 'text' ||
-                    schema[item].input === 'number' ||
-                    schema[item].input === 'password' ||
-                    schema[item].input === 'array'
-                  "
-                >
-                  <input
-                    :type="
-                      schema[item].input === 'number'
-                        ? 'number'
-                        : schema[item].input === 'password'
-                        ? 'password'
-                        : 'text'
-                    "
-                    class="input w-full"
-                    :class="{
-                      'input-red': error[item],
-                      'input-blue': !error[item],
-                    }"
-                    :disabled="
-                      item === '_id'
-                        ? true
-                        : user.rootUser
-                        ? false
-                        : schema[item].disabled || schema[item].ref
-                        ? true
-                        : false
-                    "
-                    :value="data ? data[item] : ''"
-                    @input="updateData(item, $event.target as HTMLInputElement)"
-                  />
-                  <button
-                    class="text-teal-700 text-[40px]"
-                    v-if="schema[item].ref"
-                    @click="
-                      schema[item].ref &&
-                        handleRef(
-                          schema[item].ref,
-                          schema[item].input,
-                          data[item],
-                          item
-                        )
-                    "
-                  >
-                    <i class="fa-solid fa-square-arrow-up-right"></i>
-                  </button>
-                </div>
-                <div v-else-if="schema[item].input === 'boolean'">
-                  <select
-                    v-model="data[item]"
-                    class="input"
-                    :class="{
-                      'input-red': error[item],
-                      'input-blue': !error[item],
-                    }"
-                  >
-                    <option :value="true">True</option>
-                    <option :value="false">False</option>
-                  </select>
-                </div>
-              </div>
-            </template>
+            <DynamicItemField
+              :schema="schema"
+              :data="data"
+              :error="error"
+              @updateData="updateData"
+              @handleRef="handleRef"
+            />
           </div>
         </div>
       </div>
@@ -143,8 +70,6 @@
   />
 </template>
 <script setup lang="ts">
-import Editor from "@tinymce/tinymce-vue";
-
 type TProps = {
   info: {
     schema: any;
@@ -152,7 +77,6 @@ type TProps = {
   };
 };
 const route = useRoute();
-const { user } = useAuth();
 const props = defineProps<TProps>();
 const router = useRouter();
 const schema = ref<any>(props.info.schema);
@@ -178,23 +102,6 @@ if (Object.keys(data.value).length === 0) {
   }
 }
 
-function getEditorInit(item: string) {
-  return {
-    menubar: false,
-    plugins: "lists link image emoticons",
-    toolbar:
-      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
-    setup(editor: any) {
-      editor.on("init", () => {
-        if (data.value[item]) editor.setContent(data.value[item]);
-      });
-      editor.on("input", () => {
-        data.value[item] = editor.getContent();
-      });
-    },
-  };
-}
-
 const isValid = computed(() => {
   for (const [key, value] of Object.entries(schema.value)) {
     if (key === "password") continue;
@@ -207,14 +114,15 @@ const isValid = computed(() => {
   return true;
 });
 
-function updateData(item: string, target: HTMLInputElement) {
-  const value = target.value;
-  data.value[item] = value;
+function updateData(object: { item: string; target: HTMLInputElement }) {
+  const value = object.target.value;
+  data.value[object.item] = value;
 }
 
 function errorCheck() {
   for (const [key, value] of Object.entries(schema.value)) {
     if ((value as any).required) {
+      if (key === "password") continue;
       if (!data.value[key]) {
         error.value[key] = "Không được để trống!";
       } else error.value[key] = "";
@@ -261,12 +169,13 @@ async function handleDelete() {
   }
 }
 
-function handleRef(
-  ref: string,
-  type: "text" | "number" | "array",
-  defaultValue: string | number | string[] | number[],
-  key: string
-) {
+function handleRef(object: {
+  ref: string;
+  type: "text" | "number" | "array";
+  defaultValue: string | number | string[] | number[];
+  key: string;
+}) {
+  let { ref, type, defaultValue, key } = object;
   ref = ref.toLowerCase();
   refData.value = {
     ref,
