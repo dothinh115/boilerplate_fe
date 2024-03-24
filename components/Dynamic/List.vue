@@ -6,88 +6,23 @@
       <div
         class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0"
       >
-        <div
-          v-for="(key, index) in Object.keys(schema)"
-          :key="index"
-          :class="{
-            'w-[50px]': key === '_id',
-            'w-[400px]':
-              schema[key].input === 'text' || schema[key].input === 'richText',
-            'w-[200px]':
-              (schema[key].input === 'array' ||
-                schema[key].input === 'password') &&
-              key !== '_id',
-            'w-[100px]':
-              schema[key].input === 'number' || schema[key].input === 'boolean',
-          }"
-          class="flex space-x-2 group cursor-pointer items-center"
-          @click="handleSort(key)"
-        >
-          <span> {{ key }} </span>
-          <i
-            class="fa-solid fa-caret-down hidden items-center group-hover:inline-block"
-            :class="{
-              '!inline-block': sortBy === key || sortBy.slice(1) === key,
-              'rotate-180': (sortBy as string).startsWith('-') && sortBy.slice(1) === key
-            }"
-          ></i>
-        </div>
+        <DynamicListItem
+          :schema="schema"
+          :sortBy="sortBy"
+          @handleSort="handleSort"
+        />
       </div>
-      <NuxtLink
-        v-for="list in lists"
-        :key="list._id"
-        class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        :to="{
-          name: 'route-pre-post-id',
-          params: {
-            ...(route.params.post
-              ? {
-                  pre: route.params.pre,
-                  post: route.params.post,
-                }
-              : {
-                  pre: 'api',
-                  post: route.params.pre,
-                }),
-            id: list._id,
-          },
-          query: route.query,
-        }"
-      >
-        <div
-          v-for="(key, index) in Object.keys(schema)"
-          :key="index"
-          class="line-clamp-1 truncate"
-          :class="{
-            'w-[50px]': key === '_id',
-            'w-[400px]':
-              schema[key].input === 'text' || schema[key].input === 'richText',
-            'w-[200px]':
-              (schema[key].input === 'array' ||
-                schema[key].input === 'password') &&
-              key !== '_id',
-            'w-[100px]':
-              schema[key].input === 'number' || schema[key].input === 'boolean',
-          }"
-        >
-          <p class="truncate">
-            <span
-              :class="{
-                'p-1 rounded-[10px]': schema[key].input === 'boolean',
-                'bg-red-400 text-gray-50':
-                  schema[key].input === 'boolean' && list[key] === false,
-                'bg-green-900 text-gray-50':
-                  schema[key].input === 'boolean' && list[key] === true,
-              }"
-            >
-              {{ key === "password" ? "********" : list[key] }}</span
-            >
-          </p>
-        </div>
-      </NuxtLink>
+      <DynamicListItem
+        v-for="item in data"
+        :key="item._id"
+        :schema="schema"
+        :sortBy="sortBy"
+        :item="item"
+      />
+
       <div
         class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        v-if="lists.length === 0"
+        v-if="data.length === 0"
       >
         Chưa có record nào.
       </div>
@@ -202,9 +137,9 @@ const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const { loading, screenWidth } = useGetState();
-const lists = ref<any>(null);
+const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
-const sortBy = ref(route.query.sort || "-_id");
+const sortBy = ref<string>((route.query.sort as string) || "-_id");
 
 async function getList() {
   const params = {
@@ -217,7 +152,7 @@ async function getList() {
   totalPages.value = Math.ceil(
     (result.meta.total_count || result.meta.filter_count) / perPage
   );
-  lists.value = result.data;
+  data.value = result.data;
   return result;
 }
 
@@ -283,7 +218,7 @@ watch(
   () => route.query.sort,
   async (newVal) => {
     if (newVal) {
-      sortBy.value = newVal;
+      sortBy.value = newVal as string;
       loading.value = true;
       await getList();
       loading.value = false;
