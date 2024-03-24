@@ -25,4 +25,12 @@ const emits = defineEmits(["update:modelValue"]);
 const close = () => {
   emits("update:modelValue", false);
 };
+
+onMounted(() => {
+  document.body.classList.add("body-overflow-hidden");
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove("body-overflow-hidden");
+});
 </script>

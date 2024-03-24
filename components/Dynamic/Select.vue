@@ -2,26 +2,26 @@
   <Teleport to="body">
     <Modal v-model="modalValue">
       <div
-        class="flex flex-col justify-between space-y-4 h-full bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0"
+        class="flex flex-col justify-between h-dvh bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0 max-h-dvh"
       >
-        <div>
-          <div
-            class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
+        <div
+          class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
+        >
+          <button
+            class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
+            @click="cancel"
           >
-            <button
-              class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
-              @click="cancel"
-            >
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-            <button
-              class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
-              @click="confirm"
-            >
-              <i class="fa-solid fa-check"></i>
-            </button>
-          </div>
-          <div class="min-w-full overflow-x-scroll !mt-0 hidden-scrollbar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <button
+            class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
+            @click="confirm"
+          >
+            <i class="fa-solid fa-check"></i>
+          </button>
+        </div>
+        <div class="max-h-dvh overflow-auto">
+          <div class="min-w-full !mt-0 max-h-full hidden-scrollbar">
             <div
               class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
             >
@@ -44,7 +44,7 @@
                 </div>
               </div>
             </div>
-            <div>
+            <div class="">
               <div
                 class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
                 v-for="item in data"
