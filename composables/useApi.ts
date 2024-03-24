@@ -38,7 +38,7 @@ export default async function useApi(request: string, options?: any) {
       }),
     }).catch((error: any) => {
       if (loading.value) loading.value = false;
-      if (error.data.statusCode === 403) {
+      if (error.data?.statusCode === 403) {
         const newToast: TToastData = {
           message: "Bạn không có quyền này!",
           type: "error",
