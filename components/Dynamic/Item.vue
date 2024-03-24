@@ -2,10 +2,12 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="showModal = false">
       <div
-        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full overflow-auto hidden-scrollbar"
+        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full"
       >
-        <div class="box max-h-full">
-          <div class="flex items-center justify-between space-x-2 title !py-2">
+        <div class="box max-h-full overflow-y-scroll hidden-scrollbar relative">
+          <div
+            class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
+          >
             <i
               class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
               @click="

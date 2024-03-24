@@ -1,5 +1,5 @@
 .box {
-  @apply rounded-[10px] overflow-hidden shadow-[0px_0px_2px_1px] shadow-indigo-600 border-indigo-500 border;
+  @apply rounded-[10px] shadow-[0px_0px_2px_1px] shadow-indigo-600 border-indigo-500 border;
 }
 .title {
   @apply bg-indigo-600 text-gray-50 text-[20px] py-1 px-4;
