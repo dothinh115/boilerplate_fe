@@ -96,7 +96,6 @@
           <option :value="false">False</option>
         </select>
       </div>
-
       <div
         v-else-if="schema[field].input === 'array'"
         class="flex flex-wrap h-fit"
@@ -133,6 +132,9 @@
         >
           <i class="fa-solid fa-up-right-from-square"></i>
         </button>
+      </div>
+      <div v-if="error[field]" class="text-[12px] text-red-600">
+        {{ error[field] }}
       </div>
     </div>
   </template>
