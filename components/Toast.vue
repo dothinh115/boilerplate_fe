@@ -6,7 +6,7 @@
         'opacity-100': mounted,
       }"
     >
-      <div class="flex justify-between w-[300px] min-h-[80px]">
+      <div class="flex justify-between md:w-[300px] md:min-h-[80px]">
         <div class="flex space-x-4">
           <div
             class="w-[6px] h-full rounded-full"
@@ -40,7 +40,7 @@
             <div class="text-gray-800">{{ props.message }}</div>
           </div>
         </div>
-        <div class="px-4">
+        <div class="md:px-4 px-2">
           <button class="p-1" @click="close">
             <i class="fa-solid fa-xmark text-[20px]"></i>
           </button>
