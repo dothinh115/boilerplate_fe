@@ -82,6 +82,12 @@
                   {{ item[key] }}
                 </div>
               </div>
+              <div
+                class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
+                v-if="data.length === 0"
+              >
+                Chưa có record nào!
+              </div>
             </div>
           </div>
         </div>

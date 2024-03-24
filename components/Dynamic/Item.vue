@@ -8,7 +8,24 @@
           <div class="flex items-center justify-between space-x-2 title !py-2">
             <i
               class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
-              @click="router.back()"
+              @click="
+                router.replace({
+                  name: 'route-pre-post',
+                  params: {
+                    ...(route.params.post
+                      ? {
+                          pre: route.params.pre,
+                          post: route.params.post,
+                        }
+                      : {
+                          pre: route.params.pre,
+                        }),
+                  },
+                  query: {
+                    ...route.query,
+                  },
+                })
+              "
             ></i>
 
             <div class="flex items-center space-x-2">

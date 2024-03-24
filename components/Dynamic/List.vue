@@ -85,6 +85,12 @@
           </p>
         </div>
       </NuxtLink>
+      <div
+        class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
+        v-if="lists.length === 0"
+      >
+        Chưa có record nào.
+      </div>
     </div>
     <div
       class="flex items-center justify-between w-full flex-wrap max-sm:space-y-4"
@@ -164,6 +170,9 @@
                     post: route.params.pre,
                   }),
             },
+            query: {
+              ...route.query,
+            },
           }"
           class="btn btn-green btn-icon"
         >
@@ -241,7 +250,10 @@ watch(
 );
 
 onBeforeRouteUpdate(async (to, from) => {
-  if (to.name !== from.name) {
+  if (
+    from.name?.toString().includes(to.name?.toString() as string) &&
+    from.name !== to.name
+  ) {
     loading.value = true;
     await getList();
     loading.value = false;

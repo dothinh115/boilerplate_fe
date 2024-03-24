@@ -1,8 +1,12 @@
 <template>
   <main>
     <div class="h-screen w-screen bg-[#2148c0] relative max-h-full flex">
-      <IconBackgroundTopRight class="absolute top-0 right-0" />
-      <IconBackgroundBottomLeft class="absolute bottom-0 left-0" />
+      <IconBackgroundTopRight
+        class="absolute top-0 right-0 w-full md:w-2/3 lg:w-1/2"
+      />
+      <IconBackgroundBottomLeft
+        class="absolute bottom-0 left-0 w-1/2 lg:w-1/3 xl:w-1/4"
+      />
       <SidebarSmall />
       <div class="max-h-full grid grid-cols-12 flex-grow h-full">
         <div
