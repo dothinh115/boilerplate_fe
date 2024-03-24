@@ -68,15 +68,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const excludeRoute = [
-  "assets",
-  "mail",
-  "setting",
-  "me",
-  "upload",
-  "schema",
-  "api/route",
-];
+const excludeRoute = ["assets", "mail", "setting", "upload", "api/route"];
 const routes = ref<
   {
     _id: string;

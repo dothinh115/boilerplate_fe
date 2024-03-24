@@ -1,10 +1,10 @@
 <template>
   <div class="flex h-full flex-col max-h-full space-y-4">
     <div
-      class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px]"
+      class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
     >
       <div
-        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full"
+        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0"
       >
         <div
           v-for="(key, index) in Object.keys(schema)"
@@ -93,7 +93,7 @@
       </div>
     </div>
     <div
-      class="flex items-center justify-between w-full flex-wrap max-md:space-y-4"
+      class="flex items-center justify-between w-full max-md:flex-wrap max-md:space-y-4"
     >
       <div class="flex space-x-2 items-center text-[14px]">
         <NuxtLink
@@ -155,7 +155,7 @@
           <i class="fa-solid fa-chevron-right"></i>
         </NuxtLink>
       </div>
-      <div class="flex space-x-2 items-center w-full">
+      <div class="flex space-x-2 items-center max-md:w-full">
         <NuxtLink
           :to="{
             name: 'route-pre-post-new',
