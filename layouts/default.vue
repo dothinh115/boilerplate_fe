@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="h-screen w-screen bg-[#2148c0] relative max-h-full flex">
+    <div class="w-screen h-dvh bg-[#2148c0] relative max-h-full flex">
       <IconBackgroundTopRight
         class="absolute top-0 right-0 w-full md:w-2/3 lg:w-1/2"
       />
