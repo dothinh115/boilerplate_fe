@@ -1,6 +1,6 @@
 <template>
   <form
-    class="w-[320px] h-fit space-y-6 text-gray-100"
+    class="w-[320px] h-fit space-y-6 text-gray-100 relative"
     @submit.prevent="handleLoginSubmit"
   >
     <div class="flex justify-center">
