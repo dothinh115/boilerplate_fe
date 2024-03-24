@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full max-h-dvh h-dvh text-gray-200 space-y-6 pl-2 lg:py-8 pd:my-6 py-4 max-lg:pr-2 overflow-y-scroll hidden-scrollbar"
+    class="w-full h-dvh text-gray-200 space-y-6 pl-2 lg:py-8 md:py-6 py-8 max-lg:pr-2 overflow-y-scroll hidden-scrollbar"
   >
     <div class="uppercase text-center text-[20px]">admin dashboard</div>
-    <div class="space-y-8 max-h-dvh w-full h-full">
+    <div class="space-y-8 w-full">
       <div class="space-y-4">
         <div class="text-[14px]">Routings</div>
         <div class="space-y-1 ml-2">
