@@ -46,7 +46,11 @@
           {{ field === "password" ? "********" : item[field] }}
         </span>
       </p>
-      <div v-else @click="handleSort(field)" class="space-x-2 min-w-full">
+      <div
+        v-else
+        @click="handleSort(field)"
+        class="flex items-center space-x-2 min-w-full"
+      >
         <span> {{ field }} </span>
         <i
           class="fa-solid fa-caret-down hidden items-center group-hover:inline-block"

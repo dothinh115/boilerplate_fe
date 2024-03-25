@@ -10,7 +10,7 @@
           :schema="schema"
           :sortBy="sortBy"
           @handleSort="handleSort"
-          :width="$getMaxLength({ schema, data })"
+          :width="width"
         />
       </div>
       <DynamicListItem
@@ -19,7 +19,7 @@
         :schema="schema"
         :sortBy="sortBy"
         :item="item"
-        :width="$getMaxLength({ schema, data })"
+        :width="width"
       />
 
       <div
@@ -142,7 +142,10 @@ const { loading, screenWidth } = useGetState();
 const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
 const sortBy = ref<string>((route.query.sort as string) || "-_id");
-const { $typeCheck } = useNuxtApp();
+const width = ref<{
+  [key: string]: number;
+}>({});
+const { $getMaxLength } = useNuxtApp();
 
 async function getList() {
   const params = {
@@ -171,7 +174,6 @@ watch(
     currentPage.value = Number(newValue);
     if (!route.query.page) currentPage.value = 1;
     loading.value = true;
-
     await getList();
     usePaginate(
       {
@@ -246,4 +248,6 @@ async function fetchAll() {
 }
 
 await fetchAll();
+
+width.value = $getMaxLength({ schema: schema.value, data: data.value });
 </script>

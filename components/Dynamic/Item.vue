@@ -93,6 +93,7 @@ const refData = ref<{
   defaultValue: string | number | string[] | number[];
   key: string;
 }>();
+const { $typeCheck } = useNuxtApp();
 
 if (Object.keys(data.value).length === 0) {
   for (const key in schema.value) {

@@ -10,8 +10,8 @@
       <Editor
         api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
         :init="getEditorInit(field)"
-        :width="'100%'"
         v-if="$typeCheck(data[field]) === 'longText'"
+        v-model="data[field]"
       />
 
       <div v-else-if="$typeCheck(data[field]) === 'boolean'">
@@ -152,9 +152,10 @@ const emits = defineEmits(["updateData", "handleRef"]);
 function getEditorInit(item: string) {
   return {
     menubar: false,
-    plugins: "lists link image emoticons",
+    width: "100%",
+    height: "350px",
     toolbar:
-      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image emoticons",
+      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist",
     setup(editor: any) {
       editor.on("init", () => {
         if (props.data[item]) editor.setContent(props.data[item]);
