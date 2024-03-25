@@ -13,7 +13,7 @@ export default defineNuxtPlugin(() => {
               case "array":
                 currentLength = item[field].join(",").length;
               case "string":
-              case "longText":
+              case "richText":
                 currentLength = item[field].length;
               case null:
                 currentLength = 4;

@@ -99,7 +99,7 @@
 type TProps = {
   refData: {
     ref: string;
-    type: "text" | "number" | "array";
+    type: "String" | "Number" | "Array" | undefined;
     defaultValue: string | number | string[] | number[];
     key: string;
   };
@@ -123,7 +123,7 @@ const width = ref<{
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 
 function handleSelect(item: any) {
-  if (props.refData.type === "array") {
+  if (props.refData.type === "Array") {
     if (selectedArr.value.map((x: any) => x._id).includes(item._id)) {
       selectedArr.value = selectedArr.value.filter(
         (z: any) => z._id !== item._id
@@ -138,7 +138,7 @@ function handleSelect(item: any) {
   }
 }
 
-if (props.refData.type === "array") {
+if (props.refData.type === "Array") {
   if (Array.isArray(props.refData.defaultValue)) {
     selectedArr.value = (
       props.refData.defaultValue as Array<string | number>

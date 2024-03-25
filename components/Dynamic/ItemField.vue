@@ -10,7 +10,7 @@
       <Editor
         api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
         :init="getEditorInit(field)"
-        v-if="$typeCheck(data[field]) === 'longText'"
+        v-if="schema[field].richText"
         v-model="data[field]"
       />
 
@@ -55,7 +55,7 @@
             schema[field].ref &&
               handleRef(
                 schema[field].ref,
-                $typeCheck(data[field]) as any,
+                schema[field].type,
                 data[field],
                 field
               )
@@ -122,7 +122,7 @@
             schema[field].ref &&
               handleRef(
                 schema[field].ref,
-                $typeCheck(data[field]) as any,
+                schema[field].type,
                 data[field],
                 field
               )

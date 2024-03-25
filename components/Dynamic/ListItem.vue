@@ -43,7 +43,15 @@
               $typeCheck(item[field]) === 'boolean' && item[field] === true,
           }"
         >
-          {{ field === "password" ? "********" : item[field] }}
+          {{
+            field === "password"
+              ? "********"
+              : item[field] === 0
+              ? item[field]
+              : item[field]
+              ? item[field]
+              : "null"
+          }}
         </span>
       </p>
       <div

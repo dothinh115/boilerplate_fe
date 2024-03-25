@@ -42,7 +42,6 @@ type TProps = {
   };
 };
 const props = defineProps<TProps>();
-console.log(props.width);
 const emits = defineEmits(["handleSelect"]);
 function handleSelect(item: any) {
   emits("handleSelect", item);

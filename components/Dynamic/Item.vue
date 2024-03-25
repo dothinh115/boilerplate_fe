@@ -89,11 +89,10 @@ const showModal = ref(true);
 const { toastData } = useGetState();
 const refData = ref<{
   ref: string;
-  type: "text" | "number" | "array";
+  type: "String" | "Number" | "Array" | undefined;
   defaultValue: string | number | string[] | number[];
   key: string;
 }>();
-const { $typeCheck } = useNuxtApp();
 
 if (Object.keys(data.value).length === 0) {
   for (const key in schema.value) {
@@ -172,7 +171,7 @@ async function handleDelete() {
 
 function handleRef(object: {
   ref: string;
-  type: "text" | "number" | "array";
+  type: "String" | "Number" | "Array" | undefined;
   defaultValue: string | number | string[] | number[];
   key: string;
 }) {
