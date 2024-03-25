@@ -20,68 +20,24 @@
             <i class="fa-solid fa-check"></i>
           </button>
         </div>
-        <div class="max-h-dvh overflow-auto h-full">
-          <div class="min-w-full !mt-0 max-h-full hidden-scrollbar">
+        <div class="max-h-dvh overflow-auto h-full hidden-scrollbar">
+          <div class="min-w-full !mt-0">
             <div
-              class="flex space-x-2 border-gray-200 border-b text-[16px] p-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+              class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
             >
-              <div class="min-w-[50px]"></div>
-              <div class="flex space-x-3">
-                <div
-                  v-for="(key, index) in Object.keys(schema)"
-                  :key="index"
-                  :class="{
-                    'w-[50px]': key === '_id',
-                    'w-[200px]':
-                      schema[key].input === 'text' ||
-                      schema[key].input === 'richText',
-                    'w-[100px]':
-                      schema[key].input === 'number' ||
-                      schema[key].input === 'array',
-                  }"
-                >
-                  {{ key }}
-                </div>
-              </div>
+              <div class="min-w-[50px] h-[10px]"></div>
+              <DynamicSelectItem :schema="schema" :width="width" />
             </div>
             <div class="h-full">
-              <div
-                class="flex space-x-3 odd:bg-gray-100 px-2 py-2 items-center text-[15px] w-max min-w-full"
+              <DynamicSelectItem
                 v-for="item in data"
-                :key="item._id"
-              >
-                <div class="flex justify-center items-center min-w-[50px]">
-                  <button @click="handleSelect(item)" class="flex items-center">
-                    <i
-                      class="text-[24px]"
-                      :class="{
-                      'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
-                        .map((x:any) => x._id)
-                        .includes(item._id) : selectedArr?._id !== item._id,
-                      'fa-solid fa-circle-check text-indigo-800': Array.isArray(selectedArr) ? selectedArr
-                        .map((x:any) => x._id)
-                        .includes(item._id) : selectedArr?._id === item._id,
-                    }"
-                    ></i>
-                  </button>
-                </div>
-                <div
-                  v-for="(key, index) in Object.keys(schema)"
-                  :key="index"
-                  :class="{
-                    'w-[50px]': key === '_id',
-                    'w-[200px]':
-                      schema[key].input === 'text' ||
-                      schema[key].input === 'richText',
-                    'w-[100px]':
-                      schema[key].input === 'number' ||
-                      schema[key].input === 'array',
-                  }"
-                  class="truncate flex-shrink-0"
-                >
-                  {{ item[key] }}
-                </div>
-              </div>
+                :key="data._id"
+                :schema="schema"
+                :data="item"
+                :selectedArr="selectedArr"
+                :width="width"
+                @handleSelect="handleSelect"
+              />
               <div
                 class="flex space-x-3 px-2 py-2 items-center text-[15px] min-w-max"
                 v-if="data.length === 0"
@@ -150,7 +106,6 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
-const route = useRoute();
 const modalValue = ref(true);
 const data = ref<any>({});
 const schema = ref<any>({});
@@ -162,6 +117,10 @@ const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const selectedArr = ref<any[] | any>([]);
+const width = ref<{
+  [key: string]: number;
+}>({});
+const { $getMaxLength, $widthCalc } = useNuxtApp();
 
 function handleSelect(item: any) {
   if (props.refData.type === "array") {
@@ -259,4 +218,7 @@ function confirm() {
 }
 
 await fetchAll();
+width.value = $widthCalc(
+  $getMaxLength({ schema: schema.value, data: data.value })
+);
 </script>

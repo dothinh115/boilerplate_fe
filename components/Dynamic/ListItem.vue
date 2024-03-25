@@ -1,6 +1,6 @@
 <template>
   <NuxtLink
-    class="flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
+    class="flex items-center space-x-4 duration-100 last:rounded-b-[10px] w-max min-w-full"
     :class="{
       'odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 p-2 ': props.item,
     }"
@@ -26,20 +26,8 @@
     "
   >
     <div
-      :class="{
-        'w-[50px]': field === '_id',
-        'w-[300px]':
-          (schema[field].input === 'text' ||
-            schema[field].input === 'richText') &&
-          field !== '_id',
-
-        'w-[200px]':
-          (schema[field].input === 'array' ||
-            schema[field].input === 'password' ||
-            schema[field].input === 'email') &&
-          field !== '_id',
-        'w-[100px]':
-          schema[field].input === 'number' || schema[field].input === 'boolean',
+      :style="{
+        width: width[field] + 'px',
       }"
       class="flex space-x-2 group cursor-pointer items-center"
       v-for="(field, index) in Object.keys(props.schema)"
@@ -48,15 +36,15 @@
       <p class="truncate" v-if="item">
         <span
           :class="{
-            'p-1 rounded-[10px]': schema[field].input === 'boolean',
+            'p-1 rounded-[10px]': $typeCheck(item[field]) === 'boolean',
             'bg-red-400 text-gray-50':
-              schema[field].input === 'boolean' && item[field] === false,
+              $typeCheck(item[field]) === 'boolean' && item[field] === false,
             'bg-green-900 text-gray-50':
-              schema[field].input === 'boolean' && item[field] === true,
+              $typeCheck(item[field]) === 'boolean' && item[field] === true,
           }"
         >
-          {{ field === "password" ? "********" : item[field] }}</span
-        >
+          {{ field === "password" ? "********" : item[field] }}
+        </span>
       </p>
       <div v-else @click="handleSort(field)" class="space-x-2 min-w-full">
         <span> {{ field }} </span>
@@ -76,11 +64,21 @@ type TProps = {
   schema: any;
   sortBy: string;
   item?: any;
+  width: {
+    [key: string]: number;
+  };
 };
 const route = useRoute();
 const props = defineProps<TProps>();
 const emits = defineEmits(["handleSort"]);
+const width = ref<{
+  [key: string]: number;
+}>({});
+const { $widthCalc } = useNuxtApp();
+
 function handleSort(field: string) {
   emits("handleSort", field);
 }
+
+width.value = $widthCalc(props.width);
 </script>

@@ -10,6 +10,7 @@
           :schema="schema"
           :sortBy="sortBy"
           @handleSort="handleSort"
+          :width="$getMaxLength({ schema, data })"
         />
       </div>
       <DynamicListItem
@@ -18,6 +19,7 @@
         :schema="schema"
         :sortBy="sortBy"
         :item="item"
+        :width="$getMaxLength({ schema, data })"
       />
 
       <div
@@ -140,6 +142,7 @@ const { loading, screenWidth } = useGetState();
 const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
 const sortBy = ref<string>((route.query.sort as string) || "-_id");
+const { $typeCheck } = useNuxtApp();
 
 async function getList() {
   const params = {
