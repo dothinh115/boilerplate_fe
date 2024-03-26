@@ -28,48 +28,12 @@
         </select>
       </div>
       <div
-        v-else-if="$typeCheck(data[field]) === 'Array'"
-        class="flex flex-wrap h-fit"
-      >
-        <div
-          v-for="(item, index) in data[field]"
-          :key="index"
-          class="flex items-center justify-center mr-2 mb-2"
-        >
-          <div
-            class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
-          >
-            <p class="truncate">{{ item }}</p>
-          </div>
-          <button
-            class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px]"
-            @click="handleRemoveFromArray(field, item)"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <button
-          class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px]"
-          v-if="schema[field].ref"
-          @click.stop="
-            schema[field].ref &&
-              handleRef(
-                schema[field].ref,
-                schema[field].type,
-                data[field],
-                field
-              )
-          "
-        >
-          <i class="fa-solid fa-up-right-from-square"></i>
-        </button>
-      </div>
-      <div
         class="flex items-center space-x-2"
         v-else-if="
           $typeCheck(data[field]) === 'string' ||
           $typeCheck(data[field]) === 'number' ||
-          $typeCheck(data[field]) === null
+          $typeCheck(data[field]) === null ||
+          $typeCheck(data[field]) === 'Array'
         "
       >
         <input
@@ -101,22 +65,48 @@
         <div
           :key="index"
           class="flex items-center justify-center"
-          v-else-if="schema[field].ref && data[field]"
+          v-else-if="
+            (schema[field].ref && data[field]) ||
+            $typeCheck(data[field]) === 'Array'
+          "
         >
           <div
-            class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
+            v-if="$typeCheck(data[field]) === 'Array'"
+            v-for="(item, index) in data[field]"
+            :key="index"
+            class="flex items-center justify-center mr-2 mb-2"
           >
-            <p class="truncate">{{ data[field] }}</p>
+            <div
+              class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
+            >
+              <p class="truncate">{{ item }}</p>
+            </div>
+            <button
+              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px]"
+              @click="handleRemoveFromArray(field, item)"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
-          <button
-            class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px]"
-            @click="handleRemoveFromField(field)"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+          <div v-else class="flex items-center">
+            <div
+              class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
+            >
+              <p class="truncate">{{ data[field] }}</p>
+            </div>
+            <button
+              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px]"
+              @click="handleRemoveFromField(field)"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
         </div>
         <button
           class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px]"
+          :class="{
+            'mb-2': $typeCheck(data[field]) === 'Array',
+          }"
           v-if="schema[field].ref"
           @click.stop="
             schema[field].ref &&
