@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <Modal v-model="showModal" @update:model-value="handleUpdateModel">
+    <Modal v-model="showModal" @update:model-value="handleClose">
       <div
         class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-[95%] rounded-[10px] h-full flex items-center"
       >
@@ -12,26 +12,7 @@
           >
             <i
               class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
-              @click="
-                !isFromInside
-                  ? router.replace({
-                      name: 'route-pre-post',
-                      params: {
-                        ...(route.params.post
-                          ? {
-                              pre: route.params.pre,
-                              post: route.params.post,
-                            }
-                          : {
-                              pre: route.params.pre,
-                            }),
-                      },
-                      query: {
-                        ...route.query,
-                      },
-                    })
-                  : router.back()
-              "
+              @click="handleClose"
             ></i>
 
             <div class="flex items-center space-x-2">
@@ -133,8 +114,7 @@ function errorCheck() {
   }
 }
 
-async function handleUpdateModel() {
-  console.log("object");
+async function handleClose() {
   if (isFromInside.value) {
     router.back();
   } else {

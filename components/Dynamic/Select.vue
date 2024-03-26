@@ -2,28 +2,28 @@
   <Teleport to="body">
     <Modal v-model="modalValue">
       <div
-        class="flex flex-col justify-between h-dvh bg-gray-50 lg:w-[40%] md:w-[60%] w-[90%] fixed right-0 top-0 max-h-dvh"
+        class="flex flex-col justify-between h-dvh bg-gray-50 lg:w-[40%] md:w-[60%] w-[calc(100%-61px)] max-h-dvh ml-auto relative"
       >
         <div
-          class="flex items-center space-x-3 py-2 pl-5 text-[25px] bg-indigo-600"
+          class="absolute -translate-x-full top-0 p-2 flex flex-col space-y-4"
         >
           <button
-            class="h-[35px] aspect-1 rounded-full text-red-600 flex items-center justify-center bg-gray-50"
-            @click="cancel"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <button
-            class="p-2 rounded-full text-teal-600 h-[35px] aspect-1 flex items-center justify-center bg-gray-50"
+            class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px]"
             @click="confirm"
           >
             <i class="fa-solid fa-check"></i>
+          </button>
+          <button
+            class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px]"
+            @click="cancel"
+          >
+            <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
         <div class="max-h-dvh overflow-auto h-full hidden-scrollbar">
           <div class="min-w-full !mt-0">
             <div
-              class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-400 text-gray-50 items-center w-max min-w-full"
+              class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-600 text-gray-50 items-center w-max min-w-full"
             >
               <div class="min-w-[50px] h-[10px]"></div>
               <DynamicSelectItem :schema="schema" :width="width" />
@@ -192,9 +192,9 @@ async function getSchema() {
 }
 
 async function fetchAll() {
+  loading.value = true;
   await getSchema();
   await getData();
-  loading.value = true;
   loading.value = false;
   usePaginate(
     {
