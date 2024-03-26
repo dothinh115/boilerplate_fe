@@ -159,7 +159,6 @@ async function getList() {
     (result.meta.total_count || result.meta.filter_count) / perPage
   );
   data.value = result.data;
-  return result;
 }
 
 async function getSchema() {

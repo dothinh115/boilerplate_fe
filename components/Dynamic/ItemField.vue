@@ -28,7 +28,7 @@
         </select>
       </div>
       <div
-        v-else-if="$typeCheck(data[field]) === 'array'"
+        v-else-if="$typeCheck(data[field]) === 'Array'"
         class="flex flex-wrap h-fit"
       >
         <div

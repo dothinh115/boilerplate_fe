@@ -26,6 +26,7 @@ export default defineNuxtConfig({
       title: "Control Panel",
     },
   },
+
   //loại bỏ tag name để sử dụng component
   // vue: {
   //   compilerOptions: {

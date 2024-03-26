@@ -4,23 +4,7 @@ export default defineNuxtPlugin(() => {
     provide: {
       typeCheck: (value: any) => {
         if (value === null || value === undefined) return null;
-        if (Array.isArray(value)) return "array";
-        if (typeof value === "string") {
-          if (value.length >= 50) {
-            let isOpentag = false;
-            const parser = new htmlparser2.Parser({
-              onopentag() {
-                isOpentag = true;
-              },
-              onclosetag() {
-                if (isOpentag) parser.end();
-              },
-            });
-            parser.write("<bar>");
-            if (isOpentag) return "richText";
-            else return "string";
-          } else return "string";
-        }
+        if (Array.isArray(value)) return "Array";
         return typeof value;
       },
     },

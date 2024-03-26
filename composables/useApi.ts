@@ -38,19 +38,28 @@ export default async function useApi(request: string, options?: any) {
       }),
     }).catch((error: any) => {
       if (loading.value) loading.value = false;
-      if (error.data?.statusCode === 403) {
-        const newToast: TToastData = {
-          message: "Bạn không có quyền này!",
-          type: "error",
-        };
-        toastData.value.push(newToast);
-      } else {
-        const newToast: TToastData = {
-          message: error.data.message,
-          type: "error",
-        };
-        toastData.value.push(newToast);
-      }
+      // if (error.data?.statusCode === 403) {
+      //   const newToast: TToastData = {
+      //     message: "Bạn không có quyền này!",
+      //     type: "error",
+      //   };
+      //   toastData.value.push(newToast);
+      // } else {
+      //   const newToast: TToastData = {
+      //     message: error.data.message,
+      //     type: "error",
+      //   };
+      //   toastData.value.push(newToast);
+      // }
+      const route = useRoute();
+      throw showError({
+        statusCode: error.data?.statusCode || 500,
+        message:
+          error.data?.statusCode === 403
+            ? "Bạn không có quyền này!"
+            : error.data?.message,
+        data: route,
+      });
     });
   };
 
