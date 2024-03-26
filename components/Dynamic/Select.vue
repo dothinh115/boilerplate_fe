@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <Modal v-model="modalValue">
+    <Modal v-model="modelValue">
       <div
         class="flex flex-col justify-between h-dvh bg-gray-50 lg:w-[40%] md:w-[60%] w-[calc(100%-61px)] max-h-dvh ml-auto relative"
       >
@@ -106,7 +106,7 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
-const modalValue = ref(true);
+const modelValue = ref(true);
 const data = ref<any>({});
 const schema = ref<any>({});
 const api = `/api/${props.refData.ref}`;
@@ -149,7 +149,7 @@ if (props.refData.type === "Array") {
 }
 
 watch(
-  () => modalValue.value,
+  () => modelValue.value,
   (newValue) => {
     if (!newValue) emits("close");
   }

@@ -46,10 +46,10 @@
     @update:model-value="deleteConfirmModal = false"
   />
   <DynamicSelect
-    :refData="refData"
-    v-if="refData"
+    :refData="refData!"
     @close="refData = undefined"
     @confirm="handleSelection"
+    v-if="refData"
   />
 </template>
 <script setup lang="ts">
