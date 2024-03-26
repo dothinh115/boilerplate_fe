@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <div
-      class="space-y-8 lg:w-[5 0%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full flex items-center"
+      class="space-y-8 lg:w-[5 0%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full"
     >
       <div
         class="rounded-[10px] max-h-full overflow-y-scroll hidden-scrollbar relative w-full"
