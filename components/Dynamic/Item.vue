@@ -40,17 +40,26 @@
       </div>
     </Modal>
   </Teleport>
-  <DeleteConfirm
-    :handle="handleDelete"
-    v-model="deleteConfirmModal"
-    @update:model-value="deleteConfirmModal = false"
-  />
-  <DynamicSelect
-    :refData="refData!"
-    @close="refData = undefined"
-    @confirm="handleSelection"
-    v-if="refData"
-  />
+
+  <Teleport to="body">
+    <Modal v-model="deleteConfirmModal">
+      <DeleteConfirm
+        :handle="handleDelete"
+        @confirm="deleteConfirmModal = false"
+      />
+    </Modal>
+  </Teleport>
+
+  <Teleport to="body">
+    <Modal v-model="selectModal">
+      <DynamicSelect
+        :refData="refData"
+        @close="selectModal = false"
+        @confirm="handleSelection"
+        v-if="refData"
+      />
+    </Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 type TProps = {
@@ -69,6 +78,7 @@ const error = ref<{
 }>({});
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
+const selectModal = ref(false);
 const { toastData } = useGetState();
 const isFromInside = useState("isFromInside");
 const refData = ref<{
@@ -185,6 +195,7 @@ function handleRef(object: {
   defaultValue: string | number | string[] | number[];
   key: string;
 }) {
+  selectModal.value = true;
   let { ref, type, defaultValue, key } = object;
   ref = ref.toLowerCase();
   refData.value = {

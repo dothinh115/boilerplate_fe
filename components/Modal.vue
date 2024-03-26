@@ -2,10 +2,10 @@
   <Transition name="fade">
     <div
       class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70"
-      v-if="props.modelValue"
+      v-if="modelValue"
       @click.self="close"
     >
-      <div class="absolute top-[2%] left-[2%] z-[1000]" v-if="props.closeBtn">
+      <div class="absolute top-[2%] left-[2%] z-[1000]" v-if="closeBtn">
         <i
           class="fa-regular fa-circle-xmark text-[40px] text-gray-100 cursor-pointer"
           @click="close"
