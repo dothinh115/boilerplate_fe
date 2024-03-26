@@ -51,7 +51,7 @@
         <button
           class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px]"
           v-if="schema[field].ref"
-          @click="
+          @click.stop="
             schema[field].ref &&
               handleRef(
                 schema[field].ref,
@@ -118,7 +118,7 @@
         <button
           class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px]"
           v-if="schema[field].ref"
-          @click="
+          @click.stop="
             schema[field].ref &&
               handleRef(
                 schema[field].ref,

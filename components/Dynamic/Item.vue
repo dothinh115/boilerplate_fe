@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
-    <Modal v-model="showModal" @update:model-value="showModal = false">
+    <Modal v-model="showModal" @update:model-value="handleUpdateModel">
       <div
-        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full flex items-center"
+        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-[95%] rounded-[10px] h-full flex items-center"
       >
         <div
           class="rounded-[10px] max-h-full overflow-y-scroll hidden-scrollbar relative w-full"
@@ -130,6 +130,33 @@ function errorCheck() {
         error.value[key] = "Không được để trống!";
       } else error.value[key] = "";
     }
+  }
+}
+
+async function handleUpdateModel() {
+  console.log("object");
+  if (isFromInside.value) {
+    router.back();
+  } else {
+    await navigateTo(
+      {
+        name: "route-pre-post",
+        params: {
+          ...(route.params.post
+            ? {
+                pre: route.params.pre,
+                post: route.params.post,
+              }
+            : {
+                pre: route.params.pre,
+              }),
+        },
+        query: {
+          ...route.query,
+        },
+      },
+      { replace: true }
+    );
   }
 }
 

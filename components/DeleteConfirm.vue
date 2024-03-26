@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <Modal v-model="props.modelValue">
+      <Modal v-model="props.modelValue" @update:model-value="cancel">
         <div class="bg-gray-100 rounded-[5px] w-fit mx-auto">
           <div class="border-b border-gray-500 p-2 text-center space-y-4">
             <i

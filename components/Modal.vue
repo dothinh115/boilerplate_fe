@@ -10,9 +10,7 @@
         @click="close"
       ></i>
     </div>
-    <div class="w-full max-h-[95%] h-[95%] flex items-center">
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>
 <script setup lang="ts">
@@ -22,15 +20,24 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["update:modelValue"]);
+
 const close = () => {
   emits("update:modelValue", false);
 };
 
 onMounted(() => {
   document.body.classList.add("body-overflow-hidden");
+  window.addEventListener("keyup", handleEscapePress);
 });
 
 onBeforeUnmount(() => {
   document.body.classList.remove("body-overflow-hidden");
+  window.removeEventListener("keyup", handleEscapePress);
 });
+
+function handleEscapePress(event: KeyboardEvent) {
+  if (event.key === "Escape") {
+    close();
+  }
+}
 </script>
