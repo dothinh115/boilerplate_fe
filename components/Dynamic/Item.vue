@@ -13,22 +13,24 @@
             <i
               class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
               @click="
-                router.replace({
-                  name: 'route-pre-post',
-                  params: {
-                    ...(route.params.post
-                      ? {
-                          pre: route.params.pre,
-                          post: route.params.post,
-                        }
-                      : {
-                          pre: route.params.pre,
-                        }),
-                  },
-                  query: {
-                    ...route.query,
-                  },
-                })
+                !isFromInside
+                  ? router.replace({
+                      name: 'route-pre-post',
+                      params: {
+                        ...(route.params.post
+                          ? {
+                              pre: route.params.pre,
+                              post: route.params.post,
+                            }
+                          : {
+                              pre: route.params.pre,
+                            }),
+                      },
+                      query: {
+                        ...route.query,
+                      },
+                    })
+                  : router.back()
               "
             ></i>
 
@@ -87,6 +89,7 @@ const error = ref<{
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const { toastData } = useGetState();
+const isFromInside = useState("isFromInside");
 const refData = ref<{
   ref: string;
   type: "String" | "Number" | "Array" | undefined;

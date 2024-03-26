@@ -37,4 +37,12 @@ async function fetchData() {
 }
 
 await fetchData();
+definePageMeta({
+  middleware: [
+    (to, from) => {
+      const isFromInside = useState("isFromInside", () => false);
+      if (to.name !== from.name) isFromInside.value = true;
+    },
+  ],
+});
 </script>

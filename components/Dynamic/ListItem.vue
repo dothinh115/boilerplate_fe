@@ -2,7 +2,7 @@
   <NuxtLink
     class="flex items-center space-x-4 duration-100 last:rounded-b-[10px] w-max min-w-full"
     :class="{
-      'odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 p-2 ': props.item,
+      'odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 p-2': props.item,
     }"
     :to="
       props.item
