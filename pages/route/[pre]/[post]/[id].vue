@@ -31,8 +31,8 @@ async function getData() {
 
 async function fetchData() {
   loading.value = true;
-  const promises = [getSchema(), getData()];
-  await Promise.all(promises);
+  await getSchema();
+  await getData();
   loading.value = false;
 }
 

@@ -232,7 +232,8 @@ watch(
 
 async function fetchAll() {
   loading.value = true;
-  await Promise.all([getSchema(), getList()]);
+  await getSchema();
+  await getList();
   loading.value = false;
   usePaginate(
     {

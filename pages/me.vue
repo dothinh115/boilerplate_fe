@@ -184,9 +184,8 @@ async function getSchema() {
   schema.value = result.data;
 }
 async function handleFetch() {
-  const promises = [getSchema()];
   loading.value = true;
-  await Promise.all(promises);
+  await getSchema();
   loading.value = false;
 }
 

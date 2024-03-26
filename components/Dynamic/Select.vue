@@ -192,9 +192,9 @@ async function getSchema() {
 }
 
 async function fetchAll() {
-  const promises = [getSchema(), getData()];
+  await getSchema();
+  await getData();
   loading.value = true;
-  await Promise.all(promises);
   loading.value = false;
   usePaginate(
     {
