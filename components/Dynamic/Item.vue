@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="handleClose">
       <div
-        class="space-y-8 lg:w-[50%] md:w-[60%] w-[95%] mx-auto max-h-[95%] rounded-[10px] h-full flex items-center"
+        class="space-y-8 xl:w-[50%] lg:w-[70%] w-[95%] mx-auto max-h-[95%] rounded-[10px] h-full flex items-center"
       >
         <div
           class="rounded-[10px] max-h-full overflow-y-scroll hidden-scrollbar relative w-full"
@@ -11,18 +11,18 @@
             class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
           >
             <i
-              class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600"
+              class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 hover:bg-indigo-900 hover:text-white duration-200"
               @click="handleClose"
             ></i>
 
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2 h-full">
               <i
-                class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600"
+                class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600 hover:bg-red-600 duration-200 h-[36px] aspect-1 flex justify-center items-center hover:text-white"
                 @click="deleteConfirmModal = true"
                 v-if="data._id"
               ></i>
               <i
-                class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600"
+                class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center hover:text-white"
                 @click="handleConfirm"
               ></i>
             </div>
