@@ -82,7 +82,7 @@
               <p class="truncate">{{ item }}</p>
             </div>
             <button
-              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] hover:bg-red-600 hover:text-white duration-200"
+              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
               @click="handleRemoveFromArray(field, item)"
             >
               <i class="fa-solid fa-xmark"></i>
@@ -95,7 +95,7 @@
               <p class="truncate">{{ data[field] }}</p>
             </div>
             <button
-              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] hover:bg-red-600 hover:text-white duration-200"
+              class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
               @click="handleRemoveFromField(field)"
             >
               <i class="fa-solid fa-xmark"></i>
@@ -103,7 +103,7 @@
           </div>
         </div>
         <button
-          class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] hover:bg-teal-500 duration-200"
+          class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] lg:hover:bg-teal-500 duration-200"
           :class="{
             'mb-2': $typeCheck(data[field]) === 'Array',
           }"

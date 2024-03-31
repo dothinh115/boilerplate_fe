@@ -4,13 +4,13 @@
   >
     <div class="absolute -translate-x-full top-0 p-2 flex flex-col space-y-4">
       <button
-        class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] hover:bg-teal-600 hover:text-white duration-200"
+        class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] lg:hover:bg-teal-600 lg:hover:text-white duration-200"
         @click="confirm"
       >
         <i class="fa-solid fa-check"></i>
       </button>
       <button
-        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] hover:bg-gray-50 hover:text-red-600 duration-200"
+        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-gray-50 lg:hover:text-red-600 duration-200"
         @click="cancel"
       >
         <i class="fa-solid fa-xmark"></i>
@@ -25,7 +25,7 @@
           <DynamicSelectItem :schema="schema" :width="width" />
         </div>
         <div class="h-full">
-          <DynamicSelectItem
+          <DynamicSelectListItem
             v-for="item in data"
             :key="data._id"
             :schema="schema"

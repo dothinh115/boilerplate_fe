@@ -2,7 +2,7 @@
   <NuxtLink
     class="flex items-center space-x-4 duration-100 last:rounded-b-[10px] w-max min-w-full"
     :class="{
-      'odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 p-2': props.item,
+      'odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 p-2': props.item,
     }"
     :to="
       props.item
@@ -61,7 +61,7 @@
       >
         <span> {{ field }} </span>
         <i
-          class="fa-solid fa-caret-down hidden items-center group-hover:inline-block"
+          class="fa-solid fa-caret-down hidden items-center group-lg:hover:inline-block"
           :class="{
               '!inline-block': sortBy === field || sortBy.slice(1) === field,
               'rotate-180': (sortBy as string).startsWith('-') && sortBy.slice(1) === field

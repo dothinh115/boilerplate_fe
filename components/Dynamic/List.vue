@@ -23,7 +23,7 @@
       />
 
       <div
-        class="p-2 odd:bg-gray-50 even:bg-gray-200 hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
+        class="p-2 odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
         v-if="data.length === 0"
       >
         Chưa có record nào.
