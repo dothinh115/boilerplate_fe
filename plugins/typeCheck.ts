@@ -1,4 +1,3 @@
-import * as htmlparser2 from "htmlparser2";
 export default defineNuxtPlugin(() => {
   return {
     provide: {
