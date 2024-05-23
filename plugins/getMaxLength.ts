@@ -20,12 +20,10 @@ export default defineNuxtPlugin(() => {
                 currentLength = String(item[field]).length;
               }
             }
-            if (!currentLength) currentLength = 0;
             if (currentLength > fieldObj[field])
               fieldObj[field] = currentLength;
           }
         }
-
         return fieldObj;
       },
     },

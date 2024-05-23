@@ -42,10 +42,12 @@
           :disabled="
             field === '_id'
               ? true
-              : user.rootUser
-              ? false
+              : schema[field] === 'slug'
+              ? true
               : schema[field].disabled || schema[field].ref
               ? true
+              : user.rootUser
+              ? false
               : false
           "
           :value="data ? data[field] : ''"
