@@ -108,6 +108,7 @@ const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
+
 const selectedArr = ref<any[] | any>([]);
 const width = ref<{
   [key: string]: number;
