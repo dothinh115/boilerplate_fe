@@ -3,7 +3,7 @@
     <div
       class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70"
       v-if="modelValue"
-      @click.self="close"
+      @mousedown.self="close"
     >
       <div class="absolute top-[2%] left-[2%] z-[1000]" v-if="closeBtn">
         <i

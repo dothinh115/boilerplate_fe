@@ -9,7 +9,7 @@
         <div
           class="flex items-center justify-center space-x-2 title sticky top-0 z-[1000] !p-2"
         >
-          <div>{{ error.statusCode }}</div>
+          <div>{{ error?.statusCode }}</div>
         </div>
         <div class="bg-gray-50 p-4">Không tìm thấy trang này</div>
       </div>

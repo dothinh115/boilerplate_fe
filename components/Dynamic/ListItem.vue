@@ -7,17 +7,9 @@
     :to="
       props.item
         ? {
-            name: 'route-pre-post-id',
+            name: 'route-post-id',
             params: {
-              ...(route.params.post
-                ? {
-                    pre: route.params.pre,
-                    post: route.params.post,
-                  }
-                : {
-                    pre: 'api',
-                    post: route.params.pre,
-                  }),
+              post: route.params.post,
               id: props.item._id,
             },
             query: route.query,
@@ -47,6 +39,8 @@
             field === "password"
               ? "********"
               : item[field] === 0
+              ? item[field]
+              : item[field] === false
               ? item[field]
               : item[field]
               ? item[field]

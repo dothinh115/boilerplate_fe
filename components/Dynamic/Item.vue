@@ -19,11 +19,15 @@
               <i
                 class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600 lg:hover:bg-red-600 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
                 @click="deleteConfirmModal = true"
-                v-if="data._id"
+                v-if="data._id && $roleCheck('delete', route.params.post as string)"
               ></i>
               <i
                 class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
                 @click="handleConfirm"
+                v-if="
+                  (data._id && $roleCheck('patch', route.params.post as string)) ||
+                  (!data._id && $roleCheck('post', route.params.post as string))
+                "
               ></i>
             </div>
           </div>
@@ -83,10 +87,11 @@ const data = ref<any>(props.info.data);
 const error = ref<{
   [key: string]: string;
 }>({});
+const { user } = useAuth();
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const selectModal = ref(false);
-const { toastData } = useGetState();
+const { toastData, permission } = useGetState();
 const isFromInside = useState("isFromInside");
 const refData = ref<{
   ref: string;
@@ -137,16 +142,9 @@ async function handleClose() {
   } else {
     await navigateTo(
       {
-        name: "route-pre-post",
+        name: "route-post",
         params: {
-          ...(route.params.post
-            ? {
-                pre: route.params.pre,
-                post: route.params.post,
-              }
-            : {
-                pre: route.params.pre,
-              }),
+          post: route.params.post,
         },
         query: {
           ...route.query,
@@ -161,9 +159,7 @@ async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
   const result = await useApi(
-    `/${route.params.pre}/${route.params.post}${
-      data.value._id ? "/" + data.value._id : ""
-    }`,
+    `/${route.params.post}${data.value._id ? "/" + data.value._id : ""}`,
     {
       method: data.value._id ? "PATCH" : "POST",
       body: data.value,
@@ -180,12 +176,9 @@ async function handleConfirm() {
 
 async function handleDelete() {
   if (!data.value) return;
-  const result = await useApi(
-    `/${route.params.pre}/${route.params.post}/${data.value._id}`,
-    {
-      method: "DELETE",
-    }
-  );
+  const result = await useApi(`/${route.params.post}/${data.value._id}`, {
+    method: "DELETE",
+  });
 
   if (result) {
     toastData.value.push({

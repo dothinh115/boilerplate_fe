@@ -9,6 +9,6 @@
 </template>
 <script setup lang="ts">
 const route = useRoute();
-const dataApi = `/${route.params.pre}/${route.params.post}`;
-const schemaApi = `/schema/${route.params.post}`;
+const dataApi = `/${route.params.pre}`;
+const schemaApi = `/schema/${route.params.pre}`;
 </script>

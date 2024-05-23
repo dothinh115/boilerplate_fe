@@ -38,12 +38,14 @@ export default async function useApi(request: string, options?: any) {
       }),
     }).catch((error: any) => {
       if (loading.value) loading.value = false;
+      const router = useRouter();
       if (error.data?.statusCode === 403) {
         const newToast: TToastData = {
           message: "Bạn không có quyền này!",
           type: "error",
         };
         toastData.value.push(newToast);
+        router.push({ path: "/", replace: true });
       } else if (error.data?.statusCode === 404) {
         throw showError({
           statusCode: error.data?.statusCode,

@@ -22,7 +22,7 @@
           class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-600 text-gray-50 items-center w-max min-w-full"
         >
           <div class="min-w-[50px] h-[10px]"></div>
-          <DynamicSelectItem :schema="schema" :width="width" />
+          <DynamicSelectListItem :schema="schema" :width="width" />
         </div>
         <div class="h-full">
           <DynamicSelectListItem
@@ -101,7 +101,7 @@ const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
 const data = ref<any>({});
 const schema = ref<any>({});
-const api = `/api/${props.refData.ref}`;
+const api = `/${props.refData.ref}`;
 const schemaApi = `/schema/${props.refData.ref}`;
 const { loading, screenWidth } = useGetState();
 const currentPage = ref(1);

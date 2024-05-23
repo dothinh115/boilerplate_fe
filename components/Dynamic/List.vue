@@ -95,23 +95,16 @@
       <div class="flex space-x-2 items-center max-md:w-full">
         <NuxtLink
           :to="{
-            name: 'route-pre-post-new',
+            name: 'route-post-new',
             params: {
-              ...(route.params.post
-                ? {
-                    pre: route.params.pre,
-                    post: route.params.post,
-                  }
-                : {
-                    pre: 'api',
-                    post: route.params.pre,
-                  }),
+              post: route.params.post,
             },
             query: {
               ...route.query,
             },
           }"
           class="btn btn-green btn-icon"
+          v-if="$roleCheck('post', route.params.post as string)"
         >
           <i class="fa-solid fa-plus"></i><span>Thêm mới</span>
         </NuxtLink>

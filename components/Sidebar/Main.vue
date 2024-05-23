@@ -5,34 +5,35 @@
     <div class="uppercase text-center text-[20px]">admin dashboard</div>
     <div class="space-y-8 w-full">
       <div class="space-y-4">
-        <div class="text-[14px]">Routings</div>
-        <div class="space-y-1 ml-2">
-          <div
-            v-for="route in routes"
-            :key="route._id"
-            @click="handleHideSidebar"
-          >
+        <template
+          v-if="
+            permission.filter((x) => x.roles.includes(user.role)).length > 0 ||
+            user.rootUser
+          "
+        >
+          <div class="text-[14px]">Routings</div>
+          <div class="space-y-1 ml-2">
             <template
-              v-if="
-                route.permission
-                  .filter((x) => x.method === 'get')
-                  .find((x) => x.roles.includes(user.role)) ||
-                route.permission.find((x) => x.public === true) ||
-                user.rootUser
-              "
+              v-for="route in permission.filter(
+                (x) => x.method === 'get' && !x.path.includes(':')
+              )"
+              :key="route._id"
+              @click="handleHideSidebar"
             >
-              <NuxtLink
-                :to="'/route/' + route.path"
-                v-if="!excludeRoute.includes(route.path)"
-                class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
-                :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
-              >
-                <i class="fa-solid fa-link fa-lg"></i>
-                <span>{{ route.path }}</span>
-              </NuxtLink>
+              <template v-if="user.rootUser || route.roles.includes(user.role)">
+                <NuxtLink
+                  :to="'/route/' + route.path"
+                  class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
+                  :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
+                >
+                  <i class="fa-solid fa-link fa-lg"></i>
+                  <span>{{ route.path }}</span>
+                </NuxtLink>
+              </template>
             </template>
           </div>
-        </div>
+        </template>
+
         <div class="text-[14px]">Settings</div>
         <div class="space-y-3 ml-2">
           <NuxtLink
@@ -68,31 +69,18 @@
   </div>
 </template>
 <script setup lang="ts">
-const excludeRoute = ["assets", "mail", "setting", "upload", "api/route"];
-const routes = ref<
-  {
-    _id: string;
-    path: string;
-    permission: {
-      _id: string;
-      path: string;
-      method: string;
-      roles: string[];
-      public: boolean;
-    }[];
-  }[]
->([]);
+const route = useRoute();
+const { hideSidebar, permission } = useGetState();
 const { user } = useAuth();
 const { screenWidth } = useGetState();
-const hideSidebar = useState<boolean>("hideSidebar");
 const handleFetchRoute = async () => {
-  const fieldArr = ["path", "permission.*"];
+  const fieldArr = ["path", "public", "roles", "method"];
   const params = {
     fields: fieldArr.join(","),
     limit: 0,
   };
-  const fetchRoute: any = await useApi("/api/route", { params });
-  routes.value = fetchRoute.data;
+  const fetchRoute: any = await useApi("/permission", { params });
+  permission.value = fetchRoute.data;
 };
 await handleFetchRoute();
 

@@ -15,17 +15,7 @@
       />
 
       <div v-else-if="$typeCheck(data[field]) === 'boolean'">
-        <select
-          v-model="data[field]"
-          class="input"
-          :class="{
-            'input-red': error[field],
-            'input-blue': !error[field],
-          }"
-        >
-          <option :value="true">True</option>
-          <option :value="false">False</option>
-        </select>
+        <Toggle v-model="data[field]" />
       </div>
       <div
         class="flex space-x-2"
@@ -78,12 +68,16 @@
           >
             <div
               class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
+              :class="{
+                'rounded-r-[5px]': !$roleCheck('patch', route.params.post as string),
+              }"
             >
               <p class="truncate">{{ item }}</p>
             </div>
             <button
               class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
               @click="handleRemoveFromArray(field, item)"
+              v-if="$roleCheck('patch', route.params.post as string)"
             >
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -91,12 +85,16 @@
           <div v-else class="flex items-center">
             <div
               class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
+              :class="{
+                'rounded-r-[5px]': !$roleCheck('patch', route.params.post as string),
+              }"
             >
               <p class="truncate">{{ data[field] }}</p>
             </div>
             <button
               class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
               @click="handleRemoveFromField(field)"
+              v-if="$roleCheck('patch', route.params.post as string)"
             >
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -107,7 +105,7 @@
           :class="{
             'mb-2': $typeCheck(data[field]) === 'Array',
           }"
-          v-if="schema[field].ref"
+          v-if="schema[field].ref && $roleCheck('patch', route.params.post as string)"
           @click.stop="
             schema[field].ref &&
               handleRef(
@@ -138,6 +136,7 @@ type TProps = {
 const { user } = useAuth();
 const props = defineProps<TProps>();
 const emits = defineEmits(["updateData", "handleRef"]);
+const route = useRoute();
 
 function getEditorInit(item: string) {
   return {
