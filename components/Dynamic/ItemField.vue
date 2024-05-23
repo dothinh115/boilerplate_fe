@@ -40,15 +40,9 @@
             'input-blue': !error[field],
           }"
           :disabled="
-            field === '_id'
-              ? true
-              : schema[field] === 'slug'
-              ? true
-              : schema[field].disabled || schema[field].ref
-              ? true
-              : user.rootUser
-              ? false
-              : false
+            (field === '_id' && true) ||
+            (user.rootUser && false) ||
+            (schema[field].disabled && true)
           "
           :value="data ? data[field] : ''"
           @input="updateData(field, $event.target as HTMLInputElement)"
