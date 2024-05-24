@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex-col max-h-full space-y-4">
     <div
-      class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
+      class="max-h-[85%] overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
     >
       <div
         class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0"
@@ -21,19 +21,17 @@
         :item="item"
         :width="width"
       />
-
-      <div
-        class="p-2 odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        v-if="data.length === 0"
-      >
-        {{
-          route.query.field && route.query.key && route.query.value
-            ? "Không tìm thấy kết quả nào."
-            : "Chưa có record nào."
-        }}
-      </div>
     </div>
-
+    <div
+      class="p-2 odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
+      v-if="data.length === 0"
+    >
+      {{
+        route.query.field && route.query.key && route.query.value
+          ? "Không tìm thấy kết quả nào."
+          : "Chưa có record nào."
+      }}
+    </div>
     <div
       class="mb-2 flex items-center"
       v-if="route.query.field && route.query.key && route.query.value"

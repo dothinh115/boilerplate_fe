@@ -23,9 +23,11 @@
       <div class="p-4 space-y-2 bg-gray-100 max-h-full">
         <div>Tìm kiếm theo:</div>
 
-        <div class="flex space-x-2 items-center">
-          <div>
-            <select v-model="field" class="input input-blue">
+        <div
+          class="flex md:space-x-2 max-md:space-y-2 items-center max-md:flex-wrap"
+        >
+          <div class="max-md:w-full">
+            <select v-model="field" class="input input-blue max-md:w-full">
               <option
                 v-for="(item, index) in Object.keys(localSchema)"
                 :key="index"
@@ -35,8 +37,8 @@
               </option>
             </select>
           </div>
-          <div>
-            <select v-model="searchKey" class="input input-blue">
+          <div class="max-md:w-full">
+            <select v-model="searchKey" class="input input-blue max-md:w-full">
               <option
                 v-for="([key, value], index) in Object.entries(compareKey)"
                 :key="index"
