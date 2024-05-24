@@ -177,7 +177,7 @@ async function getList() {
   const params = {
     limit: perPage,
     page: currentPage.value,
-    meta: "*",
+    meta: "total_count" + (field && key && value ? ",filter_count" : ""),
     sort: sortBy.value,
     ...(field &&
       key &&
@@ -195,7 +195,6 @@ async function getList() {
 }
 
 async function getSchema() {
-  console.log("object");
   if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
@@ -232,12 +231,15 @@ async function clearSearch() {
     },
     { replace: true }
   );
+  loading.value = true;
+  await getList();
+  loading.value = false;
 }
 
 watch(
   () => [route.query.field, route.query.key, route.query.value],
-  async () => {
-    await getList();
+  async ([field, key, value]) => {
+    if (field && key && value) await getList();
   }
 );
 
@@ -261,7 +263,6 @@ watch(
     if (!route.query.page) currentPage.value = 1;
     loading.value = true;
     await getList();
-
     loading.value = false;
   }
 );

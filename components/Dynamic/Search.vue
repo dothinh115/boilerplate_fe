@@ -16,7 +16,7 @@
         <div class="flex items-center space-x-2 h-full">
           <i
             class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
-            @click="findConfirm"
+            @click="searchConfirm"
           ></i>
         </div>
       </div>
@@ -52,6 +52,7 @@
               type="text"
               class="input input-blue w-full"
               placeholder="Tìm kiếm..."
+              @keyup.enter="searchConfirm"
             />
           </div>
         </div>
@@ -79,7 +80,7 @@ function handleClose() {
   emits("close");
 }
 
-async function findConfirm() {
+async function searchConfirm() {
   emits("searchConfirm", {
     field: field.value,
     searchKey: searchKey.value,
