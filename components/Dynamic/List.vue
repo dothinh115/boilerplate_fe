@@ -138,7 +138,7 @@
   </div>
   <Teleport to="body">
     <Modal v-model="searchModal">
-      <DynamicSearch
+      <Search
         :schema="schema"
         @close="searchModal = false"
         @searchConfirm="searchConfirm"
@@ -239,7 +239,11 @@ async function clearSearch() {
 watch(
   () => [route.query.field, route.query.key, route.query.value],
   async ([field, key, value]) => {
-    if (field && key && value) await getList();
+    if (field && key && value) {
+      loading.value = true;
+      await getList();
+      loading.value = false;
+    }
   }
 );
 
