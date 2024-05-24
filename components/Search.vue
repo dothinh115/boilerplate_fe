@@ -52,9 +52,13 @@
             <input
               v-model="searchValue"
               type="text"
-              class="input input-blue w-full"
+              class="input w-full"
               placeholder="Tìm kiếm..."
               @keyup.enter="searchConfirm"
+              :class="{
+                'input-red': invalid,
+                'input-blue': !invalid,
+              }"
             />
           </div>
         </div>
@@ -79,11 +83,23 @@ const emits = defineEmits(["close", "searchConfirm"]);
 const field = ref(route.query.field ? route.query.field : "_id");
 const searchKey = ref(route.query.key ? route.query.key : "$eq");
 const searchValue = ref(route.query.value ? route.query.value : "");
+const invalid = ref(false);
 function handleClose() {
   emits("close");
 }
 
+watch(
+  () => searchValue.value,
+  (newVal) => {
+    if (invalid.value) invalid.value = false;
+  }
+);
+
 async function searchConfirm() {
+  if (!searchValue.value) {
+    invalid.value = true;
+    return;
+  }
   emits("searchConfirm", {
     field: field.value,
     searchKey: searchKey.value,
