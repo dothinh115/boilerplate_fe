@@ -34,7 +34,6 @@
             </template>
           </div>
         </template>
-
         <div class="text-[14px]">Settings</div>
         <div class="space-y-3 ml-2">
           <NuxtLink
