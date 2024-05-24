@@ -182,9 +182,12 @@ async function fetchAll() {
   await getSchema();
   await getData();
   loading.value = false;
+}
+
+watchEffect(() => {
   usePaginate(
     {
-      totalPages: totalPages.value,
+      totalPages: totalPages.value || 0,
       currentPage: currentPage.value,
       range: screenWidth.value <= 768 ? 1 : 2,
     },
@@ -192,7 +195,7 @@ async function fetchAll() {
       pagination.value = paginate;
     }
   );
-}
+});
 
 function cancel() {
   emits("close");

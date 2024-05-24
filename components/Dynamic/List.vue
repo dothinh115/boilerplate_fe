@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full flex-col max-h-full space-y-4">
+  <div class="h-full flex-col max-h-full space-y-4">
     <div
       class="max-h-full overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
     >
@@ -26,9 +26,31 @@
         class="p-2 odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
         v-if="data.length === 0"
       >
-        Chưa có record nào.
+        {{
+          route.query.field && route.query.key && route.query.value
+            ? "Không tìm thấy kết quả nào."
+            : "Chưa có record nào."
+        }}
       </div>
     </div>
+
+    <div
+      class="mb-2 flex items-center"
+      v-if="route.query.field && route.query.key && route.query.value"
+    >
+      <div class="py-1 px-2 bg-indigo-100 w-fit rounded-l-[10px]">
+        Đang lọc theo trường {{ route.query.field }} với giá trị '{{
+          route.query.value
+        }}'
+      </div>
+      <button
+        class="py-1 px-2 bg-indigo-300 rounded-r-[10px] lg:cursor-pointer lg:hover:bg-red-600 lg:hover:text-white duration-200"
+        @click="clearSearch"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
     <div
       class="flex items-center justify-between w-full max-md:flex-wrap max-md:space-y-4"
     >
@@ -108,12 +130,20 @@
         >
           <i class="fa-solid fa-plus"></i><span>Thêm mới</span>
         </NuxtLink>
-        <button class="btn btn-blue btn-icon">
+        <button class="btn btn-blue btn-icon" @click="searchModal = true">
           <i class="fa-solid fa-magnifying-glass"></i><span>Tìm kiếm</span>
         </button>
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <Modal v-model="searchModal">
+      <DynamicSearch
+        :schema="schema"
+        @close="searchModal = false"
+        @searchConfirm="searchConfirm"
+    /></Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 type TProps = {
@@ -138,27 +168,91 @@ const sortBy = ref<string>((route.query.sort as string) || "-_id");
 const width = ref<{
   [key: string]: number;
 }>({});
+const searchModal = ref(false);
 const { $getMaxLength } = useNuxtApp();
 
 async function getList() {
+  const searchData = route.query;
+  const { field, key, value } = searchData;
   const params = {
     limit: perPage,
     page: currentPage.value,
     meta: "*",
     sort: sortBy.value,
+    ...(field &&
+      key &&
+      value && {
+        [`filter[${field}][${key}]`]: value,
+      }),
   };
   const result: any = await useApi(dataApi, { params });
   totalPages.value = Math.ceil(
-    (result.meta.total_count || result.meta.filter_count) / perPage
+    (field && key && value
+      ? result.meta.filter_count
+      : result.meta.total_count) / perPage
   );
   data.value = result.data;
 }
 
 async function getSchema() {
+  console.log("object");
   if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }
+
+async function searchConfirm(searchData: {
+  field: string;
+  searchKey: string;
+  searchValue: string;
+}) {
+  const { field, searchKey, searchValue } = searchData;
+  await navigateTo(
+    {
+      query: {
+        ...route.query,
+        field,
+        key: searchKey,
+        value: searchValue,
+      },
+    },
+    { replace: true }
+  );
+  searchModal.value = false;
+}
+
+async function clearSearch() {
+  await navigateTo(
+    {
+      query: {
+        field: undefined,
+        key: undefined,
+        value: undefined,
+      },
+    },
+    { replace: true }
+  );
+}
+
+watch(
+  () => [route.query.field, route.query.key, route.query.value],
+  async () => {
+    await getList();
+  }
+);
+
+watchEffect(() => {
+  usePaginate(
+    {
+      totalPages: totalPages.value || 0,
+      currentPage: currentPage.value,
+      range: screenWidth.value <= 768 ? 1 : 2,
+    },
+    (paginate: (string | number)[]) => {
+      pagination.value = paginate;
+    }
+  );
+});
 
 watch(
   () => route.query.page,
@@ -167,16 +261,7 @@ watch(
     if (!route.query.page) currentPage.value = 1;
     loading.value = true;
     await getList();
-    usePaginate(
-      {
-        totalPages: totalPages.value,
-        currentPage: currentPage.value,
-        range: screenWidth.value <= 768 ? 1 : 2,
-      },
-      (paginate: (string | number)[]) => {
-        pagination.value = paginate;
-      }
-    );
+
     loading.value = false;
   }
 );
@@ -228,16 +313,6 @@ async function fetchAll() {
   await getSchema();
   await getList();
   loading.value = false;
-  usePaginate(
-    {
-      totalPages: totalPages.value,
-      currentPage: currentPage.value,
-      range: screenWidth.value <= 768 ? 1 : 2,
-    },
-    (paginate: (string | number)[]) => {
-      pagination.value = paginate;
-    }
-  );
 }
 
 await fetchAll();
