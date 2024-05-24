@@ -25,6 +25,7 @@
                   :to="'/route/' + route.path"
                   class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
                   :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
+                  @click="handleHideSidebar"
                 >
                   <i class="fa-solid fa-link fa-lg"></i>
                   <span>{{ route.path }}</span>
@@ -69,7 +70,6 @@
   </div>
 </template>
 <script setup lang="ts">
-const route = useRoute();
 const { hideSidebar, permission } = useGetState();
 const { user } = useAuth();
 const { screenWidth } = useGetState();
