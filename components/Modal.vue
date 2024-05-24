@@ -26,7 +26,6 @@ const emits = defineEmits(["update:modelValue"]);
 const close = () => {
   emits("update:modelValue", false);
 };
-
 onMounted(() => {
   document.body.classList.add("body-overflow-hidden");
   window.addEventListener("keyup", handleEscapePress);
