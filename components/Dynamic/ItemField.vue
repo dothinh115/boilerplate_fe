@@ -41,8 +41,9 @@
           }"
           :disabled="
             (field === '_id' && true) ||
-            (user.rootUser && false) ||
-            (schema[field].disabled && true && data._id)
+            (schema[field].disabled && props.new && true) ||
+            (user.rootUser && !data._id && false) ||
+            (schema[field].disabled && data._id && true)
           "
           :value="data ? data[field] : ''"
           @input="updateData(field, $event.target as HTMLInputElement)"
@@ -128,6 +129,7 @@ type TProps = {
   schema: any;
   data: any;
   error: any;
+  new?: boolean;
 };
 const { user } = useAuth();
 const props = defineProps<TProps>();

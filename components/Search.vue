@@ -59,6 +59,7 @@
                 'input-red': invalid,
                 'input-blue': !invalid,
               }"
+              :disabled="!field || !searchKey"
             />
           </div>
         </div>

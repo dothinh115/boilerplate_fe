@@ -38,6 +38,7 @@
               :error="error"
               @updateData="updateData"
               @handleRef="handleRef"
+              :new="props.new"
             />
           </div>
         </div>
@@ -78,6 +79,7 @@ type TProps = {
     schema: any;
     data: any;
   };
+  new?: boolean;
 };
 const route = useRoute();
 const props = defineProps<TProps>();

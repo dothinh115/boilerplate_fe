@@ -6,6 +6,7 @@
           data,
           schema,
         }"
+        :new="true"
       />
     </Modal>
   </Teleport>
