@@ -5,7 +5,7 @@
         class="space-y-8 2xl:w-[40%] xl:w-[50%] lg:w-[70%] w-[95%] mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
       >
         <div
-          class="rounded-[10px] max-h-[95vh] overflow-y-scroll hidden-scrollbar relative w-full"
+          class="rounded-[10px] lg:max-h-[95vh] max-h-[80vh] overflow-y-scroll hidden-scrollbar relative w-full"
         >
           <div
             class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
