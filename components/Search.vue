@@ -71,10 +71,11 @@ type TProps = {
   schema: object;
 };
 const compareKey = {
-  bằng: "$eq",
-  "chứa (trong chuỗi)": "$regex",
-  "chứa (trong mảng)": "$in",
-  "không chứa (trong mảng)": "$nin",
+  "$eq (bằng)": "$eq",
+  "$regex (xuất hiện trong chuỗi)": "$regex",
+  "$in (xuất hiện 1 lần trong mảng)": "$in",
+  "$all (xuất hiện tất cả trong mảng)": "$all",
+  "$nin (không xuất hiện trong mảng)": "$nin",
 };
 const props = defineProps<TProps>();
 const localSchema = ref(props.schema);
