@@ -42,8 +42,8 @@
           :disabled="
             (field === '_id' && true) ||
             (schema[field].disabled && props.new && true) ||
-            (user.rootUser && !data._id && false) ||
-            (schema[field].disabled && data._id && true)
+            (user.rootUser && !props.new && false) ||
+            (schema[field].disabled && !props.new && true)
           "
           :value="data ? data[field] : ''"
           @input="updateData(field, $event.target as HTMLInputElement)"
