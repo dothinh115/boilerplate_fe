@@ -28,10 +28,10 @@
       <p class="truncate" v-if="item">
         <span
           :class="{
-            'p-1 rounded-[10px]': $typeCheck(item[field]) === 'boolean',
-            'bg-red-400 text-gray-50':
+            'font-bold': $typeCheck(item[field]) === 'boolean',
+            'text-red-600':
               $typeCheck(item[field]) === 'boolean' && item[field] === false,
-            'bg-green-900 text-gray-50':
+            'text-green-900 ':
               $typeCheck(item[field]) === 'boolean' && item[field] === true,
           }"
         >
