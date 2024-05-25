@@ -175,7 +175,7 @@ async function getList() {
   const params = {
     limit: perPage,
     page: currentPage.value,
-    meta: "total_count" + (field && key && value ? ",filter_count" : ""),
+    meta: "*",
     sort: sortBy.value,
     ...(field &&
       key &&
