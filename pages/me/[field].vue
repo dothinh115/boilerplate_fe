@@ -177,48 +177,57 @@ watch(
     changePasswordInfo.value.passwordConfirm,
   ],
   ([newPassword, newPasswordConfirm], [oldPassword, oldPasswordConfirm]) => {
-    checkPassword(
-      newPassword,
-      newPasswordConfirm,
-      oldPassword,
-      oldPasswordConfirm
-    );
+    if (newPassword !== oldPassword) {
+      if (newPasswordConfirm) {
+        if (newPasswordConfirm !== newPassword)
+          changePasswordError.value.passwordConfirm = "Password không khớp!";
+        else changePasswordError.value.passwordConfirm = "";
+      } else changePasswordError.value.password = "";
+      if (!newPassword)
+        changePasswordError.value.password = "Không được để trống";
+      else changePasswordError.value.password = "";
+    } else if (newPasswordConfirm !== oldPasswordConfirm) {
+      if (newPasswordConfirm !== newPassword && newPassword) {
+        changePasswordError.value.passwordConfirm = "Password không khớp!";
+      } else if (!newPasswordConfirm)
+        changePasswordError.value.passwordConfirm = "Không được để trống!";
+      else changePasswordError.value.passwordConfirm = "";
+    } else
+      changePasswordError.value = {
+        password: "",
+        passwordConfirm: "",
+      };
   }
 );
 
-function checkPassword(
-  newPassword: string,
-  newPasswordConfirm: string,
-  oldPassword: string,
-  oldPasswordConfirm: string
-) {
-  if (newPassword !== oldPassword) {
-    if (newPasswordConfirm) {
-      if (newPasswordConfirm !== newPassword)
-        changePasswordError.value.passwordConfirm = "Password không khớp!";
-      else changePasswordError.value.passwordConfirm = "";
-    } else changePasswordError.value.password = "";
-    if (!newPassword)
-      changePasswordError.value.password = "Không được để trống";
-    else changePasswordError.value.password = "";
-  } else if (newPasswordConfirm !== oldPasswordConfirm) {
-    if (newPasswordConfirm !== newPassword && newPassword) {
-      changePasswordError.value.passwordConfirm = "Password không khớp!";
-    } else if (!newPasswordConfirm)
-      changePasswordError.value.passwordConfirm = "Không được để trống!";
-    else changePasswordError.value.passwordConfirm = "";
-  } else
-    changePasswordError.value = {
-      password: "",
-      passwordConfirm: "",
-    };
+async function getSchema() {
+  if (schema.value) return;
+  const result: any = await useApi(schemaApi);
+  schema.value = result.data;
 }
+await getSchema();
 
 definePageMeta({
   middleware: [
-    (to, from) => {
+    async (to, from) => {
       const isFromInside = useState("isFromInside", () => false);
       if (to.name !== from.name) isFromInside.value = true;
+      const schemaApi = "/schema/user";
+      const schema = useState<any>(schemaApi, () => {});
+
+      async function getSchema() {
+        if (schema.value) return;
+        const result: any = await useApi(schemaApi);
+        schema.value = result.data;
+      }
+      await getSchema();
+
+      if (
+        !schema.value ||
+        !Object.keys(schema.value).includes(to.params.field as string)
+      ) {
+        return navigateTo("/me", { replace: true });
+      }
     },
   ],
 });

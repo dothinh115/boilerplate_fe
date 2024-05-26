@@ -4,7 +4,7 @@
       class="max-h-[85%] overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
     >
       <div
-        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0 text-[20px]"
+        class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0 text-[16px]"
       >
         Thông tin cá nhân
       </div>
@@ -23,7 +23,7 @@
               : undefined
           "
         >
-          <div class="text-gray-900 text-[16px]">{{ key }}</div>
+          <div class="text-gray-900">{{ key }}</div>
           <div
             class="text-indigo-900 font-bold xl:max-w-[250px] md:max-w-[200px] max-w-[140px]"
           >
