@@ -39,6 +39,7 @@ export default async function useApi(request: string, options?: any) {
     }).catch((error: any) => {
       if (loading.value) loading.value = false;
       const router = useRouter();
+      const route = useRoute();
       if (error.data?.statusCode === 403) {
         const newToast: TToastData = {
           message: "Bạn không có quyền này!",
@@ -56,6 +57,8 @@ export default async function useApi(request: string, options?: any) {
           type: "error",
         };
         toastData.value.push(newToast);
+        if (route.query.sort)
+          router.push({ query: { sort: undefined }, replace: true });
       } else
         clearError({
           redirect: "/",
