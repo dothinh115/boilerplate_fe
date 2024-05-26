@@ -45,19 +45,13 @@ const schemaApi = "/schema/user";
 const schema = useState<any>(schemaApi, () => {});
 const { loading } = useGetState();
 
-const changePasswordSuccess = ref(false);
-const changePasswordLoading = ref(false);
-
 async function getSchema() {
   if (schema.value) return;
+  loading.value = true;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
-}
-async function handleFetch() {
-  loading.value = true;
-  await getSchema();
   loading.value = false;
 }
 
-await handleFetch();
+await getSchema();
 </script>

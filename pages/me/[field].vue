@@ -14,6 +14,7 @@
           <i
             class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
             @click="handleConfirm"
+            v-if="!schema[route.params.field as string].disabled"
           ></i>
         </div>
         <div
@@ -76,6 +77,7 @@
                 class="input input-blue w-full"
                 type="text"
                 v-model="fieldData"
+                :disabled="schema[route.params.field as string].disabled"
               />
             </div>
           </div>
@@ -157,17 +159,29 @@ async function handleConfirm() {
     if (!isChangePasswordValid.value) return;
   }
   loading.value = true;
-  await useApi("/me", {
-    method: "PATCH",
-    body: {
-      [route.params.field as string]:
-        route.params.field === "password"
-          ? changePasswordInfo.value.password
-          : fieldData.value,
-    },
-  });
-  await getUser();
-  await handleClose();
+  try {
+    await useApi("/me", {
+      method: "PATCH",
+      body: {
+        [route.params.field as string]:
+          route.params.field === "password"
+            ? changePasswordInfo.value.password
+            : fieldData.value,
+      },
+    });
+    await getUser();
+    await handleClose();
+    toastData.value.push({
+      message: "Thành công!",
+      type: "success",
+    });
+  } catch (error: any) {
+    toastData.value.push({
+      message: error.data?.message,
+      type: "success",
+    });
+  }
+
   loading.value = false;
 }
 
