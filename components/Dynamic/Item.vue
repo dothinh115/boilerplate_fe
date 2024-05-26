@@ -93,7 +93,7 @@ const { user } = useAuth();
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const selectModal = ref(false);
-const { toastData, permission } = useGetState();
+const { toastData } = useGetState();
 const isFromInside = useState("isFromInside");
 const refData = ref<{
   ref: string;
@@ -161,7 +161,13 @@ async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
   const result = await useApi(
-    `/${route.params.post}${data.value._id ? "/" + data.value._id : ""}`,
+    `/${route.params.post}${
+      route.params.post === "setting"
+        ? ""
+        : data.value._id
+        ? "/" + data.value._id
+        : ""
+    }`,
     {
       method: data.value._id ? "PATCH" : "POST",
       body: data.value,

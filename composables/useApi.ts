@@ -2,7 +2,15 @@ import settings from "../configs/settings.json";
 import { jwtDecode } from "jwt-decode";
 import type { TToastData } from "./useGetState";
 
-export default async function useApi(request: string, options?: any) {
+export default async function useApi(
+  request: string,
+  options?: {
+    body?: any;
+    method?: "POST" | "PATCH" | "GET" | "DELETE";
+    baseURL?: string;
+    params?: any;
+  }
+) {
   const access_token = useCookie("access_token");
   const refresh_token = useCookie("refresh_token");
   const { loading, toastData } = useGetState();
