@@ -40,7 +40,7 @@
             'input-blue': !error[field],
           }"
           :disabled="
-            field === '_id'
+            field === '_id' || field === 'slug'
               ? true
               : props.new
               ? false
