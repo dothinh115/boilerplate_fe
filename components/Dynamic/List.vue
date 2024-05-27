@@ -183,7 +183,6 @@ const isModerator = computed(
 async function getList() {
   const searchData = route.query;
   const { field, key, value } = searchData;
-
   const params = {
     limit: perPage,
     page: currentPage.value,
