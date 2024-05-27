@@ -8,6 +8,7 @@ type TPermission = {
   path: string;
   roles: string[];
   method: string;
+  moderators: string[];
 }[];
 
 export default function useGetState() {

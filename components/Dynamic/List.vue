@@ -160,7 +160,7 @@ const currentPage = ref(Number(route.query.page) || 1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const { loading, screenWidth } = useGetState();
+const { loading, screenWidth, permission } = useGetState();
 const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
 const sortBy = ref<string>((route.query.sort as string) || "-_id");
@@ -169,10 +169,21 @@ const width = ref<{
 }>({});
 const searchModal = ref(false);
 const { $getMaxLength } = useNuxtApp();
+const { user } = useAuth();
+
+const isModerator = computed(
+  () =>
+    permission.value.filter(
+      (x) =>
+        x.path.includes(route.params.post as string) &&
+        x.moderators.includes(user.value._id)
+    ).length > 0 || user.value.rootUser
+);
 
 async function getList() {
   const searchData = route.query;
   const { field, key, value } = searchData;
+
   const params = {
     limit: perPage,
     page: currentPage.value,
@@ -183,6 +194,9 @@ async function getList() {
       value && {
         [`filter[${field}][${key}]`]: value,
       }),
+    ...(!isModerator.value && {
+      "filter[record_creater][$eq]": user.value._id,
+    }),
   };
   const result: any = await useApi(dataApi, { params });
   totalPages.value = Math.ceil(

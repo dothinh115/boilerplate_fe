@@ -73,7 +73,7 @@ const { hideSidebar, permission } = useGetState();
 const { user } = useAuth();
 const { screenWidth } = useGetState();
 const handleFetchRoute = async () => {
-  const fieldArr = ["path", "public", "roles", "method"];
+  const fieldArr = ["path", "public", "roles", "method", "moderators"];
   const params = {
     fields: fieldArr.join(","),
     limit: 0,
