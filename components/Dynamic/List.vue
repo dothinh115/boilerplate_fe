@@ -194,7 +194,7 @@ async function getList() {
         [`filter[${field}][${key}]`]: value,
       }),
     ...(!isModerator.value && {
-      "filter[record_creater][$eq]": user.value._id,
+      "filter[recordCreater][$eq]": user.value._id,
     }),
   };
   const result: any = await useApi(dataApi, { params });
