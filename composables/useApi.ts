@@ -44,11 +44,13 @@ export default async function useApi(
           authorization: "Bearer " + access_token.value,
         },
       }),
-    }).catch((error: any) => {
+    }).catch(async (error: any) => {
       if (loading.value) loading.value = false;
       const router = useRouter();
       const route = useRoute();
-      if (error.data?.statusCode === 403) {
+      if (error.data?.statusCode === 401) {
+        await logout();
+      } else if (error.data?.statusCode === 403) {
         const newToast: TToastData = {
           message: "Bạn không có quyền này!",
           type: "error",
