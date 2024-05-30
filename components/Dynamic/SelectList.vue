@@ -5,21 +5,28 @@
     <div class="absolute -translate-x-full top-0 p-2 flex flex-col space-y-4">
       <button
         class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] lg:hover:bg-teal-600 lg:hover:text-white duration-200"
-        @click="confirm"
+        @click="handleConfirm"
       >
         <i class="fa-solid fa-check"></i>
       </button>
       <button
         class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-gray-50 lg:hover:text-red-600 duration-200"
-        @click="cancel"
+        @click="handleCancel"
       >
         <i class="fa-solid fa-xmark"></i>
       </button>
+      <button
+        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-sky-500 bg-opacity-90 text-[20px] lg:hover:bg-sky-900 lg:hover:text-gray-50 duration-200"
+        @click="isSearching ? handleCancelSearch() : handleSearch()"
+      >
+        <i class="fa-solid fa-magnifying-glass-minus" v-if="isSearching"></i>
+        <i class="fa-solid fa-magnifying-glass" v-else></i>
+      </button>
     </div>
     <div class="max-h-dvh overflow-auto h-full hidden-scrollbar">
-      <div class="min-w-full !mt-0">
+      <div class="min-w-full !mt-0 relative">
         <div
-          class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-600 text-gray-50 items-center w-max min-w-full"
+          class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-600 text-gray-50 items-center w-max min-w-full sticky top-0"
         >
           <div class="min-w-[50px] h-[10px]"></div>
           <DynamicSelectListItem :schema="schema" :width="width" />
@@ -76,7 +83,6 @@
           <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
-
       <div class="bg-indigo-600 text-gray-50 p-2">
         Đã chọn:
         {{
@@ -87,6 +93,15 @@
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <Modal v-model="searchModal">
+      <Search
+        :schema="schema"
+        @close="searchModal = false"
+        @searchConfirm="handleSearchConfirm"
+      />
+    </Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 type TProps = {
@@ -108,6 +123,12 @@ const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
+const searchModal = ref(false);
+const searchData = ref({
+  field: "",
+  searchKey: "",
+  searchValue: "",
+});
 
 const selectedArr = ref<any[] | any>([]);
 const width = ref<{
@@ -143,19 +164,16 @@ if (props.refData.type === "Array") {
 
 watch(
   () => currentPage.value,
-  async (newValue) => {
+  async () => {
     await getData();
-    usePaginate(
-      {
-        totalPages: totalPages.value,
-        currentPage: newValue,
-        range: screenWidth.value <= 768 ? 1 : 2,
-      },
-      (paginate: (string | number)[]) => {
-        pagination.value = paginate;
-      }
-    );
   }
+);
+
+const isSearching = computed(
+  () =>
+    searchData.value.field &&
+    searchData.value.searchKey &&
+    searchData.value.searchValue
 );
 
 async function getData() {
@@ -164,6 +182,10 @@ async function getData() {
     limit: perPage,
     page: currentPage.value,
     sort: "-_id",
+    ...(isSearching.value && {
+      [`filter[${searchData.value.field}][${searchData.value.searchKey}]`]:
+        searchData.value.searchValue,
+    }),
   };
   const result: any = await useApi(api, { params });
   data.value = result.data;
@@ -197,13 +219,39 @@ watchEffect(() => {
   );
 });
 
-function cancel() {
+function handleCancel() {
   emits("close");
 }
 
-function confirm() {
+function handleConfirm() {
   emits("confirm", { selected: selectedArr.value, key: props.refData.key });
   emits("close");
+}
+
+function handleSearch() {
+  searchModal.value = true;
+}
+
+async function handleSearchConfirm(data: {
+  field: string;
+  searchKey: string;
+  searchValue: string;
+}) {
+  searchData.value = data;
+  await getData();
+  loading.value = false;
+  searchModal.value = false;
+}
+
+async function handleCancelSearch() {
+  searchData.value = {
+    field: "",
+    searchKey: "",
+    searchValue: "",
+  };
+  loading.value = true;
+  await getData();
+  loading.value = false;
 }
 
 await fetchAll();
