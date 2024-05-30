@@ -1,6 +1,10 @@
 <template>
   <div
-    class="space-y-8 2xl:w-[40%] xl:w-[50%] lg:w-[70%] w-[95%] mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
+    class="space-y-8 mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
+    :class="{
+      '2xl:w-[40%] xl:w-[50%] lg:w-[70%] w-[95%]': !small,
+      '2xl:w-[30%] xl:w-[40%] lg:w-[50%] md:w-[70%] w-[95%]': small,
+    }"
   >
     <div
       class="rounded-[10px] max-h-[95vh] overflow-y-scroll hidden-scrollbar relative w-full"
@@ -26,8 +30,8 @@
         <div
           class="flex md:space-x-2 max-md:space-y-2 items-center max-md:flex-wrap"
         >
-          <div class="max-md:w-full">
-            <select v-model="field" class="input input-blue max-md:w-full">
+          <div class="md:max-w-[15%] max-md:w-full">
+            <select v-model="field" class="input input-blue w-full">
               <option
                 v-for="(item, index) in Object.keys(localSchema)"
                 :key="index"
@@ -37,8 +41,8 @@
               </option>
             </select>
           </div>
-          <div class="max-md:w-full">
-            <select v-model="searchKey" class="input input-blue max-md:w-full">
+          <div class="md:flex-1 max-md:w-full">
+            <select v-model="searchKey" class="input input-blue w-full">
               <option
                 v-for="([key, value], index) in Object.entries(compareKey)"
                 :key="index"
@@ -48,7 +52,7 @@
               </option>
             </select>
           </div>
-          <div class="w-full">
+          <div class="md:flex-1 max-md:w-full">
             <input
               v-model="searchValue"
               type="text"
@@ -70,6 +74,7 @@
 <script setup lang="ts">
 type TProps = {
   schema: object;
+  small?: boolean;
 };
 const compareKey = {
   "$eq (bằng)": "$eq",

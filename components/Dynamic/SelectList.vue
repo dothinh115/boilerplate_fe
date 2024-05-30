@@ -97,6 +97,7 @@
     <Modal v-model="searchModal">
       <Search
         :schema="schema"
+        :small="true"
         @close="searchModal = false"
         @searchConfirm="handleSearchConfirm"
       />

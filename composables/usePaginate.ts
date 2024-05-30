@@ -23,7 +23,7 @@ const paginate = (
     pages.push(i);
   }
 
-  if (currentPage + range < totalPages) {
+  if (currentPage + range < totalPages && endRange < totalPages - 1) {
     pages.push("...");
   }
 
