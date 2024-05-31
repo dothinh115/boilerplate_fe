@@ -61,7 +61,7 @@
             (schema[field].ref && data[field]) ||
             $typeCheck(data[field]) === 'Array'
           "
-          v-if="data[field].length > 0"
+          v-if="data[field].length > 0 || data[field]"
         >
           <div
             v-if="$typeCheck(data[field]) === 'Array'"
