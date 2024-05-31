@@ -4,23 +4,29 @@
   >
     <div class="absolute -translate-x-full top-0 p-2 flex flex-col space-y-4">
       <button
-        class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] lg:hover:bg-teal-600 lg:hover:text-white duration-200"
-        @click="handleConfirm"
-      >
-        <i class="fa-solid fa-check"></i>
-      </button>
-      <button
         class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-gray-50 lg:hover:text-red-600 duration-200"
         @click="handleCancel"
       >
         <i class="fa-solid fa-xmark"></i>
       </button>
       <button
-        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-sky-500 bg-opacity-90 text-[20px] lg:hover:bg-sky-900 lg:hover:text-gray-50 duration-200"
-        @click="isSearching ? handleCancelSearch() : handleSearch()"
+        class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] lg:hover:bg-teal-600 lg:hover:text-white duration-200"
+        @click="handleConfirm"
       >
-        <i class="fa-solid fa-magnifying-glass-minus" v-if="isSearching"></i>
-        <i class="fa-solid fa-magnifying-glass" v-else></i>
+        <i class="fa-solid fa-check"></i>
+      </button>
+      <button
+        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-sky-500 bg-opacity-90 text-[20px] lg:hover:bg-sky-900 lg:hover:text-gray-50 duration-200"
+        @click="handleSearch()"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button
+        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-white lg:hover:text-red-500 duration-200"
+        @click="handleCancelSearch()"
+        v-if="isSearching"
+      >
+        <i class="fa-solid fa-magnifying-glass-minus"></i>
       </button>
     </div>
     <div class="max-h-dvh overflow-auto h-full hidden-scrollbar">
@@ -100,6 +106,7 @@
         :small="true"
         @close="searchModal = false"
         @searchConfirm="handleSearchConfirm"
+        :searching="searchData"
       />
     </Modal>
   </Teleport>
@@ -116,19 +123,23 @@ type TProps = {
 const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
 const data = ref<any>({});
-const schema = ref<any>({});
 const api = `/${props.refData.ref}`;
 const schemaApi = `/schema/${props.refData.ref}`;
+const schema = useState<any>(schemaApi);
 const { loading, screenWidth } = useGetState();
 const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const searchModal = ref(false);
+const { $typeCheck } = useNuxtApp();
 const searchData = ref({
-  field: "",
-  searchKey: "",
-  searchValue: "",
+  field: props.refData.defaultValue ? "_id" : "",
+  searchKey: $typeCheck(props.refData.defaultValue) === "Array" ? "$in" : "$eq",
+  searchValue:
+    $typeCheck(props.refData.defaultValue) === "Array"
+      ? Array(props.refData.defaultValue).join(",")
+      : (props.refData.defaultValue as string),
 });
 
 const selectedArr = ref<any[] | any>([]);
@@ -196,6 +207,7 @@ async function getData() {
 }
 
 async function getSchema() {
+  if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }

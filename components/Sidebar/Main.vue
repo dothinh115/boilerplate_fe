@@ -91,8 +91,6 @@ const accessible = computed(() =>
   )
 );
 
-console.log(accessible.value);
-
 await handleFetchRoute();
 await handleFetchPermission();
 

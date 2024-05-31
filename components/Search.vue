@@ -75,6 +75,11 @@
 type TProps = {
   schema: object;
   small?: boolean;
+  searching: {
+    field: string;
+    searchKey: string;
+    searchValue: string;
+  };
 };
 const compareKey = {
   "$eq (bằng)": "$eq",
@@ -87,9 +92,13 @@ const props = defineProps<TProps>();
 const localSchema = ref(props.schema);
 const route = useRoute();
 const emits = defineEmits(["close", "searchConfirm"]);
-const field = ref(route.query.field ? route.query.field : "_id");
-const searchKey = ref(route.query.key ? route.query.key : "$eq");
-const searchValue = ref(route.query.value ? route.query.value : "");
+const field = ref(props.searching.field ? props.searching.field : "_id");
+const searchKey = ref(
+  props.searching.searchKey ? props.searching.searchKey : "$eq"
+);
+const searchValue = ref(
+  props.searching.searchValue ? props.searching.searchValue : ""
+);
 const invalid = ref(false);
 function handleClose() {
   emits("close");

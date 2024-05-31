@@ -26,17 +26,12 @@
         v-if="data.length === 0"
       >
         {{
-          route.query.field && route.query.key && route.query.value
-            ? "Không tìm thấy kết quả nào."
-            : "Chưa có record nào."
+          isSearching ? "Không tìm thấy kết quả nào." : "Chưa có record nào."
         }}
       </div>
     </div>
 
-    <div
-      class="mb-2 flex items-center"
-      v-if="route.query.field && route.query.key && route.query.value"
-    >
+    <div class="mb-2 flex items-center" v-if="isSearching">
       <div class="py-1 px-2 bg-indigo-100 w-fit rounded-l-[10px]">
         Đang lọc theo trường {{ route.query.field }} với giá trị '{{
           route.query.value
@@ -141,6 +136,11 @@
         :schema="schema"
         @close="searchModal = false"
         @searchConfirm="searchConfirm"
+        :searching="{
+          field:route.query.field as string,
+          searchKey: route.query.key as string,
+          searchValue: route.query.value as string
+        }"
     /></Modal>
   </Teleport>
 </template>
@@ -199,6 +199,10 @@ async function getSchema() {
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }
+
+const isSearching = computed(
+  () => route.query.field && route.query.key && route.query.value
+);
 
 async function searchConfirm(searchData: {
   field: string;
