@@ -12,10 +12,13 @@ export default defineNuxtPlugin(() => {
             switch ($typeCheck(item[field])) {
               case "Array":
                 currentLength = item[field].join(",").length;
+                break;
               case "string":
                 currentLength = item[field].length;
+                break;
               case null:
                 currentLength = 4;
+                break;
               default: {
                 currentLength = String(item[field]).length;
               }
