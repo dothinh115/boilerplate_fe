@@ -62,7 +62,7 @@
           "
           class="paginate"
           :class="{
-            'opacity-50': currentPage === 1,
+            disabled: currentPage === 1,
           }"
         >
           <i class="fa-solid fa-chevron-left"></i>
@@ -102,7 +102,7 @@
           "
           class="paginate"
           :class="{
-            'opacity-50': currentPage === totalPages,
+            disabled: currentPage === totalPages,
           }"
         >
           <i class="fa-solid fa-chevron-right"></i>

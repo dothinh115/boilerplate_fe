@@ -62,7 +62,7 @@
           @click="currentPage !== 1 && (currentPage -= 1)"
           class="paginate"
           :class="{
-            'opacity-50': currentPage === 1,
+            disabled: currentPage === 1,
           }"
         >
           <i class="fa-solid fa-chevron-left"></i>
@@ -83,7 +83,7 @@
           @click="currentPage !== totalPages && (currentPage += 1)"
           class="paginate"
           :class="{
-            'opacity-50': currentPage === totalPages,
+            disabled: currentPage === totalPages,
           }"
         >
           <i class="fa-solid fa-chevron-right"></i>
