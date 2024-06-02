@@ -47,8 +47,14 @@
 
     <div
       class="flex items-center justify-between w-full max-md:flex-wrap max-md:space-y-4"
+      :class="{
+        '!justify-end': totalPages === 1,
+      }"
     >
-      <div class="flex space-x-2 items-center text-[14px]">
+      <div
+        class="flex space-x-2 items-center text-[14px]"
+        v-if="totalPages > 1"
+      >
         <NuxtLink
           :to="
             currentPage > 1
