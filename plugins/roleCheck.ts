@@ -5,9 +5,8 @@ export default defineNuxtPlugin(() => {
         const { permissions, routes } = useGetState();
         const { user } = useAuth();
         const isRouteExist = routes.value.find(
-          (x) => x.path.split("/").includes(route) && x.method === route
+          (x) => x.path.split("/").includes(route) && x.method === method
         );
-
         if (user.value.rootUser && isRouteExist) return true;
         const result =
           permissions.value.filter(
