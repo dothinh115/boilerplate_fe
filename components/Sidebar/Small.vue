@@ -2,20 +2,32 @@
   <div
     class="bg-indigo-900 w-[40px] flex flex-col justify-between text-[16px] flex-shrink-0 relative"
   >
-    <div
-      class="bg-indigo-950 flex justify-center items-center lg:hover:bg-gray-50 duration-200"
-    >
-      <button
-        class="h-full text-gray-50 w-full aspect-1 lg:hover:text-indigo-950"
-        @click="handleHideSidebar"
+    <div>
+      <div
+        class="bg-indigo-950 flex justify-center items-center lg:hover:bg-gray-50 duration-200"
       >
-        <i
-          class="fa-solid fa-chevron-left"
-          :class="{
-            'rotate-180': hideSidebar,
-          }"
-        ></i>
-      </button>
+        <button
+          class="h-full text-gray-50 w-full aspect-1 lg:hover:text-indigo-950"
+          @click="handleHideSidebar"
+        >
+          <i
+            class="fa-solid fa-chevron-left"
+            :class="{
+              'rotate-180': hideSidebar,
+            }"
+          ></i>
+        </button>
+      </div>
+      <div
+        class="bg-slate-300 flex justify-center items-center lg:hover:bg-gray-50 duration-200"
+      >
+        <NuxtLink
+          :to="'/'"
+          class="h-full text-indigo-800 w-full aspect-1 lg:hover:text-indigo-950 flex items-center justify-center"
+        >
+          <i class="fa-solid fa-house"></i>
+        </NuxtLink>
+      </div>
     </div>
     <div class="flex justify-center">
       <button

@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "admin",
+      name: "CP",
       script: "./.output/server/index.mjs",
       instances: 1,
       autorestart: true,

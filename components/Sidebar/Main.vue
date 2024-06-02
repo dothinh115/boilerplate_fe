@@ -2,7 +2,7 @@
   <div
     class="w-full h-dvh text-gray-200 space-y-6 pl-2 lg:py-8 md:py-6 py-8 max-lg:pr-2 overflow-y-scroll hidden-scrollbar"
   >
-    <div class="uppercase text-center text-[20px]">admin dashboard</div>
+    <div class="uppercase text-[20px]">Control Panel</div>
     <div class="space-y-8 w-full">
       <div class="space-y-4">
         <template v-if="user.rootUser || accessible">
