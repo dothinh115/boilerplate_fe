@@ -19,14 +19,14 @@
               <i
                 class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600 lg:hover:bg-red-600 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
                 @click="deleteConfirmModal = true"
-                v-if="data._id && $roleCheck('delete', route.params.post as string)"
+                v-if="data.id && $roleCheck('DELETE', route.params.post as string)"
               ></i>
               <i
                 class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
                 @click="handleConfirm"
                 v-if="
-                  (data._id && $roleCheck('patch', route.params.post as string)) ||
-                  (!data._id && $roleCheck('post', route.params.post as string))
+                  (data.id && $roleCheck('PATCH', route.params.post as string)) ||
+                  (!data.id && $roleCheck('POST', route.params.post as string))
                 "
               ></i>
             </div>
@@ -38,10 +38,11 @@
               :item="data[field]"
               :error
               @updateData="updateData"
-              @handleRef="handleRef"
+              @handleRef="handleRelation"
               :new
               :field
               :value
+              @update-data-field="updateDataField"
             />
           </div>
         </div>
@@ -68,10 +69,10 @@
   <Teleport to="body">
     <Modal v-model="selectModal">
       <DynamicSelectList
-        :refData="refData"
+        :relationData="relationData"
         @close="selectModal = false"
         @confirm="handleSelection"
-        v-if="refData"
+        v-if="relationData"
       />
     </Modal>
   </Teleport>
@@ -84,6 +85,7 @@ type TProps = {
   };
   new?: boolean;
 };
+const excludedKey = ["password", "id", "slug"];
 const route = useRoute();
 const props = defineProps<TProps>();
 const router = useRouter();
@@ -92,15 +94,14 @@ const data = ref<any>(props.info.data);
 const error = ref<{
   [key: string]: string;
 }>({});
-const { user } = useAuth();
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const selectModal = ref(false);
 const { toastData } = useGetState();
 const isFromInside = useState("isFromInside");
-const refData = ref<{
-  ref: string;
-  type: "String" | "Number" | "Array" | undefined;
+const relationData = ref<{
+  relation: string;
+  type: "string" | "number" | "array" | undefined;
   defaultValue: string | number | string[] | number[];
   key: string;
 }>();
@@ -109,13 +110,13 @@ if (Object.keys(data.value).length === 0) {
   for (const key in schema.value) {
     if (schema.value[key].default !== undefined) {
       data.value[key] = schema.value[key].default;
-    } else if (key !== "_id") data.value[key] = "";
+    } else if (key !== "id") data.value[key] = "";
   }
 }
 
 const isValid = computed(() => {
   for (const [key, value] of Object.entries(schema.value)) {
-    if (key === "password") continue;
+    if (excludedKey.includes(key) || data.value[key] === 0) continue;
     if ((value as any).required) {
       if (!data.value[key]) {
         return false;
@@ -133,7 +134,7 @@ function updateData(object: { item: string; target: HTMLInputElement }) {
 function errorCheck() {
   for (const [key, value] of Object.entries(schema.value)) {
     if ((value as any).required) {
-      if (key === "password") continue;
+      if (excludedKey.includes(key) || data.value[key] === 0) continue;
       if (!data.value[key]) {
         error.value[key] = "Không được để trống!";
       } else error.value[key] = "";
@@ -167,12 +168,12 @@ async function handleConfirm() {
     `/${route.params.post}${
       route.params.post === "setting"
         ? ""
-        : data.value._id
-        ? "/" + data.value._id
+        : data.value.id
+        ? "/" + data.value.id
         : ""
     }`,
     {
-      method: data.value._id ? "PATCH" : "POST",
+      method: data.value.id ? "PATCH" : "POST",
       body: data.value,
     }
   );
@@ -187,7 +188,7 @@ async function handleConfirm() {
 
 async function handleDelete() {
   if (!data.value) return;
-  const result = await useApi(`/${route.params.post}/${data.value._id}`, {
+  const result = await useApi(`/${route.params.post}/${data.value.id}`, {
     method: "DELETE",
   });
 
@@ -200,17 +201,17 @@ async function handleDelete() {
   }
 }
 
-function handleRef(object: {
-  ref: string;
-  type: "String" | "Number" | "Array" | undefined;
+function handleRelation(object: {
+  relation: string;
+  type: "string" | "number" | "array" | undefined;
   defaultValue: string | number | string[] | number[];
   key: string;
 }) {
   selectModal.value = true;
-  let { ref, type, defaultValue, key } = object;
-  ref = ref.toLowerCase();
-  refData.value = {
-    ref,
+  let { relation, type, defaultValue, key } = object;
+  relation = relation.toLowerCase();
+  relationData.value = {
+    relation,
     type,
     defaultValue,
     key,
@@ -221,11 +222,15 @@ function handleSelection({
   selected,
   key,
 }: {
-  selected: { _id: string | number } | { _id: string | number }[];
+  selected: { id: string | number } | { id: string | number }[];
   key: string;
 }) {
   if (Array.isArray(selected)) {
-    data.value[key] = selected.map((x) => x._id);
-  } else data.value[key] = selected._id || null;
+    data.value[key] = selected.map((x) => x.id);
+  } else data.value[key] = selected.id || null;
+}
+
+function updateDataField(obj: { field: string; value: any }) {
+  data.value[obj.field] = obj.value;
 }
 </script>

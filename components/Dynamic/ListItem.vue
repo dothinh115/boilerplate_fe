@@ -10,7 +10,7 @@
             name: 'route-post-id',
             params: {
               post: route.params.post,
-              id: props.item._id,
+              id: props.item.id,
             },
             query: route.query,
           }
@@ -76,6 +76,7 @@ type TProps = {
 };
 const route = useRoute();
 const props = defineProps<TProps>();
+
 const emits = defineEmits(["handleSort"]);
 const width = ref<{
   [key: string]: number;

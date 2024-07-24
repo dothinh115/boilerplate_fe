@@ -11,11 +11,11 @@
           class="text-[24px]"
           :class="{
                       'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
-                        .map((x:any) => x._id)
-                        .includes(data._id) : selectedArr?._id !== data._id,
+                        .map((x:any) => x.id)
+                        .includes(data.id) : selectedArr?.id !== data.id,
                       'fa-solid fa-circle-check text-indigo-800': Array.isArray(selectedArr) ? selectedArr
-                        .map((x:any) => x._id)
-                        .includes(data._id) : selectedArr?._id === data._id,
+                        .map((x:any) => x.id)
+                        .includes(data.id) : selectedArr?.id === data.id,
                     }"
         ></i>
       </button>

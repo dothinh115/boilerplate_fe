@@ -15,7 +15,7 @@
       </div>
       <DynamicListItem
         v-for="item in data"
-        :key="item._id"
+        :key="item.id"
         :schema="schema"
         :sortBy="sortBy"
         :item="item"
@@ -126,7 +126,7 @@
             },
           }"
           class="btn btn-green btn-icon"
-          v-if="$roleCheck('post', route.params.post as string)"
+          v-if="$roleCheck('POST', route.params.post as string)"
         >
           <i class="fa-solid fa-plus"></i><span>Thêm mới</span>
         </NuxtLink>
@@ -169,7 +169,7 @@ const pagination = ref<(string | number)[]>([]);
 const { loading, screenWidth, routes } = useGetState();
 const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
-const sortBy = ref<string>((route.query.sort as string) || "-_id");
+const sortBy = ref<string>((route.query.sort as string) || "-id");
 const width = ref<{
   [key: string]: number;
 }>({});
@@ -193,9 +193,8 @@ async function getList() {
   };
   const result: any = await useApi(dataApi, { params });
   totalPages.value = Math.ceil(
-    (field && key && value
-      ? result.meta.filter_count
-      : result.meta.total_count) / perPage
+    (field && key && value ? result.meta.filterCount : result.meta.totalCount) /
+      perPage
   );
   data.value = result.data;
 }
@@ -293,7 +292,7 @@ onBeforeRouteUpdate(async (to, from) => {
 });
 
 function handleSort(key: string) {
-  if (!sortBy.value) sortBy.value = "-_id";
+  if (!sortBy.value) sortBy.value = "-id";
   if ((sortBy.value as string).startsWith("-")) {
     router.replace({
       query: {

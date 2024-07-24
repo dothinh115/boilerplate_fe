@@ -92,9 +92,9 @@ const props = defineProps<TProps>();
 const localSchema = ref(props.schema);
 const route = useRoute();
 const emits = defineEmits(["close", "searchConfirm"]);
-const field = ref(props.searching.field ? props.searching.field : "_id");
+const field = ref(props.searching.field ? props.searching.field : "id");
 const searchKey = ref(
-  props.searching.searchKey ? props.searching.searchKey : "$eq"
+  props.searching.searchKey ? props.searching.searchKey : "_eq"
 );
 const searchValue = ref(
   props.searching.searchValue ? props.searching.searchValue : ""

@@ -4,19 +4,10 @@ export type TToastData = {
 };
 
 type TRoute = {
-  _id: string;
+  id: string;
   path: string;
   method: string;
-}[];
-
-type TPermission = {
-  _id: string;
-  route: {
-    _id: string;
-    path: string;
-    method: string;
-  };
-  roles: string[];
+  roles: number[];
 }[];
 
 export default function useGetState() {
@@ -25,7 +16,6 @@ export default function useGetState() {
   const screenWidth = useState("screenWidth", () => screen.width);
   const hideSidebar = useState("hideSidebar", () => false);
   const routes = useState<TRoute>("route", () => []);
-  const permissions = useState<TPermission>("permission", () => []);
 
-  return { toastData, loading, screenWidth, hideSidebar, routes, permissions };
+  return { toastData, loading, screenWidth, hideSidebar, routes };
 }

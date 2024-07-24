@@ -14,7 +14,7 @@ export default function useAuth() {
           authorization: "Bearer " + accessTokenCookie.value,
         },
       });
-      if (fetchUserResult) user.value = fetchUserResult.data;
+      if (fetchUserResult.data) user.value = fetchUserResult.data[0];
       return user.value;
     } catch (error) {}
   };

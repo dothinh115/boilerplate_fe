@@ -40,7 +40,7 @@
         <div class="h-full">
           <DynamicSelectListItem
             v-for="item in data"
-            :key="data._id"
+            :key="data.id"
             :schema="schema"
             :data="item"
             :selectedArr="selectedArr"
@@ -93,8 +93,8 @@
         Đã chọn:
         {{
           Array.isArray(selectedArr)
-            ? selectedArr.map((item: any) => item._id)
-            : selectedArr?._id
+            ? selectedArr.map((item: any) => item.id)
+            : selectedArr?.id
         }}
       </div>
     </div>
@@ -113,9 +113,9 @@
 </template>
 <script setup lang="ts">
 type TProps = {
-  refData: {
-    ref: string;
-    type: "String" | "Number" | "Array" | undefined;
+  relationData: {
+    relation: string;
+    type: "string" | "number" | "array" | undefined;
     defaultValue: string | number | string[] | number[];
     key: string;
   };
@@ -123,8 +123,8 @@ type TProps = {
 const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
 const data = ref<any>({});
-const api = `/${props.refData.ref}`;
-const schemaApi = `/schema/${props.refData.ref}`;
+const api = `/${props.relationData.relation}`;
+const schemaApi = `/schema/${props.relationData.relation}`;
 const schema = useState<any>(schemaApi);
 const { loading, screenWidth } = useGetState();
 const currentPage = ref(1);
@@ -134,12 +134,13 @@ const pagination = ref<(string | number)[]>([]);
 const searchModal = ref(false);
 const { $typeCheck } = useNuxtApp();
 const searchData = ref({
-  field: props.refData.defaultValue ? "_id" : "",
-  searchKey: $typeCheck(props.refData.defaultValue) === "Array" ? "$in" : "$eq",
+  field: props.relationData.defaultValue ? "id" : "",
+  searchKey:
+    $typeCheck(props.relationData.defaultValue) === "array" ? "_in" : "_eq",
   searchValue:
-    $typeCheck(props.refData.defaultValue) === "Array"
-      ? Array(props.refData.defaultValue).join(",")
-      : (props.refData.defaultValue as string),
+    $typeCheck(props.relationData.defaultValue) === "array"
+      ? Array(props.relationData.defaultValue).join(",")
+      : (props.relationData.defaultValue as string),
 });
 
 const selectedArr = ref<any[] | any>([]);
@@ -149,29 +150,29 @@ const width = ref<{
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 
 function handleSelect(item: any) {
-  if (props.refData.type === "Array") {
-    if (selectedArr.value.map((x: any) => x._id).includes(item._id)) {
+  if (props.relationData.type === "array") {
+    if (selectedArr.value.map((x: any) => x.id).includes(item.id)) {
       selectedArr.value = selectedArr.value.filter(
-        (z: any) => z._id !== item._id
+        (z: any) => z.id !== item.id
       );
-    } else selectedArr.value.push({ _id: item._id });
+    } else selectedArr.value.push({ id: item.id });
   } else {
-    if (item._id === selectedArr.value._id) {
+    if (item.id === selectedArr.value.id) {
       selectedArr.value = {};
     } else {
-      selectedArr.value._id = item._id;
+      selectedArr.value.id = item.id;
     }
   }
 }
 
-if (props.refData.type === "Array") {
-  if (Array.isArray(props.refData.defaultValue)) {
+if (props.relationData.type === "array") {
+  if (Array.isArray(props.relationData.defaultValue)) {
     selectedArr.value = (
-      props.refData.defaultValue as Array<string | number>
-    ).map((x) => ({ _id: x }));
+      props.relationData.defaultValue as Array<string | number>
+    ).map((x) => ({ id: x }));
   }
 } else {
-  selectedArr.value = { _id: props.refData.defaultValue };
+  selectedArr.value = { id: props.relationData.defaultValue };
 }
 
 watch(
@@ -193,7 +194,7 @@ async function getData() {
     meta: "*",
     limit: perPage,
     page: currentPage.value,
-    sort: "-_id",
+    sort: "-id",
     ...(isSearching.value && {
       [`filter[${searchData.value.field}][${searchData.value.searchKey}]`]:
         searchData.value.searchValue,
@@ -202,7 +203,7 @@ async function getData() {
   const result: any = await useApi(api, { params });
   data.value = result.data;
   totalPages.value = Math.ceil(
-    (result.meta.total_count || result.meta.filter_count) / perPage
+    (result.meta.totalCount || result.meta.filterCount) / perPage
   );
 }
 
@@ -237,7 +238,10 @@ function handleCancel() {
 }
 
 function handleConfirm() {
-  emits("confirm", { selected: selectedArr.value, key: props.refData.key });
+  emits("confirm", {
+    selected: selectedArr.value,
+    key: props.relationData.key,
+  });
   emits("close");
 }
 

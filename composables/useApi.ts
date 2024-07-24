@@ -9,6 +9,9 @@ export default async function useApi(
     method?: "POST" | "PATCH" | "GET" | "DELETE";
     baseURL?: string;
     params?: any;
+    headers?: {
+      authorization: string;
+    };
   }
 ) {
   const access_token = useCookie("access_token");

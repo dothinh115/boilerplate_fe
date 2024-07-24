@@ -3,7 +3,7 @@ export default defineNuxtPlugin(() => {
     provide: {
       typeCheck: (value: any) => {
         if (value === null || value === undefined) return null;
-        if (Array.isArray(value)) return "Array";
+        if (Array.isArray(value)) return "array";
         return typeof value;
       },
     },

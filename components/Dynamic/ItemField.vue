@@ -8,8 +8,8 @@
     <div class="text-gray-900">{{ field }}:</div>
     <Editor
       api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
-      :init="getEditorInit(field)"
-      v-if="value.richText"
+      :init="getEditorInit(data)"
+      v-if="value.type === 'richText'"
       v-model="data"
     />
 
@@ -22,7 +22,7 @@
         $typeCheck(data) === 'string' ||
         $typeCheck(data) === 'number' ||
         $typeCheck(data) === null ||
-        $typeCheck(data) === 'Array'
+        $typeCheck(data) === 'array'
       "
     >
       <input
@@ -39,38 +39,36 @@
           'input-blue': !error[field],
         }"
         :disabled="
-          field === '_id' || field === 'slug'
+          field === 'id' || field === 'slug'
             ? true
             : props.new
-            ? false
-            : user.rootUser
             ? false
             : value.disabled
             ? true
             : false
         "
-        :value="data ? data : ''"
+        v-model="data"
         @input="updateData(field, $event.target as HTMLInputElement)"
-        v-if="!value.ref"
+        v-if="!value.relation"
       />
       <div
         class="flex flex-wrap"
-        v-else-if="(value.ref && data) || $typeCheck(data) === 'Array'"
+        v-else-if="(value.relation && data) || $typeCheck(data) === 'array'"
         v-if="
-          ($typeCheck(data) === 'Array' && data.length > 0) ||
-          ($typeCheck(data) !== 'Array' && data)
+          ($typeCheck(data) === 'array' && data.length > 0) ||
+          ($typeCheck(data) !== 'array' && data)
         "
       >
         <div
-          v-if="$typeCheck(data) === 'Array'"
-          v-for="(item, index) in data"
+          v-if="$typeCheck(data) === 'array'"
+          v-for="(item, index) in item"
           :key="index"
           class="flex items-center justify-center mr-2 mb-2"
         >
           <div
             class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
             :class="{
-                'rounded-r-[5px]': !$roleCheck('patch', route.params.post as string),
+                'rounded-r-[5px]': !$roleCheck('PATCH', route.params.post as string),
               }"
           >
             <p class="truncate">{{ item }}</p>
@@ -78,7 +76,7 @@
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
             @click="handleRemoveFromArray(field, item)"
-            v-if="$roleCheck('patch', route.params.post as string)"
+            v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -87,7 +85,7 @@
           <div
             class="bg-indigo-700 text-gray-50 p-1 min-w-[35px] max-w-[100px] h-[30px] flex items-center justify-center rounded-l-[5px]"
             :class="{
-                'rounded-r-[5px]': !$roleCheck('patch', route.params.post as string),
+                'rounded-r-[5px]': !$roleCheck('PATCH', route.params.post as string),
               }"
           >
             <p class="truncate">{{ data }}</p>
@@ -95,7 +93,7 @@
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
             @click="handleRemoveFromField(field)"
-            v-if="$roleCheck('patch', route.params.post as string)"
+            v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -104,10 +102,13 @@
       <button
         class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] lg:hover:bg-teal-500 duration-200"
         :class="{
-          'mb-2': $typeCheck(data) === 'Array',
+          'mb-2': $typeCheck(data) === 'array',
         }"
-        v-if="value.ref && $roleCheck('patch', route.params.post as string)"
-        @click.stop="value.ref && handleRef(value.ref, value.type, data, field)"
+        v-if="value.relation && $roleCheck('PATCH', route.params.post as string)"
+        @click.stop="
+          value.relation &&
+            handleRelation(value.relation, value.type, data, field)
+        "
       >
         <i class="fa-solid fa-up-right-from-square"></i>
       </button>
@@ -127,11 +128,17 @@ type TProps = {
   error: any;
   new?: boolean;
 };
-const { user } = useAuth();
 const props = defineProps<TProps>();
-const emits = defineEmits(["updateData", "handleRef"]);
+const emits = defineEmits(["updateData", "handleRef", "updateDataField"]);
 const route = useRoute();
 const data = ref(props.item);
+
+watch(
+  () => props.item,
+  (newValue) => {
+    data.value = newValue;
+  }
+);
 
 function getEditorInit(item: string) {
   return {
@@ -146,6 +153,7 @@ function getEditorInit(item: string) {
       });
       editor.on("input", () => {
         item = editor.getContent();
+        emits("updateDataField", { field: props.field, value: item });
       });
     },
   };
@@ -155,22 +163,22 @@ function updateData(item: string, target: HTMLInputElement) {
   emits("updateData", { item, target });
 }
 
-function handleRef(
-  ref: string,
+function handleRelation(
+  relation: string,
   type: "text" | "number" | "array",
   defaultValue: string | number | string[] | number[],
   key: string
 ) {
-  emits("handleRef", { ref, type, defaultValue, key });
+  emits("handleRef", { relation, type, defaultValue, key });
 }
 
 function handleRemoveFromArray(field: string, item: string | number) {
-  data.value = (data.value[field] as Array<string | number>).filter(
-    (x) => x !== item
-  );
+  data.value = data.value.filter((x: string | number) => x !== item);
+  emits("updateDataField", { field, value: data.value });
 }
 
 function handleRemoveFromField(field: string) {
-  data.value[field] = null;
+  data.value = null;
+  emits("updateDataField", { field, value: null });
 }
 </script>
