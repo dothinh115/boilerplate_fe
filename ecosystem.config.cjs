@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "CP",
+      name: "truyenhot-cp",
       script: "./.output/server/index.mjs",
       instances: 1,
       autorestart: true,
