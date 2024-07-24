@@ -82,11 +82,10 @@ type TProps = {
   };
 };
 const compareKey = {
-  "$eq (bằng)": "$eq",
-  "$regex (xuất hiện trong chuỗi)": "$regex",
-  "$in (xuất hiện 1 lần trong mảng)": "$in",
-  "$all (xuất hiện tất cả trong mảng)": "$all",
-  "$nin (không xuất hiện trong mảng)": "$nin",
+  "_eq (bằng)": "_eq",
+  "_contains (xuất hiện trong chuỗi)": "_contains",
+  "_in (xuất hiện 1 lần trong mảng)": "_in",
+  "_nin (không xuất hiện trong mảng)": "_nin",
 };
 const props = defineProps<TProps>();
 const localSchema = ref(props.schema);

@@ -10,7 +10,7 @@ export default defineNuxtPlugin(() => {
           for (const item of data) {
             let currentLength = 0;
             switch ($typeCheck(item[field])) {
-              case "Array":
+              case "array":
                 currentLength = item[field].join(",").length;
                 break;
               case "string":
