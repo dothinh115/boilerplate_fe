@@ -17,7 +17,7 @@ export default defineNuxtPlugin(() => {
             (r) =>
               r.method === method &&
               r.path.includes(route) &&
-              r.roles.includes(user.value.id)
+              r.roles.includes(user.value.role)
           ).length > 0;
         return result && isRouteExist;
       },

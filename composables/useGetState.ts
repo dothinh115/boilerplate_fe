@@ -4,7 +4,7 @@ export type TToastData = {
 };
 
 export type TRoute = {
-  id: string;
+  id: number;
   path: string;
   method: string;
   roles: number[];
