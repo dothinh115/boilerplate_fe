@@ -55,5 +55,4 @@ const emits = defineEmits(["handleSelect"]);
 function handleSelect(item: any) {
   emits("handleSelect", item);
 }
-console.log(props.width);
 </script>

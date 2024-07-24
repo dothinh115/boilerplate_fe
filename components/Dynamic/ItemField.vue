@@ -5,16 +5,16 @@
       'space-y-1': $typeCheck(data) !== 'boolean',
     }"
   >
-    <div class="text-gray-900">{{ schemaKey }}:</div>
+    <div class="text-gray-900">{{ localSchemaKey }}:</div>
     <Editor
       api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
       :init="getEditorInit(data)"
-      v-if="schemaValue.type === 'richText'"
+      v-if="localSchemaValue.type === 'richText'"
       v-model="data"
     />
 
     <div v-else-if="$typeCheck(data) === 'boolean'">
-      <Toggle v-model="data" :disabled="schemaValue.disabled" />
+      <Toggle v-model="data" :disabled="localSchemaValue.disabled" />
     </div>
     <div
       class="flex space-x-2"
@@ -29,32 +29,32 @@
         :type="
           $typeCheck(data) === 'number'
             ? 'number'
-            : schemaKey === 'password'
+            : localSchemaKey === 'password'
             ? 'password'
             : 'text'
         "
         class="input w-full"
         :class="{
-          'input-red': error[schemaKey],
-          'input-blue': !error[schemaKey],
+          'input-red': error[localSchemaKey],
+          'input-blue': !error[localSchemaKey],
         }"
         :disabled="
-          schemaKey === 'id' || schemaKey === 'slug'
+          localSchemaKey === 'id' || localSchemaKey === 'slug'
             ? true
             : props.new
             ? false
-            : schemaValue.disabled
+            : localSchemaValue.disabled
             ? true
             : false
         "
         v-model="data"
-        @input="updateData(schemaKey, $event.target as HTMLInputElement)"
-        v-if="!schemaValue.relation"
+        @input="updateData(localSchemaKey, $event.target as HTMLInputElement)"
+        v-if="!localSchemaValue.relation"
       />
       <div
         class="flex flex-wrap"
         v-else-if="
-          (schemaValue.relation && data) || $typeCheck(data) === 'array'
+          (localSchemaValue.relation && data) || $typeCheck(data) === 'array'
         "
         v-if="
           ($typeCheck(data) === 'array' && data.length > 0) ||
@@ -77,7 +77,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromArray(schemaKey, item)"
+            @click="handleRemoveFromArray(localSchemaKey, item)"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -94,7 +94,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromField(schemaKey)"
+            @click="handleRemoveFromField(localSchemaKey)"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -106,22 +106,34 @@
         :class="{
           'mb-2': $typeCheck(data) === 'array',
         }"
-        v-if="schemaValue.relation && $roleCheck('PATCH', route.params.post as string)"
+        v-if="localSchemaValue.relation && $roleCheck('PATCH', route.params.post as string)"
         @click.stop="
-          schemaValue.relation &&
+          localSchemaValue.relation &&
             handleRelation(
-              schemaValue.relation,
-              schemaValue.type,
+              localSchemaValue.relation,
+              localSchemaValue.type,
               data,
-              schemaKey
+              localSchemaKey
             )
         "
       >
         <i class="fa-solid fa-up-right-from-square"></i>
       </button>
+      <button
+        class="bg-teal-700 h-[39px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[16px] lg:hover:bg-teal-500 duration-200"
+        v-if="
+          localSchemaValue.disabled &&
+          localSchemaKey !== 'id' &&
+          !localSchemaValue.relation &&
+          user.rootUser
+        "
+        @click="handleUnDisabled()"
+      >
+        <i class="fa-solid fa-lock-open"></i>
+      </button>
     </div>
-    <div v-if="error[schemaKey]" class="text-[12px] text-red-600">
-      {{ error[schemaKey] }}
+    <div v-if="error[localSchemaKey]" class="text-[12px] text-red-600">
+      {{ error[localSchemaKey] }}
     </div>
   </div>
 </template>
@@ -139,6 +151,9 @@ const props = defineProps<TProps>();
 const emits = defineEmits(["updateData", "handleRef", "updateDataField"]);
 const route = useRoute();
 const data = ref(props.item);
+const localSchemaKey = ref(props.schemaKey);
+const localSchemaValue = ref({ ...props.schemaValue });
+const { user } = useAuth();
 
 watch(
   () => props.item,
@@ -187,5 +202,9 @@ function handleRemoveFromArray(field: string, item: string | number) {
 function handleRemoveFromField(field: string) {
   data.value = null;
   emits("updateDataField", { field, value: null });
+}
+
+function handleUnDisabled() {
+  localSchemaValue.value.disabled = false;
 }
 </script>
