@@ -8,7 +8,11 @@
         <div class="text-[14px]">Routings</div>
         <div class="space-y-1 ml-2">
           <template
-            v-for="route in routes.filter((x) => x.method === 'GET')"
+            v-for="route in routes.filter(
+              (x) =>
+                x.method === 'GET' &&
+                (x.roles.includes(user.role) || x.isProtected === false)
+            )"
             :key="route.id"
             @click="handleHideSidebar"
           >

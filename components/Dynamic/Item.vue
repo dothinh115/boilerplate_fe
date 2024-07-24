@@ -120,7 +120,11 @@ const isValid = computed(() => {
   for (const [key, value] of Object.entries(schema.value)) {
     if (excludedKey.includes(key) || data.value[key] === 0) continue;
     if ((value as any).required) {
-      if (!data.value[key]) {
+      if (
+        data.value[key] === undefined ||
+        data.value[key] === null ||
+        data.value[key] === ""
+      ) {
         return false;
       }
     }
@@ -137,7 +141,11 @@ function errorCheck() {
   for (const [key, value] of Object.entries(schema.value)) {
     if ((value as any).required) {
       if (excludedKey.includes(key) || data.value[key] === 0) continue;
-      if (!data.value[key]) {
+      if (
+        data.value[key] === undefined ||
+        data.value[key] === null ||
+        data.value[key] === ""
+      ) {
         error.value[key] = "Không được để trống!";
       } else error.value[key] = "";
     }

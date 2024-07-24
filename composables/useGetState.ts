@@ -3,11 +3,12 @@ export type TToastData = {
   type: "success" | "error" | "warning" | "info";
 };
 
-type TRoute = {
+export type TRoute = {
   id: string;
   path: string;
   method: string;
   roles: number[];
+  isProtected: boolean;
 }[];
 
 export default function useGetState() {

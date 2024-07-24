@@ -1,10 +1,15 @@
 import type { TLogin } from "~/utils/models/login.model";
-
+export type TUser = {
+  id: string;
+  email: string;
+  rootUser: boolean;
+  role: number;
+};
 export default function useAuth() {
   const accessTokenCookie = useCookie("access_token");
   const refreshTokenCookie = useCookie("refresh_token");
 
-  const user = useState<any>("user");
+  const user = useState<TUser>("user");
 
   const getUser = async () => {
     if (!accessTokenCookie.value) return undefined;
