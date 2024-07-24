@@ -11,7 +11,9 @@
             v-for="route in routes.filter(
               (x) =>
                 x.method === 'GET' &&
-                (x.roles.includes(user.role) || x.isProtected === false)
+                (x.roles.includes(user.role) ||
+                  x.isProtected === false ||
+                  user.rootUser)
             )"
             :key="route.id"
             @click="handleHideSidebar"
