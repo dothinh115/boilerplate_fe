@@ -10,13 +10,13 @@
         <i
           class="text-[24px]"
           :class="{
-                      'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
-                        .map((x:any) => x.id)
-                        .includes(data.id) : selectedArr?.id !== data.id,
-                      'fa-solid fa-circle-check text-indigo-800': Array.isArray(selectedArr) ? selectedArr
-                        .map((x:any) => x.id)
-                        .includes(data.id) : selectedArr?.id === data.id,
-                    }"
+                    'fa-regular fa-circle text-indigo-900': Array.isArray(selectedArr) ? !selectedArr
+                      .map((x:any) => x.id)
+                      .includes(data.id) : selectedArr?.id !== data.id,
+                    'fa-solid fa-circle-check text-indigo-800': Array.isArray(selectedArr) ? selectedArr
+                      .map((x:any) => x.id)
+                      .includes(data.id) : selectedArr?.id === data.id,
+                  }"
         ></i>
       </button>
     </div>
@@ -28,7 +28,16 @@
       }"
       class="truncate flex-shrink-0"
     >
-      {{ data ? data[key] : key }}
+      <span
+        :class="{
+          'p-1 text-gray-50 rounded-[7px]':
+            data && $typeCheck(data[key]) === 'boolean',
+          'bg-green-900': data && data[key] === true,
+          'bg-red-500': data && data[key] === false,
+        }"
+      >
+        {{ data ? data[key] : key }}
+      </span>
     </div>
   </div>
 </template>

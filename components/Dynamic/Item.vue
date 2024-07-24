@@ -33,15 +33,17 @@
           </div>
           <div class="p-4 space-y-5 bg-gray-100 max-h-full">
             <DynamicItemField
-              v-for="([field, value], index) in Object.entries(schema)"
+              v-for="([schemaKey, schemaValue], index) in Object.entries(
+                schema
+              )"
               :key="index"
-              :item="data[field]"
+              :item="data[schemaKey]"
               :error
               @updateData="updateData"
               @handleRef="handleRelation"
               :new
-              :field
-              :value
+              :schemaKey
+              :schemaValue
               @update-data-field="updateDataField"
             />
           </div>

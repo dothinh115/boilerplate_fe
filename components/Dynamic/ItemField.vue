@@ -5,16 +5,16 @@
       'space-y-1': $typeCheck(data) !== 'boolean',
     }"
   >
-    <div class="text-gray-900">{{ field }}:</div>
+    <div class="text-gray-900">{{ schemaKey }}:</div>
     <Editor
       api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
       :init="getEditorInit(data)"
-      v-if="value.type === 'richText'"
+      v-if="schemaValue.type === 'richText'"
       v-model="data"
     />
 
     <div v-else-if="$typeCheck(data) === 'boolean'">
-      <Toggle v-model="data" />
+      <Toggle v-model="data" :disabled="schemaValue.disabled" />
     </div>
     <div
       class="flex space-x-2"
@@ -29,31 +29,33 @@
         :type="
           $typeCheck(data) === 'number'
             ? 'number'
-            : field === 'password'
+            : schemaKey === 'password'
             ? 'password'
             : 'text'
         "
         class="input w-full"
         :class="{
-          'input-red': error[field],
-          'input-blue': !error[field],
+          'input-red': error[schemaKey],
+          'input-blue': !error[schemaKey],
         }"
         :disabled="
-          field === 'id' || field === 'slug'
+          schemaKey === 'id' || schemaKey === 'slug'
             ? true
             : props.new
             ? false
-            : value.disabled
+            : schemaValue.disabled
             ? true
             : false
         "
         v-model="data"
-        @input="updateData(field, $event.target as HTMLInputElement)"
-        v-if="!value.relation"
+        @input="updateData(schemaKey, $event.target as HTMLInputElement)"
+        v-if="!schemaValue.relation"
       />
       <div
         class="flex flex-wrap"
-        v-else-if="(value.relation && data) || $typeCheck(data) === 'array'"
+        v-else-if="
+          (schemaValue.relation && data) || $typeCheck(data) === 'array'
+        "
         v-if="
           ($typeCheck(data) === 'array' && data.length > 0) ||
           ($typeCheck(data) !== 'array' && data)
@@ -75,7 +77,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromArray(field, item)"
+            @click="handleRemoveFromArray(schemaKey, item)"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -92,7 +94,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromField(field)"
+            @click="handleRemoveFromField(schemaKey)"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -104,17 +106,22 @@
         :class="{
           'mb-2': $typeCheck(data) === 'array',
         }"
-        v-if="value.relation && $roleCheck('PATCH', route.params.post as string)"
+        v-if="schemaValue.relation && $roleCheck('PATCH', route.params.post as string)"
         @click.stop="
-          value.relation &&
-            handleRelation(value.relation, value.type, data, field)
+          schemaValue.relation &&
+            handleRelation(
+              schemaValue.relation,
+              schemaValue.type,
+              data,
+              schemaKey
+            )
         "
       >
         <i class="fa-solid fa-up-right-from-square"></i>
       </button>
     </div>
-    <div v-if="error[field]" class="text-[12px] text-red-600">
-      {{ error[field] }}
+    <div v-if="error[schemaKey]" class="text-[12px] text-red-600">
+      {{ error[schemaKey] }}
     </div>
   </div>
 </template>
@@ -122,8 +129,8 @@
 import Editor from "@tinymce/tinymce-vue";
 
 type TProps = {
-  field: string;
-  value: any;
+  schemaKey: string;
+  schemaValue: any;
   item: any;
   error: any;
   new?: boolean;
@@ -153,7 +160,7 @@ function getEditorInit(item: string) {
       });
       editor.on("input", () => {
         item = editor.getContent();
-        emits("updateDataField", { field: props.field, value: item });
+        emits("updateDataField", { field: props.schemaKey, value: item });
       });
     },
   };
