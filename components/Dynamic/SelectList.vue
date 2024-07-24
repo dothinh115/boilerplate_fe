@@ -197,10 +197,7 @@ async function getData() {
     sort: "-id",
     ...(isSearching.value && {
       [`filter[${searchData.value.field}][${searchData.value.searchKey}]`]:
-        searchData.value.searchKey === "_in" ||
-        searchData.value.searchKey === "_nin"
-          ? `[${searchData.value.searchValue}]`
-          : searchData.value.searchValue,
+        searchData.value.searchValue,
     }),
   };
   const result: any = await useApi(api, { params });
