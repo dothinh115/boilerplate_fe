@@ -63,7 +63,7 @@
       >
         <div
           v-if="$typeCheck(data) === 'array'"
-          v-for="(item, index) in item"
+          v-for="(item, index) in data"
           :key="index"
           class="flex items-center justify-center mr-2 mb-2"
         >
@@ -77,7 +77,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromArray(localSchemaKey, item)"
+            @click="handleRemoveFromArray(item)"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -94,7 +94,7 @@
           </div>
           <button
             class="bg-indigo-300 h-[30px] flex items-center justify-center text-gray-800 px-2 rounded-r-[5px] lg:hover:bg-red-600 lg:hover:text-white duration-200"
-            @click="handleRemoveFromField(localSchemaKey)"
+            @click="handleRemoveFromField()"
             v-if="$roleCheck('PATCH', route.params.post as string)"
           >
             <i class="fa-solid fa-xmark"></i>
@@ -143,22 +143,22 @@ import Editor from "@tinymce/tinymce-vue";
 type TProps = {
   schemaKey: string;
   schemaValue: any;
-  item: any;
+  modelValue: any;
   error: any;
   new?: boolean;
 };
 const props = defineProps<TProps>();
-const emits = defineEmits(["updateData", "handleRef", "updateDataField"]);
+const emits = defineEmits(["updateData", "handleRef", "update:modelValue"]);
 const route = useRoute();
-const data = ref(props.item);
+const data = ref(props.modelValue);
 const localSchemaKey = ref(props.schemaKey);
 const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
 
 watch(
-  () => props.item,
-  (newValue) => {
-    data.value = newValue;
+  () => props.modelValue,
+  (newVal) => {
+    data.value = newVal;
   }
 );
 
@@ -175,7 +175,7 @@ function getEditorInit(item: string) {
       });
       editor.on("input", () => {
         item = editor.getContent();
-        emits("updateDataField", { field: props.schemaKey, value: item });
+        emits("update:modelValue", item);
       });
     },
   };
@@ -194,14 +194,15 @@ function handleRelation(
   emits("handleRef", { relation, type, defaultValue, key });
 }
 
-function handleRemoveFromArray(field: string, item: string | number) {
-  data.value = data.value.filter((x: string | number) => x !== item);
-  emits("updateDataField", { field, value: data.value });
+function handleRemoveFromArray(item: string | number) {
+  emits(
+    "update:modelValue",
+    data.value.filter((x: string | number) => x !== item)
+  );
 }
 
-function handleRemoveFromField(field: string) {
-  data.value = null;
-  emits("updateDataField", { field, value: null });
+function handleRemoveFromField() {
+  emits("update:modelValue", null);
 }
 
 function handleUnDisabled() {

@@ -1,10 +1,5 @@
 <template>
-  <DynamicItem
-    :info="{
-      schema,
-      data,
-    }"
-  />
+  <DynamicItem :schema v-model="data" />
 </template>
 <script setup lang="ts">
 const route = useRoute();

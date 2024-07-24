@@ -37,14 +37,13 @@
                 schema
               )"
               :key="index"
-              :item="data[schemaKey]"
+              v-model="data[schemaKey]"
               :error
               @updateData="updateData"
               @handleRef="handleRelation"
               :new
               :schemaKey
               :schemaValue
-              @update-data-field="updateDataField"
             />
           </div>
         </div>
@@ -81,18 +80,16 @@
 </template>
 <script setup lang="ts">
 type TProps = {
-  info: {
-    schema: any;
-    data: any;
-  };
+  schema: any;
   new?: boolean;
+  modelValue?: any;
 };
 const excludedKey = ["password", "id", "slug"];
 const route = useRoute();
 const props = defineProps<TProps>();
 const router = useRouter();
-const schema = ref<any>(props.info.schema);
-const data = ref<any>(props.info.data);
+const schema = ref<any>(props.schema);
+const data = ref<any>(props.modelValue);
 const error = ref<{
   [key: string]: string;
 }>({});
@@ -238,9 +235,5 @@ function handleSelection({
   if (Array.isArray(selected)) {
     data.value[key] = selected.map((x) => x.id);
   } else data.value[key] = selected.id || null;
-}
-
-function updateDataField(obj: { field: string; value: any }) {
-  data.value[obj.field] = obj.value;
 }
 </script>

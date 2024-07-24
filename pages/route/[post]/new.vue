@@ -1,13 +1,7 @@
 <template>
   <Teleport to="body">
     <Modal v-model="modelValue">
-      <DynamicItem
-        :info="{
-          data,
-          schema,
-        }"
-        :new="true"
-      />
+      <DynamicItem :schema v-model="data" :new="true" />
     </Modal>
   </Teleport>
 </template>

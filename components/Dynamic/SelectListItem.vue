@@ -51,7 +51,9 @@ type TProps = {
   };
 };
 const props = defineProps<TProps>();
+
 const emits = defineEmits(["handleSelect"]);
+
 function handleSelect(item: any) {
   emits("handleSelect", item);
 }
