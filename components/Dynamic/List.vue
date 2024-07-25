@@ -19,14 +19,17 @@
             <i class="fa-solid fa-x"></i>
           </div>
         </div> -->
+        <span class="text-[30px] text-gray-200">
+          {{ "/" + route.params.post }}
+        </span>
       </div>
       <div class="space-x-4 flex">
         <div
-          class="relative h-[40px] aspect-2 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 hover:text-indigo-800 z-[1] duration-200"
+          class="relative h-[40px] aspect-2 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 z-[1] duration-200"
           @click.stop="isSearching = true"
           :class="{
             '!aspect-[10] !cursor-auto hover:bg-transparent': isSearching,
-            border: !isSearching,
+            'border hover:text-indigo-800': !isSearching,
           }"
           v-click-outside="
             () => {
@@ -65,7 +68,7 @@
                   v-model="filterArr[index]"
                 />
                 <button
-                  class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1"
+                  class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
                   @click="handleRemoveFilter(index)"
                 >
                   <i class="fa-solid fa-minus"></i>
@@ -73,7 +76,7 @@
               </div>
 
               <button
-                class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2"
+                class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2 hover:text-indigo-800 duration-200 hover:border-indigo-400"
                 @click="handleAddFilter"
               >
                 <i class="fa-solid fa-plus"></i>
@@ -81,20 +84,27 @@
               </button>
               <div class="flex items-center">
                 <button
-                  class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2"
+                  class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-emerald-900 duration-200"
                   @click="handleApplyFilter"
                 >
                   <i class="fa-solid fa-check"></i>
                   <span class="text-gray-50"> Áp dụng filter </span>
                 </button>
                 <button
-                  class="border border-emerald-600 bg-red-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2"
+                  class="border border-amber-600 bg-amber-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-amber-800 duration-200"
                   @click="handleUnReviewFilter"
                 >
                   <i class="fa-solid fa-x"></i>
                   <span class="text-gray-50"> Xoá filter </span>
                 </button>
               </div>
+              <button
+                class="border border-red-600 bg-red-500 rounded-full h-[30px] flex items-center justify-center space-x-2 py-1 px-2 text-gray-100 w-full hover:bg-red-800 duration-200"
+                @click.stop="isSearching = false"
+              >
+                <i class="fa-solid fa-x"></i>
+                <span class="text-gray-50"> Đóng </span>
+              </button>
             </div>
           </div>
         </div>
