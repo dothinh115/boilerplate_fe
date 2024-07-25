@@ -72,8 +72,14 @@ export default async function useApi(
         toastData.value.push(newToast);
         if (route.query.sort)
           router.push({ query: { sort: undefined }, replace: true });
-      } else clearError();
-      location.reload();
+      } else {
+        const newToast: TToastData = {
+          message: error.data?.message,
+          type: "error",
+        };
+        toastData.value.push(newToast);
+        clearError();
+      }
     });
   };
 
