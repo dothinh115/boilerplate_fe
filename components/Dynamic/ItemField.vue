@@ -173,7 +173,7 @@ function getEditorInit(item: string) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
       });
-      editor.on("input", () => {
+      editor.on("change", () => {
         item = editor.getContent();
         emits("update:modelValue", item);
       });

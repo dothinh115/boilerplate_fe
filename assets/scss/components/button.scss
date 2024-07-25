@@ -20,3 +20,10 @@
     @apply bg-red-600 text-gray-50 lg:hover:bg-red-800;
   }
 }
+
+.select {
+  @apply p-1;
+  option {
+    @apply bg-gray-100;
+  }
+}

@@ -72,10 +72,8 @@ export default async function useApi(
         toastData.value.push(newToast);
         if (route.query.sort)
           router.push({ query: { sort: undefined }, replace: true });
-      } else
-        clearError({
-          redirect: "/",
-        });
+      } else clearError();
+      location.reload();
     });
   };
 

@@ -16,12 +16,14 @@
     "@tinymce/tinymce-vue": "^4",
     "jwt-decode": "^4.0.0",
     "nuxt": "^3.11.1",
+    "qs": "^6.12.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/qs": "^6.9.15",
     "sass": "^1.72.0"
   }
 }

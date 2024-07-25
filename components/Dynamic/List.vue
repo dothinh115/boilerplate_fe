@@ -1,7 +1,123 @@
 <template>
   <div class="h-full flex-col max-h-full space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <!-- <div v-if="isFiltering" class="flex items-center">
+          <div class="py-2 px-4 bg-gray-100 rounded-l-full text-gray-800">
+            Đang áp dụng filter.
+          </div>
+          <div
+            class="py-2 px-4 bg-lime-200 text-gray-800 cursor-pointer"
+            @click.stop="isSearching = true"
+          >
+            Xem filter
+          </div>
+          <div
+            class="py-2 px-4 bg-red-500 rounded-r-full text-gray-100 cursor-pointer"
+            @click.stop="handleUnReviewFilter()"
+          >
+            <i class="fa-solid fa-x"></i>
+          </div>
+        </div> -->
+      </div>
+      <div class="space-x-4 flex">
+        <div
+          class="relative h-[40px] aspect-2 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 hover:text-indigo-800 z-[1] duration-200"
+          @click.stop="isSearching = true"
+          :class="{
+            '!aspect-[10] !cursor-auto hover:bg-transparent': isSearching,
+            border: !isSearching,
+          }"
+          v-click-outside="
+            () => {
+              isSearching = false;
+            }
+          "
+        >
+          <div
+            class="flex items-center justify-between w-full text-[18px] p-2"
+            :class="{
+              'text-indigo-800': isSearching,
+            }"
+            v-if="!isSearching"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-sort"></i>
+          </div>
+          <div
+            class="absolute w-full top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300"
+            :class="{
+              'py-2': Object.keys(searchObject).length > 0,
+            }"
+            v-show="isSearching"
+          >
+            <Search :searchObject :deep="0" :type="'object'" />
+            <div class="p-1 space-y-2">
+              <div
+                v-for="(item, index) in filterArr"
+                :key="index"
+                class="flex space-x-2 items-center"
+              >
+                <span class="text-gray-400">filter</span>
+                <input
+                  type="text"
+                  class="rounded-full border border-gray-200 outline-none w-full py-1 px-2 text-indigo-500 !ml-1"
+                  v-model="filterArr[index]"
+                />
+                <button
+                  class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1"
+                  @click="handleRemoveFilter(index)"
+                >
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+              </div>
+
+              <button
+                class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2"
+                @click="handleAddFilter"
+              >
+                <i class="fa-solid fa-plus"></i>
+                <span class="text-gray-500"> Add filter... </span>
+              </button>
+              <div class="flex items-center">
+                <button
+                  class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2"
+                  @click="handleApplyFilter"
+                >
+                  <i class="fa-solid fa-check"></i>
+                  <span class="text-gray-50"> Áp dụng filter </span>
+                </button>
+                <button
+                  class="border border-emerald-600 bg-red-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2"
+                  @click="handleUnReviewFilter"
+                >
+                  <i class="fa-solid fa-x"></i>
+                  <span class="text-gray-50"> Xoá filter </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <NuxtLink
+          :to="{
+            name: 'route-post-new',
+            params: {
+              post: route.params.post,
+            },
+            query: {
+              ...route.query,
+            },
+          }"
+          class="h-[40px] aspect-1 bg-emerald-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-emerald-800"
+          v-if="$roleCheck('POST', route.params.post as string)"
+        >
+          <i class="fa-solid fa-plus"></i>
+        </NuxtLink>
+      </div>
+    </div>
+
     <div
-      class="max-h-[85%] overflow-y-scroll hidden-scrollbar space-y-[1px] !mt-[1px] rounded-b-[10px] rounded-t-[10px] relative"
+      class="max-h-[85%] overflow-y-scroll hidden-scrollbar space-y-[1px] rounded-b-[10px] rounded-t-[10px]"
     >
       <div
         class="p-2 bg-indigo-600 text-gray-100 flex items-center space-x-2 w-max min-w-full sticky top-0"
@@ -21,28 +137,6 @@
         :item="item"
         :width="width"
       />
-      <div
-        class="p-2 odd:bg-gray-50 even:bg-gray-200 lg:hover:bg-opacity-90 flex items-center space-x-2 duration-100 last:rounded-b-[10px] w-max min-w-full"
-        v-if="data.length === 0"
-      >
-        {{
-          isSearching ? "Không tìm thấy kết quả nào." : "Chưa có record nào."
-        }}
-      </div>
-    </div>
-
-    <div class="mb-2 flex items-center" v-if="isSearching">
-      <div class="py-1 px-2 bg-indigo-100 w-fit rounded-l-[10px]">
-        Đang lọc theo trường {{ route.query.field }} với giá trị '{{
-          route.query.value
-        }}'
-      </div>
-      <button
-        class="py-1 px-2 bg-indigo-300 rounded-r-[10px] lg:cursor-pointer lg:hover:bg-red-600 lg:hover:text-white duration-200"
-        @click="clearSearch"
-      >
-        <i class="fa-solid fa-xmark"></i>
-      </button>
     </div>
 
     <div
@@ -114,43 +208,11 @@
           <i class="fa-solid fa-chevron-right"></i>
         </NuxtLink>
       </div>
-      <div class="flex space-x-2 items-center max-md:w-full">
-        <NuxtLink
-          :to="{
-            name: 'route-post-new',
-            params: {
-              post: route.params.post,
-            },
-            query: {
-              ...route.query,
-            },
-          }"
-          class="btn btn-green btn-icon"
-          v-if="$roleCheck('POST', route.params.post as string)"
-        >
-          <i class="fa-solid fa-plus"></i><span>Thêm mới</span>
-        </NuxtLink>
-        <button class="btn btn-blue btn-icon" @click="searchModal = true">
-          <i class="fa-solid fa-magnifying-glass"></i><span>Tìm kiếm</span>
-        </button>
-      </div>
     </div>
   </div>
-  <Teleport to="body">
-    <Modal v-model="searchModal">
-      <Search
-        :schema="schema"
-        @close="searchModal = false"
-        @searchConfirm="searchConfirm"
-        :searching="{
-          field:route.query.field as string,
-          searchKey: route.query.key as string,
-          searchValue: route.query.value as string
-        }"
-    /></Modal>
-  </Teleport>
 </template>
 <script setup lang="ts">
+import qs from "qs";
 type TProps = {
   api: {
     dataApi: string;
@@ -166,35 +228,52 @@ const currentPage = ref(Number(route.query.page) || 1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const { loading, screenWidth, routes } = useGetState();
+const { loading, screenWidth } = useGetState();
 const data = ref<any>(null);
 const schema = useState<any>(schemaApi);
 const sortBy = ref<string>((route.query.sort as string) || "-id");
 const width = ref<{
   [key: string]: number;
 }>({});
-const searchModal = ref(false);
 const { $getMaxLength } = useNuxtApp();
-const { user } = useAuth();
+const searchObject = useState<any>("searchObject", () => ({}));
+const isSearching = ref(false);
+const filterArr = ref<string[]>([""]);
+const filtering = ref(false);
+
+const isFiltering = computed(() => {
+  if (
+    Object.keys(searchObject).length > 0 &&
+    filtering.value === true &&
+    filterArr.value.every((filter) => filter !== "")
+  ) {
+    return true;
+  }
+  return false;
+});
 
 async function getList() {
-  const searchData = route.query;
-  const { field, key, value } = searchData;
-  const params = {
+  const params: any = {
     limit: perPage,
     page: currentPage.value,
     meta: "*",
     sort: sortBy.value,
-    ...(field &&
-      key &&
-      value && {
-        [`filter[${field}][${key}]`]: value,
-      }),
   };
+  if (filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")) {
+    for (const filter of filterArr.value) {
+      const filterSplit = filter.split("=");
+      const filterKey = `filter${filterSplit[0]}`;
+      params[filterKey] = filterSplit[1];
+    }
+    filtering.value = true;
+  } else {
+    filtering.value = false;
+  }
   const result: any = await useApi(dataApi, { params });
   totalPages.value = Math.ceil(
-    (field && key && value ? result.meta.filterCount : result.meta.totalCount) /
-      perPage
+    (filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")
+      ? result.meta.filterCount
+      : result.meta.totalCount) / perPage
   );
   data.value = result.data;
 }
@@ -205,41 +284,39 @@ async function getSchema() {
   schema.value = result.data;
 }
 
-const isSearching = computed(
-  () => route.query.field && route.query.key && route.query.value
-);
-
-async function searchConfirm(searchData: {
-  field: string;
-  searchKey: string;
-  searchValue: string;
-}) {
-  const { field, searchKey, searchValue } = searchData;
-  await navigateTo(
-    {
-      query: {
-        ...route.query,
-        field,
-        key: searchKey,
-        value: searchValue,
-      },
-    },
-    { replace: true }
-  );
-  searchModal.value = false;
+function handleAddFilter() {
+  filterArr.value.push("");
 }
 
-async function clearSearch() {
-  await navigateTo(
-    {
-      query: {
-        field: undefined,
-        key: undefined,
-        value: undefined,
-      },
-    },
-    { replace: true }
-  );
+function handleRemoveFilter(index: number) {
+  filterArr.value = filterArr.value.filter((item, idx) => idx !== index);
+}
+
+watchEffect(() => {
+  handleReviewFilter();
+});
+
+function handleReviewFilter() {
+  let totalString = "";
+  for (const item of filterArr.value) {
+    totalString += "&" + item;
+  }
+  searchObject.value = qs.parse(totalString, { depth: 10 });
+}
+
+async function handleApplyFilter() {
+  loading.value = true;
+  await getList();
+  loading.value = false;
+}
+
+function handleUnReviewFilter() {
+  searchObject.value = {};
+  filterArr.value = [];
+}
+
+async function handleUnApplyFilter() {
+  handleUnReviewFilter();
   loading.value = true;
   await getList();
   loading.value = false;

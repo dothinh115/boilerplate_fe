@@ -1,124 +1,102 @@
 <template>
   <div
-    class="space-y-8 mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
+    v-if="type === 'object' && Object.keys(searchObject).length > 0"
+    class="flex items-center justify-between text-indigo-800 w-full h-[45px] px-2"
     :class="{
-      '2xl:w-[40%] xl:w-[50%] lg:w-[70%] w-[95%]': !small,
-      '2xl:w-[30%] xl:w-[40%] lg:w-[50%] md:w-[70%] w-[95%]': small,
+      'bg-gray-50': Object.keys(searchObject).length > 0,
     }"
   >
-    <div
-      class="rounded-[10px] max-h-[95vh] overflow-y-scroll hidden-scrollbar relative w-full"
-    >
+    <div class="relative ml-2 flex items-center space-x-1 h-full">
       <div
-        class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
+        class="h-full border-l border-gray-200 relative after:absolute after:contents-['-'] after:h-[1px] after:w-full after:border-t after:border-gray-200 after:border-dashed after:top-1/2 after:-translate-y-1/2"
+        :style="{ width: (deep + 1) * 12 + 'px' }"
+      ></div>
+      <i class="fa-solid fa-grip-vertical"></i>
+      <span
+        class="rounded-[5px] p-1 min-w-[35px] bg-lime-200 flex justify-center items-center"
+        :class="{
+          '!bg-indigo-200': Object.keys(searchObject)[0] === 'and',
+          '!bg-orange-200': Object.keys(searchObject)[0] === 'or',
+        }"
       >
-        <i
-          class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 lg:hover:bg-indigo-900 lg:hover:text-white duration-200"
-          @click="handleClose"
-        ></i>
-        Tìm kiếm
-        <div class="flex items-center space-x-2 h-full">
-          <i
-            class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
-            @click="searchConfirm"
-          ></i>
-        </div>
-      </div>
-      <div class="p-4 space-y-2 bg-gray-100 max-h-full">
-        <div>Tìm kiếm theo:</div>
+        {{ Object.keys(searchObject)[0] }}
+      </span>
 
-        <div
-          class="flex md:space-x-2 max-md:space-y-2 items-center max-md:flex-wrap"
-        >
-          <div class="md:max-w-[15%] max-md:w-full">
-            <select v-model="field" class="input input-blue w-full">
-              <option
-                v-for="(item, index) in Object.keys(localSchema)"
-                :key="index"
-                :value="item"
-              >
-                {{ item }}
-              </option>
-            </select>
-          </div>
-          <div class="md:flex-1 max-md:w-full">
-            <select v-model="searchKey" class="input input-blue w-full">
-              <option
-                v-for="([key, value], index) in Object.entries(compareKey)"
-                :key="index"
-                :value="value"
-              >
-                {{ key }}
-              </option>
-            </select>
-          </div>
-          <div class="md:flex-1 max-md:w-full">
-            <input
-              v-model="searchValue"
-              type="text"
-              class="input w-full"
-              placeholder="Tìm kiếm..."
-              @keyup.enter="searchConfirm"
-              :class="{
-                'input-red': invalid,
-                'input-blue': !invalid,
-              }"
-              :disabled="!field || !searchKey"
-            />
-          </div>
-        </div>
-      </div>
+      <span
+        class="rounded-[5px] p-1 min-w-[30px] flex justify-center items-center bg-red-200"
+        v-if="
+          localType === 'unknown' && searchObject[Object.keys(searchObject)[0]]
+        "
+      >
+        {{ searchObject[Object.keys(searchObject)[0]] }}
+      </span>
     </div>
   </div>
+  <div v-if="localType === 'object' && Object.keys(searchObject).length > 0">
+    <Search
+      :searchObject="searchObject[Object.keys(searchObject)[0]]"
+      :deep="deep + 1"
+      :type="getType(searchObject[Object.keys(searchObject)[0]])"
+    />
+  </div>
+  <div
+    v-if="
+      localType !== 'unknown' &&
+      localType === 'array' &&
+      Array.isArray(searchObject[Object.keys(searchObject)[0]])
+    "
+  >
+    <Search
+      v-for="(item, index) in searchObject[Object.keys(searchObject)[0]]"
+      :key="index"
+      :searchObject="item"
+      :deep="deep + 1"
+      :type="getType(item)"
+    />
+  </div>
 </template>
+
 <script setup lang="ts">
 type TProps = {
-  schema: object;
-  small?: boolean;
-  searching: {
-    field: string;
-    searchKey: string;
-    searchValue: string;
-  };
+  searchObject: any;
+  deep: number;
+  type: "array" | "object" | "unknown";
 };
-const compareKey = {
-  "_eq (bằng)": "_eq",
-  "_contains (xuất hiện trong chuỗi)": "_contains",
-  "_in (xuất hiện 1 lần trong mảng)": "_in",
-  "_nin (không xuất hiện trong mảng)": "_nin",
-};
+const emits = defineEmits(["updateSearchData"]);
 const props = defineProps<TProps>();
-const localSchema = ref(props.schema);
-const route = useRoute();
-const emits = defineEmits(["close", "searchConfirm"]);
-const field = ref(props.searching.field ? props.searching.field : "id");
-const searchKey = ref(
-  props.searching.searchKey ? props.searching.searchKey : "_eq"
+const flag = ref(false); //cờ để xác định đã chọn key
+const mainSearchObject = useState<any>("searchObject");
+
+const localType = computed(() =>
+  Array.isArray(props.searchObject[Object.keys(props.searchObject)[0]])
+    ? "array"
+    : typeof props.searchObject[Object.keys(props.searchObject)[0]] === "object"
+    ? "object"
+    : "unknown"
 );
-const searchValue = ref(
-  props.searching.searchValue ? props.searching.searchValue : ""
-);
-const invalid = ref(false);
-function handleClose() {
-  emits("close");
+
+function getType(data: any) {
+  return Array.isArray(data)
+    ? "array"
+    : typeof data === "object"
+    ? "object"
+    : "unknown";
 }
 
-watch(
-  () => searchValue.value,
-  (newVal) => {
-    if (invalid.value) invalid.value = false;
+function removeAttribute(mainObj: any = { ...mainSearchObject.value }) {
+  if (typeof mainObj === "object") {
+    for (const key in mainObj) {
+      if (JSON.stringify(mainObj) === JSON.stringify(props.searchObject)) {
+        delete mainObj[key];
+      } else {
+        removeAttribute(mainObj[key]);
+      }
+    }
+  } else if (Array.isArray(mainObj)) {
+    for (const item of mainObj) {
+      removeAttribute(item);
+    }
   }
-);
-
-async function searchConfirm() {
-  if (!searchValue.value) {
-    invalid.value = true;
-    return;
-  }
-  emits("searchConfirm", {
-    field: field.value,
-    searchKey: searchKey.value,
-    searchValue: searchValue.value,
-  });
+  mainSearchObject.value = mainObj;
 }
 </script>
