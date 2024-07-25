@@ -125,7 +125,8 @@
           localSchemaValue.disabled &&
           localSchemaKey !== 'id' &&
           !localSchemaValue.relation &&
-          user.rootUser
+          user.rootUser &&
+          props.new !== true
         "
         @click="handleUnDisabled()"
       >
