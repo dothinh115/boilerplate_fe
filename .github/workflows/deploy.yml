@@ -20,7 +20,7 @@ jobs:
         id: deploy
         run: |
           echo "Deploying..."
-          sshpass -p "$SSH_PASSWORD" ssh $SSH_USER@$SSH_HOST << EOF
+          sshpass -p "$SSH_PASSWORD" ssh -T $SSH_USER@$SSH_HOST << EOF
             cd ${{ env.PROJECT_PATH }}
             # Pull từ git về 
             git checkout -- yarn.lock
