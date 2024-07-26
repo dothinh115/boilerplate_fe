@@ -172,13 +172,7 @@ async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
   const result = await useApi(
-    `/${route.params.post}${
-      route.params.post === "setting"
-        ? ""
-        : data.value.id
-        ? "/" + data.value.id
-        : ""
-    }`,
+    `/${route.params.post}${data.value.id ? "/" + data.value.id : ""}`,
     {
       method: data.value.id ? "PATCH" : "POST",
       body: data.value,
