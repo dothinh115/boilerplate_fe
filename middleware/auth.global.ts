@@ -1,8 +1,8 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const access_token = useCookie("access_token");
+  const refreshToken = useCookie(REFRESH_TOKEN);
   const { user, getUser } = useAuth();
 
-  if (access_token && !user.value) {
+  if (refreshToken.value && !user.value) {
     await getUser();
   }
 

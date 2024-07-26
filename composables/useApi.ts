@@ -14,7 +14,6 @@ export default async function useApi(
     };
   }
 ) {
-  const access_token = sessionStorage.getItem(ACCESS_TOKEN);
   const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
@@ -24,6 +23,7 @@ export default async function useApi(
   };
 
   const isTokenValid = () => {
+    const access_token = sessionStorage.getItem(ACCESS_TOKEN);
     if (!access_token) return false;
     try {
       const decoded: any = jwtDecode(access_token);
@@ -41,6 +41,7 @@ export default async function useApi(
     if (!isValid && refresh_token.value) {
       await refreshToken();
     }
+    const access_token = sessionStorage.getItem(ACCESS_TOKEN);
     return await $fetch(request, {
       ...options,
       ...(access_token && {

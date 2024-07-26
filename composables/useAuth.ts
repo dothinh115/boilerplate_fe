@@ -12,14 +12,8 @@ export default function useAuth() {
   const user = useState<TUser>("user");
 
   const getUser = async () => {
-    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
-    if (!accessToken) return undefined;
     try {
-      const fetchUserResult: any = await useApi("/me", {
-        headers: {
-          authorization: "Bearer " + accessToken,
-        },
-      });
+      const fetchUserResult: any = await useApi("/me");
       if (fetchUserResult.data) user.value = fetchUserResult.data[0];
       return user.value;
     } catch (error) {}
