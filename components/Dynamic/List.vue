@@ -422,6 +422,7 @@ function handleReviewFilter() {
 async function handleApplyFilter() {
   loading.value = true;
   await getList();
+  currentPage.value = 1;
   loading.value = false;
   if (screenWidth.value < 768) modalFilter.value = false;
   else isSearching.value = false;
@@ -436,6 +437,7 @@ async function handleUnApplyFilter() {
   handleUnReviewFilter();
   loading.value = true;
   await getList();
+  currentPage.value = 1;
   loading.value = false;
 }
 
