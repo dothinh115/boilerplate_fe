@@ -10,10 +10,11 @@ const route = useRoute();
 const modelValue = ref(true);
 const { loading } = useGetState();
 const data = ref<any>({});
-const schema = ref<any>();
 const schemaApi = `/schema/${route.params.post}`;
+const schema = useState<any>(schemaApi);
 
 async function getSchema() {
+  if (schema.value) return;
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
 }
