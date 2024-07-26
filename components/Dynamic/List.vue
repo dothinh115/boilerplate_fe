@@ -1,14 +1,26 @@
 <template>
   <div class="h-full flex-col max-h-full space-y-4">
-    <div class="flex items-center justify-between">
-      <div>
-        <div v-if="isFiltering" class="flex items-center">
+    <div class="flex items-center justify-between flex-wrap-reverse">
+      <div
+        :class="{
+          'max-md:w-full': isFiltering,
+        }"
+      >
+        <div
+          v-if="isFiltering"
+          class="max-md:flex-wrap-reverse flex items-center max-md:mt-2"
+        >
           <div class="py-2 px-4 bg-gray-100 rounded-l-full text-gray-800">
             Đang áp dụng filter.
           </div>
           <div
             class="py-2 px-4 bg-lime-200 text-gray-800 cursor-pointer"
-            @click.stop="isSearching = true"
+            @click.stop="
+              () => {
+                if (screenWidth < 768) modalFilter = true;
+                else isSearching = true;
+              }
+            "
           >
             Xem filter
           </div>
@@ -23,9 +35,14 @@
           {{ "/" + route.params.post }}
         </span>
       </div>
-      <div class="space-x-4 flex">
+      <div
+        class="max-md:space-x-2 space-x-4 flex max-md:justify-end"
+        :class="{
+          'max-md:w-full': isFiltering,
+        }"
+      >
         <div
-          class="relative h-[40px] aspect-2 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 z-[1] duration-200"
+          class="relative h-[40px] md:aspect-2 aspect-1 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 z-[1] duration-200"
           :class="{
             '!aspect-[10] !cursor-auto hover:bg-transparent': isSearching,
             'border hover:text-indigo-800': !isSearching,
@@ -37,15 +54,20 @@
           "
         >
           <div
-            class="flex items-center justify-between w-full text-[18px] p-2"
+            class="flex items-center md:justify-between justify-center w-full text-[18px] p-2"
             :class="{
               'text-indigo-800': isSearching,
             }"
             v-if="!isSearching"
-            @click.stop="() => (isSearching = true)"
+            @click.stop="
+              () => {
+                if (screenWidth < 768) modalFilter = true;
+                else isSearching = true;
+              }
+            "
           >
             <i class="fa-solid fa-magnifying-glass"></i>
-            <i class="fa-solid fa-sort"></i>
+            <i class="fa-solid fa-sort md:inline-block hidden"></i>
           </div>
           <div
             class="absolute w-full top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300"
@@ -226,6 +248,75 @@
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <Modal v-model="modalFilter">
+      <div
+        class="w-full top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300 mx-2"
+        :class="{
+          'py-2': Object.keys(searchObject).length > 0,
+        }"
+      >
+        <Search
+          :searchObject
+          :deep="0"
+          :type="'object'"
+          :schema
+          @updateSearchObject="updateSearchObject"
+        />
+        <div class="p-1 space-y-2">
+          <div
+            v-for="(item, index) in filterArr"
+            :key="index"
+            class="flex space-x-2 items-center"
+          >
+            <span class="text-gray-400">filter</span>
+            <input
+              type="text"
+              class="rounded-full border border-gray-200 outline-none w-full py-1 px-2 text-indigo-500 !ml-1"
+              v-model="filterArr[index]"
+            />
+            <button
+              class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
+              @click.stop="handleRemoveFilter(index)"
+            >
+              <i class="fa-solid fa-minus"></i>
+            </button>
+          </div>
+
+          <button
+            class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2 hover:text-indigo-800 duration-200 hover:border-indigo-400"
+            @click="handleAddFilter"
+          >
+            <i class="fa-solid fa-plus"></i>
+            <span class="text-gray-500"> Add filter... </span>
+          </button>
+          <div class="flex items-center">
+            <button
+              class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-emerald-900 duration-200"
+              @click="handleApplyFilter"
+            >
+              <i class="fa-solid fa-check"></i>
+              <span class="text-gray-50"> Áp dụng filter </span>
+            </button>
+            <button
+              class="border border-amber-600 bg-amber-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-amber-800 duration-200"
+              @click="handleUnReviewFilter"
+            >
+              <i class="fa-solid fa-x"></i>
+              <span class="text-gray-50"> Xoá filter </span>
+            </button>
+          </div>
+          <button
+            class="border border-red-600 bg-red-500 rounded-full h-[30px] flex items-center justify-center space-x-2 py-1 px-2 text-gray-100 w-full hover:bg-red-800 duration-200"
+            @click.stop="modalFilter = false"
+          >
+            <i class="fa-solid fa-x"></i>
+            <span class="text-gray-50"> Đóng </span>
+          </button>
+        </div>
+      </div>
+    </Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 import qs from "qs";
@@ -256,6 +347,7 @@ const searchObject = useState<any>("searchObject", () => ({}));
 const isSearching = ref(false);
 const filterArr = ref<string[]>([""]);
 const filtering = ref(false);
+const modalFilter = ref(false);
 
 const isFiltering = computed(() => {
   if (
@@ -331,7 +423,8 @@ async function handleApplyFilter() {
   loading.value = true;
   await getList();
   loading.value = false;
-  isSearching.value = false;
+  if (screenWidth.value < 768) modalFilter.value = false;
+  else isSearching.value = false;
 }
 
 async function handleUnReviewFilter() {
