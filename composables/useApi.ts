@@ -80,6 +80,7 @@ export default async function useApi(
         toastData.value.push(newToast);
         clearError();
       }
+      clearError();
     });
   };
 

@@ -2,7 +2,7 @@
   <div class="h-full flex-col max-h-full space-y-4">
     <div class="flex items-center justify-between">
       <div>
-        <!-- <div v-if="isFiltering" class="flex items-center">
+        <div v-if="isFiltering" class="flex items-center">
           <div class="py-2 px-4 bg-gray-100 rounded-l-full text-gray-800">
             Đang áp dụng filter.
           </div>
@@ -14,19 +14,18 @@
           </div>
           <div
             class="py-2 px-4 bg-red-500 rounded-r-full text-gray-100 cursor-pointer"
-            @click.stop="handleUnReviewFilter()"
+            @click.stop="handleUnApplyFilter()"
           >
             <i class="fa-solid fa-x"></i>
           </div>
-        </div> -->
-        <span class="text-[30px] text-gray-200">
+        </div>
+        <span class="text-[30px] text-gray-200" v-else>
           {{ "/" + route.params.post }}
         </span>
       </div>
       <div class="space-x-4 flex">
         <div
           class="relative h-[40px] aspect-2 bg-transparent border-gray-200 rounded-full cursor-pointer flex items-center text-gray-200 hover:bg-gray-200 z-[1] duration-200"
-          @click.stop="isSearching = true"
           :class="{
             '!aspect-[10] !cursor-auto hover:bg-transparent': isSearching,
             'border hover:text-indigo-800': !isSearching,
@@ -43,6 +42,7 @@
               'text-indigo-800': isSearching,
             }"
             v-if="!isSearching"
+            @click.stop="() => (isSearching = true)"
           >
             <i class="fa-solid fa-magnifying-glass"></i>
             <i class="fa-solid fa-sort"></i>
@@ -54,7 +54,13 @@
             }"
             v-show="isSearching"
           >
-            <Search :searchObject :deep="0" :type="'object'" />
+            <Search
+              :searchObject
+              :deep="0"
+              :type="'object'"
+              :schema
+              @updateSearchObject="updateSearchObject"
+            />
             <div class="p-1 space-y-2">
               <div
                 v-for="(item, index) in filterArr"
@@ -69,7 +75,7 @@
                 />
                 <button
                   class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
-                  @click="handleRemoveFilter(index)"
+                  @click.stop="handleRemoveFilter(index)"
                 >
                   <i class="fa-solid fa-minus"></i>
                 </button>
@@ -265,7 +271,10 @@ const isFiltering = computed(() => {
 async function getList() {
   const params: any = {
     limit: perPage,
-    page: currentPage.value,
+    page:
+      filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")
+        ? 1
+        : currentPage.value,
     meta: "*",
     sort: sortBy.value,
   };
@@ -302,6 +311,10 @@ function handleRemoveFilter(index: number) {
   filterArr.value = filterArr.value.filter((item, idx) => idx !== index);
 }
 
+function updateSearchObject(data: any) {
+  searchObject.value = data;
+}
+
 watchEffect(() => {
   handleReviewFilter();
 });
@@ -318,9 +331,10 @@ async function handleApplyFilter() {
   loading.value = true;
   await getList();
   loading.value = false;
+  isSearching.value = false;
 }
 
-function handleUnReviewFilter() {
+async function handleUnReviewFilter() {
   searchObject.value = {};
   filterArr.value = [];
 }
