@@ -62,7 +62,7 @@ type TProps = {
   deep: number;
   type: "array" | "object" | "unknown";
 };
-const emits = defineEmits(["updateSearchData"]);
+const emits = defineEmits(["updateSearchObject"]);
 const props = defineProps<TProps>();
 const flag = ref(false); //cờ để xác định đã chọn key
 const mainSearchObject = useState<any>("searchObject");

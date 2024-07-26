@@ -24,7 +24,7 @@
       <button
         class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-white lg:hover:text-red-500 duration-200"
         @click="handleCancelSearch()"
-        v-if="isSearching"
+        v-if="isFiltering"
       >
         <i class="fa-solid fa-magnifying-glass-minus"></i>
       </button>
@@ -100,18 +100,77 @@
     </div>
   </div>
   <Teleport to="body">
-    <Modal v-model="searchModal">
-      <Search
-        :schema="schema"
-        :small="true"
-        @close="searchModal = false"
-        @searchConfirm="handleSearchConfirm"
-        :searching="searchData"
-      />
+    <Modal v-model="modalFilter">
+      <div
+        class="xl:w-[35%] lg:w-1/2 md:w-[60%] w-[95%] top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300 mx-2"
+        :class="{
+          'py-2': Object.keys(searchObject).length > 0,
+        }"
+      >
+        <Search
+          :searchObject
+          :deep="0"
+          :type="'object'"
+          @updateSearchObject="updateSearchObject"
+        />
+        <div class="p-1 space-y-2">
+          <div
+            v-for="(item, index) in filterArr"
+            :key="index"
+            class="flex space-x-2 items-center"
+          >
+            <span class="text-gray-400">filter</span>
+            <input
+              type="text"
+              class="rounded-full border border-gray-200 outline-none w-full py-1 px-2 text-indigo-500 !ml-1"
+              v-model="filterArr[index]"
+            />
+            <button
+              class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
+              @click.stop="handleRemoveFilter(index)"
+            >
+              <i class="fa-solid fa-minus"></i>
+            </button>
+          </div>
+
+          <button
+            class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2 hover:text-indigo-800 duration-200 hover:border-indigo-400"
+            @click="handleAddFilter"
+          >
+            <i class="fa-solid fa-plus"></i>
+            <span class="text-gray-500"> Add filter... </span>
+          </button>
+          <div class="flex items-center">
+            <button
+              class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-emerald-900 duration-200"
+              @click="handleApplyFilter"
+            >
+              <i class="fa-solid fa-check"></i>
+              <span class="text-gray-50"> Áp dụng filter </span>
+            </button>
+            <button
+              class="border border-amber-600 bg-amber-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-amber-800 duration-200"
+              @click="handleUnReviewFilter"
+            >
+              <i class="fa-solid fa-x"></i>
+              <span class="text-gray-50"> Xoá filter </span>
+            </button>
+          </div>
+          <button
+            class="border border-red-600 bg-red-500 rounded-full h-[30px] flex items-center justify-center space-x-2 py-1 px-2 text-gray-100 w-full hover:bg-red-800 duration-200"
+            @click.stop="modalFilter = false"
+          >
+            <i class="fa-solid fa-x"></i>
+            <span class="text-gray-50"> Đóng </span>
+          </button>
+        </div>
+      </div>
     </Modal>
   </Teleport>
 </template>
 <script setup lang="ts">
+import qs from "qs";
+
 type TProps = {
   relationData: {
     relation: string;
@@ -131,23 +190,31 @@ const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const searchModal = ref(false);
 const { $typeCheck } = useNuxtApp();
-const searchData = ref({
-  field: props.relationData.defaultValue ? "id" : "",
-  searchKey:
-    $typeCheck(props.relationData.defaultValue) === "array" ? "_in" : "_eq",
-  searchValue:
-    $typeCheck(props.relationData.defaultValue) === "array"
-      ? Array(props.relationData.defaultValue).join(",")
-      : (props.relationData.defaultValue as string),
-});
-
+const modalFilter = ref(false);
+const searchObject = useState<any>("searchObject", () => ({}));
+const filterArr = ref<string[]>([
+  `[id][${props.relationData.type === "array" ? "_in" : "_eq"}]=${
+    props.relationData.defaultValue
+  }`,
+]);
 const selectedArr = ref<any[] | any>([]);
 const width = ref<{
   [key: string]: number;
 }>({});
 const { $getMaxLength, $widthCalc } = useNuxtApp();
+const filtering = ref(false);
+
+const isFiltering = computed(() => {
+  if (
+    Object.keys(searchObject).length > 0 &&
+    filtering.value === true &&
+    filterArr.value.every((filter) => filter !== "")
+  ) {
+    return true;
+  }
+  return false;
+});
 
 function handleSelect(item: any) {
   if (props.relationData.type === "array") {
@@ -182,24 +249,23 @@ watch(
   }
 );
 
-const isSearching = computed(
-  () =>
-    searchData.value.field &&
-    searchData.value.searchKey &&
-    searchData.value.searchValue
-);
-
 async function getData() {
-  const params = {
+  const params: any = {
     meta: "*",
     limit: perPage,
     page: currentPage.value,
     sort: "-id",
-    ...(isSearching.value && {
-      [`filter[${searchData.value.field}][${searchData.value.searchKey}]`]:
-        searchData.value.searchValue,
-    }),
   };
+  if (filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")) {
+    for (const filter of filterArr.value) {
+      const filterSplit = filter.split("=");
+      const filterKey = `filter${filterSplit[0]}`;
+      params[filterKey] = filterSplit[1];
+    }
+    filtering.value = true;
+  } else {
+    filtering.value = false;
+  }
   const result: any = await useApi(api, { params });
   data.value = result.data;
   totalPages.value = Math.ceil(
@@ -245,27 +311,49 @@ function handleConfirm() {
   emits("close");
 }
 
-function handleSearch() {
-  searchModal.value = true;
+function updateSearchObject(data: any) {
+  searchObject.value = data;
 }
 
-async function handleSearchConfirm(data: {
-  field: string;
-  searchKey: string;
-  searchValue: string;
-}) {
-  searchData.value = data;
+function handleRemoveFilter(index: number) {
+  filterArr.value = filterArr.value.filter((item, idx) => idx !== index);
+}
+
+function handleAddFilter() {
+  filterArr.value.push("");
+}
+
+async function handleApplyFilter() {
+  loading.value = true;
   await getData();
+  currentPage.value = 1;
   loading.value = false;
-  searchModal.value = false;
+  modalFilter.value = false;
+}
+
+async function handleUnReviewFilter() {
+  searchObject.value = {};
+  filterArr.value = [];
+}
+
+function handleSearch() {
+  modalFilter.value = true;
+}
+
+watchEffect(() => {
+  handleReviewFilter();
+});
+
+function handleReviewFilter() {
+  let totalString = "";
+  for (const item of filterArr.value) {
+    totalString += "&" + item;
+  }
+  searchObject.value = qs.parse(totalString, { depth: 10 });
 }
 
 async function handleCancelSearch() {
-  searchData.value = {
-    field: "",
-    searchKey: "",
-    searchValue: "",
-  };
+  filterArr.value = [];
   loading.value = true;
   await getData();
   loading.value = false;

@@ -80,7 +80,6 @@
               :searchObject
               :deep="0"
               :type="'object'"
-              :schema
               @updateSearchObject="updateSearchObject"
             />
             <div class="p-1 space-y-2">
@@ -251,7 +250,7 @@
   <Teleport to="body">
     <Modal v-model="modalFilter">
       <div
-        class="w-full top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300 mx-2"
+        class="w-[95%] top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300"
         :class="{
           'py-2': Object.keys(searchObject).length > 0,
         }"
@@ -260,7 +259,6 @@
           :searchObject
           :deep="0"
           :type="'object'"
-          :schema
           @updateSearchObject="updateSearchObject"
         />
         <div class="p-1 space-y-2">
