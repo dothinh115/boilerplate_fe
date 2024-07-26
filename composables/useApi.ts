@@ -14,8 +14,8 @@ export default async function useApi(
     };
   }
 ) {
-  const access_token = useCookie("access_token");
-  const refresh_token = useCookie("refresh_token");
+  const access_token = sessionStorage.getItem(ACCESS_TOKEN);
+  const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
   options = {
@@ -24,9 +24,9 @@ export default async function useApi(
   };
 
   const isTokenValid = () => {
-    if (!access_token.value) return true;
+    if (!access_token) return false;
     try {
-      const decoded: any = jwtDecode(access_token.value);
+      const decoded: any = jwtDecode(access_token);
       if (!decoded || !decoded.exp) return false;
       const currentTime = Math.floor(Date.now() / 1000);
       if (decoded.exp < currentTime) return false;
@@ -38,13 +38,14 @@ export default async function useApi(
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (!isValid) await refreshToken();
-
+    if (!isValid && refresh_token.value) {
+      await refreshToken();
+    }
     return await $fetch(request, {
       ...options,
-      ...(access_token.value && {
+      ...(access_token && {
         headers: {
-          authorization: "Bearer " + access_token.value,
+          authorization: "Bearer " + access_token,
         },
       }),
     }).catch(async (error: any) => {
@@ -85,16 +86,19 @@ export default async function useApi(
   };
 
   const refreshToken = async () => {
+    const body = {
+      refreshToken: refresh_token.value,
+      clientId: await useFingerSprint(),
+    };
     try {
       const refreshTokenResponse: any = await $fetch("/refreshtoken", {
         baseURL: settings.apiUrl,
         method: "POST",
-        body: {
-          refreshToken: refresh_token.value,
-        },
+        body,
       });
-      access_token.value = refreshTokenResponse.accessToken;
       refresh_token.value = refreshTokenResponse.refreshToken;
+      //lưu accessToken vào session
+      sessionStorage.setItem(ACCESS_TOKEN, refreshTokenResponse.accessToken);
     } catch (error) {
       await logout();
     }

@@ -1,4 +1,5 @@
 import type { TLogin } from "~/utils/models/login.model";
+
 export type TUser = {
   id: string;
   email: string;
@@ -6,17 +7,17 @@ export type TUser = {
   role: number;
 };
 export default function useAuth() {
-  const accessTokenCookie = useCookie("access_token");
-  const refreshTokenCookie = useCookie("refresh_token");
-
+  //refreshToken lưu ở cookie, access lưu ở session
+  const refreshToken = useCookie(REFRESH_TOKEN);
   const user = useState<TUser>("user");
 
   const getUser = async () => {
-    if (!accessTokenCookie.value) return undefined;
+    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+    if (!accessToken) return undefined;
     try {
       const fetchUserResult: any = await useApi("/me", {
         headers: {
-          authorization: "Bearer " + accessTokenCookie.value,
+          authorization: "Bearer " + accessToken,
         },
       });
       if (fetchUserResult.data) user.value = fetchUserResult.data[0];
@@ -25,14 +26,19 @@ export default function useAuth() {
   };
 
   const login = async (data: TLogin) => {
+    data = {
+      ...data,
+      clientId: await useFingerSprint(),
+    };
     const result: any = await useApi("/login", {
       method: "POST",
       body: data,
     });
-    accessTokenCookie.value = result?.accessToken;
-    refreshTokenCookie.value = result?.refreshToken;
+    refreshToken.value = result?.refreshToken;
+    //lưu accessToken vào session
+    sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
     const fetchUser = await getUser();
-    if (fetchUser) navigateTo("/");
+    if (fetchUser) window.location.reload();
     return result;
   };
 
@@ -40,8 +46,8 @@ export default function useAuth() {
     // await useApi("/logout", {
     //   method: "POST",
     // });
-    accessTokenCookie.value = null;
-    refreshTokenCookie.value = null;
+    sessionStorage.removeItem(ACCESS_TOKEN);
+    refreshToken.value = null;
     window.location.reload();
   };
 
