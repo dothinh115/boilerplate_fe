@@ -37,15 +37,20 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    await useApi("/logout", {
-      method: "POST",
-      body: {
-        refreshToken: refreshToken.value,
-      },
-    });
     sessionStorage.removeItem(ACCESS_TOKEN);
     refreshToken.value = null;
-    window.location.reload();
+    try {
+      await useApi("/logout", {
+        method: "POST",
+        body: {
+          refreshToken: refreshToken.value,
+        },
+      });
+    } catch (error: any) {
+      console.log(error.data.message);
+    } finally {
+      window.location.reload();
+    }
   };
 
   return { login, getUser, logout, user };
