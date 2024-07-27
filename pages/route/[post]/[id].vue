@@ -13,7 +13,7 @@ const data = ref<any>({});
 async function getSchema() {
   if (schema.value) return;
   const result: any = await useApi(schemaApi);
-  schema.value = result.data;
+  schema.value = result;
 }
 
 async function getData() {
