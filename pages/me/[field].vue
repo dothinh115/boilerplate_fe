@@ -33,7 +33,10 @@
               }"
             >
               <div v-if="$typeCheck(fieldData) === 'boolean'">
-                <Toggle v-model="fieldData" />
+                <Toggle
+                  v-model="fieldData"
+                  :disabled="schema[route.params.field as string].disabled"
+                />
               </div>
               <div
                 v-else-if="route.params.field === 'password'"
@@ -98,10 +101,11 @@ const fieldModal = ref(true);
 const { user } = useAuth();
 const schemaApi = "/schema/user";
 const schema = useState<any>(schemaApi, () => {});
-const fieldData = ref(user.value[route.params.field as string]);
+const fieldData = ref<any>(user.value[route.params.field as keyof TUser]);
 const isFromInside = useState("isFromInside");
 const { loading, toastData } = useGetState();
 const { getUser } = useAuth();
+const { $typeCheck } = useNuxtApp();
 const changePasswordInfo = ref<{
   [key: string]: string;
 }>({
@@ -238,13 +242,6 @@ definePageMeta({
         schema.value = result.data;
       }
       await getSchema();
-
-      if (
-        !schema.value ||
-        !Object.keys(schema.value).includes(to.params.field as string)
-      ) {
-        return navigateTo("/me", { replace: true });
-      }
     },
   ],
 });

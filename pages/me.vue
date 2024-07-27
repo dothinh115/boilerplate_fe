@@ -31,7 +31,7 @@
               class="fa-solid fa-chevron-right"
               v-if="!schema[key].disabled"
             ></i>
-            <div v-else class="truncate">{{ user[key] }}</div>
+            <div v-else class="truncate">{{ user[key as keyof TUser] }}</div>
           </div>
         </NuxtLink>
       </template>
@@ -49,7 +49,7 @@ async function getSchema() {
   if (schema.value) return;
   loading.value = true;
   const result: any = await useApi(schemaApi);
-  schema.value = result.data;
+  schema.value = result;
   loading.value = false;
 }
 
