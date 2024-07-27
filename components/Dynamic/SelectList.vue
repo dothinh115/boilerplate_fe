@@ -192,7 +192,6 @@ const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const { $typeCheck } = useNuxtApp();
 const modalFilter = ref(false);
 const searchObject = useState<any>("searchObject", () => ({}));
 const filterArr = ref<string[]>([

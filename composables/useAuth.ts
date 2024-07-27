@@ -1,5 +1,5 @@
 import type { TLogin } from "~/utils/models/login.model";
-
+import settings from "@/configs/settings.json";
 export type TUser = {
   id: string;
   email: string;
@@ -28,22 +28,29 @@ export default function useAuth() {
       method: "POST",
       body: data,
     });
-    refreshToken.value = result?.refreshToken;
-    //lưu accessToken vào session
-    sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
-    const fetchUser = await getUser();
-    if (fetchUser) window.location.reload();
+    if (result) {
+      refreshToken.value = result?.refreshToken;
+      //lưu accessToken vào session
+      sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
+
+      const fetchUser = await getUser();
+      if (fetchUser) window.location.reload();
+    }
+
     return result;
   };
 
   const logout = async () => {
     if (refreshToken.value) {
-      await $fetch("/logout", {
-        method: "POST",
-        body: {
-          refreshToken: refreshToken.value,
-        },
-      });
+      try {
+        await $fetch("/logout", {
+          method: "POST",
+          baseURL: settings.apiUrl,
+          body: {
+            refreshToken: refreshToken.value,
+          },
+        });
+      } catch (error) {}
     }
     sessionStorage.removeItem(ACCESS_TOKEN);
     refreshToken.value = null;

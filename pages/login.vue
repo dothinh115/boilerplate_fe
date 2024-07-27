@@ -56,14 +56,17 @@
       Email hoặc mật khẩu không đúng!
     </div>
     <div
-      class="mt-8"
+      class="mt-8 space-y-2"
       :class="{
         '!mt-2': failed,
       }"
     >
-      <button class="btn btn-white w-full flex items-center space-x-2">
+      <button
+        class="btn btn-white w-full flex items-center justify-center space-x-2"
+      >
         <span>LOGIN</span> <span class="gg-spinner" v-if="loading"></span>
       </button>
+      <GoogleLogin />
     </div>
   </form>
 </template>
@@ -121,6 +124,7 @@ const handleLoginSubmit = async () => {
   loading.value = true;
   const user = await login(loginInfo.value);
   if (!user) failed.value = true;
+  console.log(user);
   loading.value = false;
 };
 
