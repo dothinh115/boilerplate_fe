@@ -24,11 +24,14 @@ async function handleLoginWithGoogle() {
       clientId,
     },
   });
-  window.open(
+  const popup = window.open(
     authUrl,
     "google_login",
     `width=${width},height=${height},top=${top},left=${left}`
   );
+  if (popup) {
+    popup.focus();
+  }
 }
 
 onMounted(() => {
