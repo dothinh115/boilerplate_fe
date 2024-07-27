@@ -131,11 +131,13 @@ const handleLoginSubmit = async () => {
 definePageMeta({
   layout: "login",
   middleware: [
-    async (to, from) => {
+    async (to) => {
+      const { loading } = useGetState();
       const refreshTokenCookie = useCookie(REFRESH_TOKEN);
       const accessToken = to.query.accessToken;
       const refreshToken = to.query.refreshToken;
       if (accessToken && refreshToken) {
+        loading.value = true;
         sessionStorage.setItem(ACCESS_TOKEN, accessToken as string);
         refreshTokenCookie.value = refreshToken as string;
         window.location.reload();

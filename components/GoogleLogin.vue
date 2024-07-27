@@ -1,11 +1,11 @@
 <template>
   <button
-    class="btn w-full bg-[#EA4335]"
     type="button"
-    @click="handleLoginWithGoogle()"
+    class="w-full duration-200 justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 space-x-1"
+    @click="handleLoginWithGoogle"
   >
-    <i class="fa-brands fa-google text-[18px]"></i>
-    <span> Đăng nhập với Google </span>
+    <i class="fa-brands fa-google"></i>
+    <span>Đăng nhập với Google</span>
   </button>
 </template>
 <script lang="ts" setup>

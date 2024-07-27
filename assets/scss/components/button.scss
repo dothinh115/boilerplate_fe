@@ -5,7 +5,7 @@
     @apply flex items-center space-x-2 justify-center;
   }
   &.btn-white {
-    @apply bg-white text-[#2148c0] lg:hover:bg-blue-900 lg:hover:text-gray-100 uppercase;
+    @apply bg-white text-[#2148c0] lg:hover:bg-gray-100 uppercase;
   }
 
   &.btn-blue {
