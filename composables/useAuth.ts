@@ -38,7 +38,7 @@ export default function useAuth() {
 
   const logout = async () => {
     if (refreshToken.value) {
-      await useApi("/logout", {
+      await $fetch("/logout", {
         method: "POST",
         body: {
           refreshToken: refreshToken.value,
