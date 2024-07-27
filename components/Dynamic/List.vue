@@ -183,7 +183,7 @@
       }"
     >
       <div
-        class="flex space-x-2 items-center text-[14px]"
+        class="flex space-x-2 items-center text-[14px] w-full flex-wrap [&>a]:max-md:mb-2"
         v-if="totalPages > 1"
       >
         <NuxtLink

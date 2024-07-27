@@ -57,7 +57,9 @@
       </div>
     </div>
     <div>
-      <div class="flex space-x-2 items-center text-[14px] p-2">
+      <div
+        class="flex space-x-2 items-center text-[14px] p-2 w-full flex-wrap [&>a]:max-md:mb-2"
+      >
         <button
           @click="currentPage !== 1 && (currentPage -= 1)"
           class="paginate"
