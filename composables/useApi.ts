@@ -42,14 +42,17 @@ export default async function useApi(
       await refreshToken();
     }
     const access_token = sessionStorage.getItem(ACCESS_TOKEN);
-    return await $fetch(request, {
-      ...options,
-      ...(access_token && {
-        headers: {
-          authorization: "Bearer " + access_token,
-        },
-      }),
-    }).catch(async (error: any) => {
+    try {
+      const result: any = await $fetch(request, {
+        ...options,
+        ...(access_token && {
+          headers: {
+            authorization: "Bearer " + access_token,
+          },
+        }),
+      });
+      return result.data;
+    } catch (error: any) {
       if (loading.value) loading.value = false;
       const router = useRouter();
       const route = useRoute();
@@ -83,7 +86,7 @@ export default async function useApi(
         clearError();
       }
       clearError();
-    });
+    }
   };
 
   const refreshToken = async () => {
@@ -97,9 +100,12 @@ export default async function useApi(
         method: "POST",
         body,
       });
-      refresh_token.value = refreshTokenResponse.refreshToken;
+      refresh_token.value = refreshTokenResponse.data.refreshToken;
       //lưu accessToken vào session
-      sessionStorage.setItem(ACCESS_TOKEN, refreshTokenResponse.accessToken);
+      sessionStorage.setItem(
+        ACCESS_TOKEN,
+        refreshTokenResponse.data.accessToken
+      );
     } catch (error) {
       await logout();
     }
