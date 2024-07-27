@@ -1,5 +1,4 @@
 import type { TLogin } from "~/utils/models/login.model";
-import settings from "@/configs/settings.json";
 export type TUser = {
   id: string;
   email: string;
@@ -8,15 +7,20 @@ export type TUser = {
 };
 export default function useAuth() {
   //refreshToken lưu ở cookie, access lưu ở session
-  const refreshToken = useCookie(REFRESH_TOKEN);
+  const { public: runtimeConfigPublic } = useRuntimeConfig();
+  const apiUrl = runtimeConfigPublic.apiUrl;
+  const refreshTokenCookie = useCookie(REFRESH_TOKEN);
   const user = useState<TUser>("user");
+  const route = useRoute();
 
   const getUser = async () => {
     try {
       const fetchUserResult: any = await useApi("/me");
       if (fetchUserResult.data) user.value = fetchUserResult.data;
       return user.value;
-    } catch (error) {}
+    } catch (error) {
+      await logout();
+    }
   };
 
   const login = async (data: TLogin) => {
@@ -29,7 +33,7 @@ export default function useAuth() {
       body: data,
     });
     if (result) {
-      refreshToken.value = result?.refreshToken;
+      refreshTokenCookie.value = result?.refreshToken;
       //lưu accessToken vào session
       sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
 
@@ -41,20 +45,25 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    if (refreshToken.value) {
+    const { accessToken, refreshToken } = route.query;
+
+    if (refreshTokenCookie.value) {
       try {
         await $fetch("/logout", {
           method: "POST",
-          baseURL: settings.apiUrl,
+          baseURL: apiUrl,
           body: {
-            refreshToken: refreshToken.value,
+            refreshToken: refreshTokenCookie.value,
           },
         });
       } catch (error) {}
     }
     sessionStorage.removeItem(ACCESS_TOKEN);
-    refreshToken.value = null;
-    window.location.reload();
+    refreshTokenCookie.value = null;
+    if (accessToken || refreshToken) {
+      const newPath = route.fullPath.split("?")[0];
+      window.location.href = newPath;
+    } else window.location.reload();
   };
 
   return { login, getUser, logout, user };

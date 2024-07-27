@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "npx nuxt build --dotenv .env.production",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "npx nuxt preview --dotenv .env.production",
     "postinstall": "nuxt prepare",
-    "start": "node .output/server/index.mjs"
+    "start": "npx node .output/server/index.mjs --dotenv .env.production"
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.4.3",

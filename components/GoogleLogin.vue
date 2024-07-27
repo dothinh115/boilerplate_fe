@@ -9,45 +9,20 @@
   </button>
 </template>
 <script lang="ts" setup>
-const refreshTokenCookie = useCookie(REFRESH_TOKEN);
-const { loading } = useGetState();
+const { public: runTimeConfigPublic } = useRuntimeConfig();
+const environment = runTimeConfigPublic.environment;
 async function handleLoginWithGoogle() {
-  loading.value = true;
-  const width = 500;
-  const height = 600;
-  const left = screen.width / 2 - width / 2;
-  const top = screen.height / 2 - height / 2;
   const clientId = await useFingerSprint();
   const authUrl = await useApi("/auth/google/url", {
     method: "POST",
     body: {
       clientId,
+      redirectTo:
+        environment === "development"
+          ? "http://localhost:3000/login"
+          : "https://cp.truyenhot.info/login",
     },
   });
-  const popup = window.open(
-    authUrl,
-    "google_login",
-    `width=${width},height=${height},top=${top},left=${left}`
-  );
-  if (popup) {
-    popup.focus();
-  }
-}
-
-onMounted(() => {
-  window.addEventListener("message", handleMessage);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("message", handleMessage);
-});
-
-async function handleMessage(event: MessageEvent) {
-  if (event.origin !== "https://api.truyenhot.info") return;
-  const { accessToken, refreshToken } = event.data;
-  sessionStorage.setItem(ACCESS_TOKEN, accessToken);
-  refreshTokenCookie.value = refreshToken;
-  loading.value = false;
-  window.location.reload();
+  window.location.href = authUrl;
 }
 </script>

@@ -1,4 +1,3 @@
-import settings from "../configs/settings.json";
 import { jwtDecode } from "jwt-decode";
 import type { TToastData } from "./useGetState";
 
@@ -14,12 +13,14 @@ export default async function useApi(
     };
   }
 ) {
+  const { public: runtimeConfigPublic } = useRuntimeConfig();
+  const apiUrl = runtimeConfigPublic.apiUrl;
   const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
   options = {
     ...options,
-    baseURL: settings.apiUrl,
+    baseURL: apiUrl,
   };
 
   const isTokenValid = () => {
@@ -96,7 +97,7 @@ export default async function useApi(
     };
     try {
       const refreshTokenResponse: any = await $fetch("/refreshtoken", {
-        baseURL: settings.apiUrl,
+        baseURL: apiUrl,
         method: "POST",
         body,
       });

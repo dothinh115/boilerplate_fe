@@ -130,5 +130,22 @@ const handleLoginSubmit = async () => {
 
 definePageMeta({
   layout: "login",
+  middleware: [
+    async (to, from) => {
+      const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+      const accessToken = to.query.accessToken;
+      const refreshToken = to.query.refreshToken;
+      if (accessToken && refreshToken) {
+        sessionStorage.setItem(ACCESS_TOKEN, accessToken as string);
+        refreshTokenCookie.value = refreshToken as string;
+        window.location.reload();
+      } else {
+        const newPath = to.fullPath.split("?")[0];
+        if (window.location.pathname !== to.fullPath) {
+          window.location.href = newPath;
+        }
+      }
+    },
+  ],
 });
 </script>
