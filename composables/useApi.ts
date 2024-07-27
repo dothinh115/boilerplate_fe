@@ -107,6 +107,9 @@ export default async function useApi(
         refreshTokenResponse.data.accessToken
       );
     } catch (error) {
+      sessionStorage.removeItem(ACCESS_TOKEN);
+      refresh_token.value = null;
+    } finally {
       await logout();
     }
   };

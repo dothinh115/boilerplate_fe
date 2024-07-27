@@ -14,7 +14,7 @@ export default function useAuth() {
   const getUser = async () => {
     try {
       const fetchUserResult: any = await useApi("/me");
-      if (fetchUserResult.data) user.value = fetchUserResult.data[0];
+      if (fetchUserResult.data) user.value = fetchUserResult.data;
       return user.value;
     } catch (error) {}
   };
@@ -37,13 +37,14 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    await useApi("/logout", {
-      method: "POST",
-      body: {
-        refreshToken: refreshToken.value,
-      },
-    });
-
+    if (refreshToken.value) {
+      await useApi("/logout", {
+        method: "POST",
+        body: {
+          refreshToken: refreshToken.value,
+        },
+      });
+    }
     sessionStorage.removeItem(ACCESS_TOKEN);
     refreshToken.value = null;
     window.location.reload();
