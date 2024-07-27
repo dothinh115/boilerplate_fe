@@ -183,7 +183,7 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["close", "confirm"]);
-const data = ref<any>({});
+const data = ref<any>([]);
 const api = `/${props.relationData.relation}`;
 const schemaApi = `/schema/${props.relationData.relation}`;
 const schema = useState<any>(schemaApi);
@@ -278,7 +278,7 @@ async function getData() {
 async function getSchema() {
   if (schema.value) return;
   const result: any = await useApi(schemaApi);
-  schema.value = result.data;
+  schema.value = result;
 }
 
 async function fetchAll() {
