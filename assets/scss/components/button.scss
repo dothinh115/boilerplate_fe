@@ -13,7 +13,7 @@
   }
 
   &.btn-green {
-    @apply bg-emerald-500 text-white lg:hover:bg-emerald-600;
+    @apply bg-emerald-500 text-white lg:hover:bg-emerald-600 shadow-none;
   }
 
   &.btn-red {
