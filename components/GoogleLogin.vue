@@ -8,19 +8,17 @@
     <span>Đăng nhập với Google</span>
   </button>
 </template>
+
 <script lang="ts" setup>
-const { public: runTimeConfigPublic } = useRuntimeConfig();
-const environment = runTimeConfigPublic.environment;
+const baseUrl = `${window.location.protocol}//${window.location.host}`;
+console.log(baseUrl);
 async function handleLoginWithGoogle() {
   const clientId = await useFingerSprint();
   const authUrl = await useApi("/auth/google/url", {
     method: "POST",
     body: {
       clientId,
-      redirectTo:
-        environment === "development"
-          ? "http://localhost:3000/login"
-          : "https://cp.truyenhot.info/login",
+      redirectTo: `${baseUrl}/login`,
     },
   });
   window.location.href = authUrl;

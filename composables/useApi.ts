@@ -13,14 +13,13 @@ export default async function useApi(
     };
   }
 ) {
-  const { public: runtimeConfigPublic } = useRuntimeConfig();
-  const apiUrl = runtimeConfigPublic.apiUrl;
+  const { apiUrl } = useRuntimeConfig().public;
   const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
   options = {
     ...options,
-    baseURL: apiUrl,
+    baseURL: "/api",
   };
 
   const isTokenValid = () => {
