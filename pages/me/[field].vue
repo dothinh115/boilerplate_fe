@@ -44,10 +44,10 @@
               >
                 <div class="space-y-1">
                   <input
-                    class="input input-blue w-full"
+                    class="input w-full"
                     type="password"
                     :class="{
-                      'input-red': changePasswordError.password,
+                      'input-error': changePasswordError.password,
                     }"
                     v-model="changePasswordInfo.password"
                     placeholder="Nhập mật khẩu..."
@@ -61,10 +61,10 @@
                 </div>
                 <div class="space-y-1">
                   <input
-                    class="input input-blue w-full"
+                    class="input w-full"
                     type="password"
                     :class="{
-                      'input-red': changePasswordError.passwordConfirm,
+                      'input-error': changePasswordError.passwordConfirm,
                     }"
                     v-model="changePasswordInfo.passwordConfirm"
                     placeholder="Nhập lại mật khẩu"

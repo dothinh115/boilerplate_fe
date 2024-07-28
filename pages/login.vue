@@ -1,29 +1,35 @@
 <template>
   <form
-    class="w-[320px] h-fit space-y-6 text-gray-100 relative"
+    class="w-[320px] h-fit space-y-2 relative"
     @submit.prevent="handleLoginSubmit"
   >
     <div class="flex justify-center">
       <IconLoginAdmin class="text-gray-200 w-[100px]" />
     </div>
-    <div class="space-y-4">
-      <div>
+    <div class="space-y-2 bg-gray-50 p-3 rounded-[15px] text-gray-900">
+      <div class="space-y-1">
         <div
-          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center duration-200"
+          class="space-y-2"
           :class="{
             '!border-red-500': loginError.email || failed,
           }"
         >
-          <IconUser />
+          <div class="flex space-x-2">
+            <IconUser class="text-gray-900" />
+            <span>Email address</span>
+          </div>
           <input
             type="email"
-            class="outline-none bg-transparent w-full text-[16px] placeholder:uppercase text-gray-100"
+            class="input"
             placeholder="Email"
             v-model.trim="loginInfo.email"
+            :class="{
+              'input-error': loginError.email || failed,
+            }"
           />
         </div>
         <div
-          class="w-full text-red-300 text-[12px] ml-4"
+          class="w-full text-red-300 text-[12px] ml-2"
           v-if="loginError.email"
         >
           {{ loginError.email }}
@@ -31,17 +37,23 @@
       </div>
       <div>
         <div
-          class="border-2 border-white rounded-4 p-3 flex space-x-2 rounded-[4px] items-center duration-200"
+          class="space-y-2"
           :class="{
-            '!border-red-500': loginError.password || failed,
+            '!border-red-500': loginError.email || failed,
           }"
         >
-          <IconPassword />
+          <div class="flex space-x-2">
+            <IconPassword class="text-gray-900" />
+            <span>Password</span>
+          </div>
           <input
             type="password"
-            class="outline-none bg-transparent w-full text-[16px] placeholder:uppercase text-gray-100"
+            class="input"
             placeholder="Password"
             v-model.trim="loginInfo.password"
+            :class="{
+              'input-error': loginError.password || failed,
+            }"
           />
         </div>
         <div
@@ -62,10 +74,15 @@
       }"
     >
       <button
-        class="btn btn-white w-full flex items-center justify-center space-x-2"
+        class="btn btn-green w-full flex items-center justify-center space-x-2"
       >
-        <span>LOGIN</span> <span class="gg-spinner" v-if="loading"></span>
+        <span>Đăng nhập</span> <span class="gg-spinner" v-if="loading"></span>
       </button>
+      <div
+        class="relative flex items-center justify-center text-gray-200 before:absolute before:contents-[''] before:block before:h-[1px] before:w-full before:bg-gray-100 before:z-[1]"
+      >
+        <div class="relative z-[2] bg-[#2148c0] px-2">Hoặc</div>
+      </div>
       <GoogleLogin />
     </div>
   </form>

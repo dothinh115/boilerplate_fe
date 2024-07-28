@@ -6,12 +6,13 @@
     }"
   >
     <div class="text-gray-900">{{ localSchemaKey }}:</div>
-    <Editor
-      api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
-      :init="getEditorInit(data)"
-      v-if="localSchemaValue.type === 'richText'"
-      v-model="data"
-    />
+    <div v-if="localSchemaValue.type === 'richText'" v-show="isTinyReady">
+      <Editor
+        api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
+        :init="getEditorInit(data)"
+        v-model="data"
+      />
+    </div>
 
     <div v-else-if="$typeCheck(data) === 'boolean'">
       <Toggle v-model="data" :disabled="localSchemaValue.disabled" />
@@ -35,8 +36,7 @@
         "
         class="input w-full"
         :class="{
-          'input-red': error[localSchemaKey],
-          'input-blue': !error[localSchemaKey],
+          'input-error': error[localSchemaKey],
         }"
         :disabled="
           localSchemaKey === 'id' || localSchemaKey === 'slug'
@@ -155,6 +155,7 @@ const data = ref(props.modelValue);
 const localSchemaKey = ref(props.schemaKey);
 const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
+const isTinyReady = ref(false);
 
 watch(
   () => props.modelValue,
@@ -173,6 +174,7 @@ function getEditorInit(item: string) {
     setup(editor: any) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
+        isTinyReady.value = true;
       });
       editor.on("change", () => {
         item = editor.getContent();
