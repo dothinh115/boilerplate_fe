@@ -11,7 +11,6 @@ export default function useAuth() {
   const apiUrl = runtimeConfigPublic.apiUrl;
   const refreshTokenCookie = useCookie(REFRESH_TOKEN);
   const user = useState<TUser>("user");
-  const route = useRoute();
 
   const getUser = async () => {
     try {
@@ -45,8 +44,6 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    const { accessToken, refreshToken } = route.query;
-
     if (refreshTokenCookie.value) {
       try {
         await $fetch("/logout", {
@@ -59,10 +56,7 @@ export default function useAuth() {
       } catch (error) {}
     }
     removeToken();
-    if (accessToken || refreshToken) {
-      const newPath = route.fullPath.split("?")[0];
-      window.location.href = newPath;
-    } else window.location.reload();
+    window.location.reload();
   };
 
   const removeToken = () => {

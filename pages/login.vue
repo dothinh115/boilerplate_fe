@@ -150,7 +150,8 @@ definePageMeta({
   middleware: [
     async (to) => {
       const tokenId = to.query.tokenId as string;
-      const { loading } = useGetState();
+      const error = to.query.error as string;
+      const { loading, toastData } = useGetState();
       const refreshTokenCookie = useCookie(REFRESH_TOKEN);
       if (tokenId) {
         loading.value = true;
@@ -166,6 +167,12 @@ definePageMeta({
           refreshTokenCookie.value = refreshToken;
         }
         window.location.href = to.path;
+      } else if (error) {
+        loading.value = false;
+        toastData.value.push({
+          message: "Đã có lỗi xảy ra",
+          type: "error",
+        });
       }
     },
   ],

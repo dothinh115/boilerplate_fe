@@ -194,17 +194,20 @@ const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const modalFilter = ref(false);
 const searchObject = useState<any>("searchObject", () => ({}));
-const filterArr = ref<string[]>([
-  `[id][${props.relationData.type === "array" ? "_in" : "_eq"}]=${
-    props.relationData.defaultValue
-  }`,
-]);
+const filterArr = ref<string[]>([]);
 const selectedArr = ref<any[] | any>([]);
 const width = ref<{
   [key: string]: number;
 }>({});
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const filtering = ref(false);
+if (Object.keys(props.relationData.defaultValue).length > 0) {
+  filterArr.value = [
+    `[id][${props.relationData.type === "array" ? "_in" : "_eq"}]=${
+      props.relationData.defaultValue
+    }`,
+  ];
+}
 
 const isFiltering = computed(() => {
   if (
