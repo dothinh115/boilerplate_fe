@@ -29,7 +29,7 @@
           />
         </div>
         <div
-          class="w-full text-red-300 text-[12px] ml-2"
+          class="w-full text-red-500 text-[12px] ml-2"
           v-if="loginError.email"
         >
           {{ loginError.email }}
@@ -57,7 +57,7 @@
           />
         </div>
         <div
-          class="w-full text-red-300 text-[12px] ml-4"
+          class="w-full text-red-500 text-[12px] ml-4"
           v-if="loginError.password"
         >
           {{ loginError.password }}
