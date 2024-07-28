@@ -149,20 +149,23 @@ definePageMeta({
   layout: "login",
   middleware: [
     async (to) => {
+      const tokenId = to.query.tokenId as string;
       const { loading } = useGetState();
       const refreshTokenCookie = useCookie(REFRESH_TOKEN);
-      const accessToken = to.query.accessToken;
-      const refreshToken = to.query.refreshToken;
-      if (accessToken && refreshToken) {
+      if (tokenId) {
         loading.value = true;
-        sessionStorage.setItem(ACCESS_TOKEN, accessToken as string);
-        refreshTokenCookie.value = refreshToken as string;
-        window.location.href = "/";
-      } else {
-        const newPath = to.fullPath.split("?")[0];
-        if (window.location.pathname !== to.fullPath) {
-          window.location.href = newPath;
+        const params = {
+          tokenId,
+        };
+        const tokenData = await useApi("token", {
+          params,
+        });
+        if (tokenData) {
+          const { accessToken, refreshToken } = tokenData;
+          sessionStorage.setItem(ACCESS_TOKEN, accessToken);
+          refreshTokenCookie.value = refreshToken;
         }
+        window.location.href = to.path;
       }
     },
   ],
