@@ -158,7 +158,7 @@ definePageMeta({
         const params = {
           tokenId,
         };
-        const tokenData = await useApi("token", {
+        const tokenData = await useApi("auth/token", {
           params,
         });
         if (tokenData) {
