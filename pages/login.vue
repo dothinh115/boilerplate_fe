@@ -140,7 +140,7 @@ definePageMeta({
         loading.value = true;
         sessionStorage.setItem(ACCESS_TOKEN, accessToken as string);
         refreshTokenCookie.value = refreshToken as string;
-        window.location.reload();
+        window.location.href = "/";
       } else {
         const newPath = to.fullPath.split("?")[0];
         if (window.location.pathname !== to.fullPath) {

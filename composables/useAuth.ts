@@ -58,12 +58,16 @@ export default function useAuth() {
         });
       } catch (error) {}
     }
-    sessionStorage.removeItem(ACCESS_TOKEN);
-    refreshTokenCookie.value = null;
+    removeToken();
     if (accessToken || refreshToken) {
       const newPath = route.fullPath.split("?")[0];
       window.location.href = newPath;
     } else window.location.reload();
+  };
+
+  const removeToken = () => {
+    sessionStorage.removeItem(ACCESS_TOKEN);
+    refreshTokenCookie.value = null;
   };
 
   return { login, getUser, logout, user };
