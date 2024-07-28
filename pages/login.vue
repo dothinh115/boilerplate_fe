@@ -57,7 +57,7 @@
           />
         </div>
         <div
-          class="w-full text-red-500 text-[12px] ml-4"
+          class="w-full text-red-500 text-[12px] ml-2"
           v-if="loginError.password"
         >
           {{ loginError.password }}
