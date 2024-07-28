@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: process.env.API_URL,
-      environment: process.env.NODE_ENV,
     },
   },
   modules: ["@nuxtjs/tailwindcss"],
