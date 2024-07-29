@@ -53,8 +53,4 @@ async function handleFetchRoute() {
 }
 
 await handleFetchRoute();
-
-function handleHideSidebar() {
-  if (screenWidth.value <= 768 && !hideSidebar.value) hideSidebar.value = true;
-}
 </script>
