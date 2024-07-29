@@ -1,0 +1,24 @@
+<template>
+  <li>
+    <NuxtLink
+      :to="to ? to : undefined"
+      class="flex items-center space-x-2 h-10 p-2 hover:bg-indigo-800 hover:text-gray-50 rounded-[0.375rem] duration-200"
+      :active-class="'bg-indigo-800 text-gray-50'"
+    >
+      <div
+        class="p-1 bg-indigo-500 rounded-[8px] text-gray-200 [&>i]:aspect-1 [&>i]:flex [&>i]:w-4 [&>i]:justify-center [&>i]:items-center"
+      >
+        <slot name="icon" />
+      </div>
+      <span> {{ title }}</span>
+    </NuxtLink>
+  </li>
+</template>
+<script setup lang="ts">
+type TProps = {
+  title: string;
+  handle?: Function;
+  to?: string;
+};
+const props = defineProps<TProps>();
+</script>

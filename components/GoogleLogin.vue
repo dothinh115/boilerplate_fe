@@ -11,7 +11,6 @@
 
 <script lang="ts" setup>
 const baseUrl = `${window.location.protocol}//${window.location.host}`;
-console.log(baseUrl);
 async function handleLoginWithGoogle() {
   const clientId = await useFingerSprint();
   const authUrl = await useApi("/auth/google/url", {

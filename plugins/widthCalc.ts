@@ -4,7 +4,7 @@ export default defineNuxtPlugin(() => {
       widthCalc: (widthObj: { [key: string]: number }) => {
         let result: any = {};
         watchEffect(() => {
-          const perChar = 10;
+          const perChar = 12;
           for (const [key, value] of Object.entries(widthObj)) {
             let w = value * perChar;
             if (w < 50) w = 50;

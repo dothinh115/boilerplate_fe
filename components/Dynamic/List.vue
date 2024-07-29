@@ -1,6 +1,6 @@
 <template>
   <div class="h-full flex-col max-h-full space-y-4">
-    <div class="flex items-center justify-between flex-wrap-reverse">
+    <div class="flex justify-between flex-wrap-reverse self-start">
       <div
         :class="{
           'max-md:w-full': isFiltering,
@@ -31,9 +31,9 @@
             <i class="fa-solid fa-x"></i>
           </div>
         </div>
-        <span class="text-[30px] text-gray-200" v-else>
+        <div class="text-[25px] text-gray-200" v-else>
           {{ "/" + route.params.post }}
-        </span>
+        </div>
       </div>
       <div
         class="max-md:space-x-2 space-x-4 flex max-md:justify-end"

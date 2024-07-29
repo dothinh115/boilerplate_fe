@@ -1,66 +1,43 @@
 <template>
   <div
-    class="w-full h-dvh text-gray-200 space-y-6 pl-2 lg:py-8 md:py-6 py-8 max-lg:pr-2 overflow-y-scroll hidden-scrollbar"
+    class="w-full h-dvh text-gray-200 overflow-y-scroll hidden-scrollbar px-6 bg-indigo-600 bg-opacity-90 space-y-8"
   >
-    <div class="uppercase text-[20px]">Control Panel</div>
-    <div class="space-y-8 w-full">
-      <div class="space-y-4">
-        <div class="text-[14px]">Routings</div>
-        <div class="space-y-1 ml-2">
-          <template
-            v-for="route in routes.filter(
-              (x) =>
-                x.method === 'GET' &&
-                (x.roles.includes(user.role) ||
-                  x.isProtected === false ||
-                  user.rootUser)
-            )"
-            :key="route.id"
-            @click="handleHideSidebar"
-          >
-            <NuxtLink
-              :to="'/route' + route.path"
-              class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
-              :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
-              @click="handleHideSidebar"
-            >
-              <i class="fa-solid fa-link fa-lg"></i>
-              <span>{{ route.path }}</span>
-            </NuxtLink>
-          </template>
-        </div>
-        <div class="text-[14px]">Settings</div>
-        <div class="space-y-3 ml-2">
-          <NuxtLink
-            :to="'/me'"
-            class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
-            :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
-            @click="handleHideSidebar"
-          >
-            <i class="fa-solid fa-user fa-lg"></i>
-            <span>Account</span>
-          </NuxtLink>
-          <NuxtLink
-            :to="'/'"
-            class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
-            :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
-            @click="handleHideSidebar"
-          >
-            <i class="fa-solid fa-upload fa-lg"></i>
-            <span>Upload</span>
-          </NuxtLink>
-          <NuxtLink
-            :to="'/'"
-            class="flex items-center space-x-2 lg:hover:bg-blue-900 lg:hover:bg-opacity-60 lg:hover:rounded-[10px] lg:hover:text-gray-100 duration-200 p-2"
-            :active-class="'bg-blue-900 rounded-[10px] text-gray-100 lg:hover:text-gray-100'"
-            @click="handleHideSidebar"
-          >
-            <i class="fa-solid fa-gear fa-lg"></i>
-            <span>Setting</span>
-          </NuxtLink>
-        </div>
-      </div>
+    <div class="uppercase text-[20px] mt-8 ml-2">
+      <span class="bg-indigo-500 p-2 text-gray-50 rounded-[8px] ring-2"
+        >Control Panel</span
+      >
     </div>
+    <SidebarGroup :title="'Routings'">
+      <SidebarGroupItem
+        v-for="(route, index) in routes.filter(
+          (x) =>
+            x.method === 'GET' &&
+            (x.roles.includes(user.role) ||
+              x.isProtected === false ||
+              user.rootUser)
+        )"
+        :key="route.id"
+        :to="'/route' + route.path"
+        :title="route.path"
+      >
+        <template #icon><i class="fa-solid fa-link"></i></template>
+      </SidebarGroupItem>
+    </SidebarGroup>
+    <SidebarGroup :title="'Settings'">
+      <SidebarGroupItem :to="'/me'" :title="'Account'">
+        <template #icon> <i class="fa-solid fa-user"></i></template>
+      </SidebarGroupItem>
+      <SidebarGroupItem :title="'Account'">
+        <template #icon>
+          <i class="fa-solid fa-upload"></i>
+        </template>
+      </SidebarGroupItem>
+      <SidebarGroupItem :title="'Account'">
+        <template #icon>
+          <i class="fa-solid fa-gear"></i>
+        </template>
+      </SidebarGroupItem>
+    </SidebarGroup>
   </div>
 </template>
 <script setup lang="ts">
