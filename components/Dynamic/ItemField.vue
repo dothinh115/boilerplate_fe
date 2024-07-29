@@ -14,8 +14,18 @@
       />
     </div>
 
-    <div v-else-if="$typeCheck(data) === 'boolean'">
+    <div
+      v-else-if="$typeCheck(data) === 'boolean'"
+      class="flex items-center justify-between w-full"
+    >
       <Toggle v-model="data" :disabled="localSchemaValue.disabled" />
+      <button
+        class="bg-teal-700 h-[39px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[16px] lg:hover:bg-teal-500 duration-200"
+        v-if="isShowLockedButton"
+        @click="handleUnLock()"
+      >
+        <i class="fa-solid fa-lock-open"></i>
+      </button>
     </div>
     <div
       class="flex space-x-2"
@@ -38,15 +48,7 @@
         :class="{
           'input-error': error[localSchemaKey],
         }"
-        :disabled="
-          localSchemaKey === 'id' || localSchemaKey === 'slug'
-            ? true
-            : props.new
-            ? false
-            : localSchemaValue.disabled
-            ? true
-            : false
-        "
+        :disabled="isFieldDisabled"
         v-model="data"
         @input="updateData(localSchemaKey, $event.target as HTMLInputElement)"
         v-if="!localSchemaValue.relation"
@@ -102,13 +104,16 @@
         </div>
       </div>
       <button
-        class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] lg:hover:bg-teal-500 duration-200"
+        class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] duration-200"
         :class="{
           'mb-2': $typeCheck(data) === 'array',
+          'opacity-50': !$roleCheck('PATCH', route.params.post as string),
+          'lg:hover:bg-teal-500': $roleCheck('PATCH', route.params.post as string)
         }"
-        v-if="localSchemaValue.relation && $roleCheck('PATCH', route.params.post as string)"
+        v-if="localSchemaValue.relation"
         @click.stop="
           localSchemaValue.relation &&
+            $roleCheck('PATCH', route.params.post as string) &&
             handleRelation(
               localSchemaValue.relation,
               localSchemaValue.type,
@@ -121,14 +126,8 @@
       </button>
       <button
         class="bg-teal-700 h-[39px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[16px] lg:hover:bg-teal-500 duration-200"
-        v-if="
-          localSchemaValue.disabled &&
-          localSchemaKey !== 'id' &&
-          !localSchemaValue.relation &&
-          user.rootUser &&
-          props.new !== true
-        "
-        @click="handleUnDisabled()"
+        v-if="isShowLockedButton"
+        @click="handleUnLock()"
       >
         <i class="fa-solid fa-lock-open"></i>
       </button>
@@ -156,6 +155,7 @@ const localSchemaKey = ref(props.schemaKey);
 const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
 const isTinyReady = ref(false);
+const { $roleCheck } = useNuxtApp();
 
 watch(
   () => props.modelValue,
@@ -184,6 +184,25 @@ function getEditorInit(item: string) {
   };
 }
 
+const isFieldDisabled = computed(() => {
+  if (props.new && localSchemaKey.value !== "id") return false;
+  if (!$roleCheck("PATCH", route.params.post as string)) return true;
+  if (localSchemaValue.value.disabled) return true;
+  return false;
+});
+
+const isShowLockedButton = computed(() => {
+  if (
+    localSchemaValue.value.disabled &&
+    localSchemaKey.value !== "id" &&
+    !props.new &&
+    ($roleCheck("PATCH", route.params.post as string) || user.value.rootUser)
+  )
+    return true;
+  console.log($roleCheck("PATCH", route.params.post as string));
+  return false;
+});
+
 function updateData(item: string, target: HTMLInputElement) {
   emits("updateData", { item, target });
 }
@@ -208,7 +227,7 @@ function handleRemoveFromField() {
   emits("update:modelValue", null);
 }
 
-function handleUnDisabled() {
+function handleUnLock() {
   localSchemaValue.value.disabled = false;
 }
 </script>

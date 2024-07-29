@@ -1,7 +1,10 @@
 export default defineNuxtPlugin(() => {
   return {
     provide: {
-      roleCheck: (method: string, route: string) => {
+      roleCheck: (
+        method: "POST" | "GET" | "PATCH" | "DELETE",
+        route: string
+      ) => {
         const { routes } = useGetState();
         const { user } = useAuth();
         const isRouteExist = routes.value.find(

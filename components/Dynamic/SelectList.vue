@@ -201,7 +201,11 @@ const width = ref<{
 }>({});
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const filtering = ref(false);
-if (Object.keys(props.relationData.defaultValue).length > 0) {
+
+if (
+  props.relationData.defaultValue &&
+  Object.keys(props.relationData.defaultValue).length > 0
+) {
   filterArr.value = [
     `[id][${props.relationData.type === "array" ? "_in" : "_eq"}]=${
       props.relationData.defaultValue
