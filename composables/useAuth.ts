@@ -7,7 +7,7 @@ export type TUser = {
 };
 export default function useAuth() {
   //refreshToken lưu ở cookie, access lưu ở session
-  const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+  const refreshTokenCookie = useCustomCookie(REFRESH_TOKEN);
   const user = useState<TUser>("user");
 
   const getUser = async () => {

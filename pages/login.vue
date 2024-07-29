@@ -152,7 +152,7 @@ definePageMeta({
       const tokenId = to.query.tokenId as string;
       const error = to.query.error as string;
       const { loading, toastData } = useGetState();
-      const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+      const refreshTokenCookie = useCustomCookie(REFRESH_TOKEN);
       if (tokenId) {
         loading.value = true;
         const params = {
