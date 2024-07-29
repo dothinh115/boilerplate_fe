@@ -38,7 +38,7 @@ export default async function useApi(
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (!isValid && refresh_token.value) {
+    if (!isValid && refresh_token.value && request !== "refreshtoken") {
       await refreshToken();
     }
     const access_token = sessionStorage.getItem(ACCESS_TOKEN);
@@ -95,8 +95,7 @@ export default async function useApi(
       clientId: await useFingerSprint(),
     };
     try {
-      const refreshTokenResponse: any = await $fetch("/refreshtoken", {
-        baseURL: apiUrl,
+      const refreshTokenResponse: any = await useApi("/refreshtoken", {
         method: "POST",
         body,
       });
