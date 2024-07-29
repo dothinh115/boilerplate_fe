@@ -15,15 +15,12 @@ const schema = useState<any>(schemaApi);
 
 async function getSchema() {
   if (schema.value) return;
+  loading.value = true;
+
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
-}
-
-async function fetchAll() {
-  loading.value = true;
-  await getSchema();
   loading.value = false;
 }
 
-await fetchAll();
+await getSchema();
 </script>

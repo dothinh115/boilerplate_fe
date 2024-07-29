@@ -2,7 +2,7 @@
   <li>
     <NuxtLink
       :to="to ? to : undefined"
-      class="flex items-center space-x-2 h-10 p-2 hover:bg-indigo-800 hover:text-gray-50 rounded-[0.375rem] duration-200"
+      class="flex items-center space-x-2 h-10 p-2 lg:hover:bg-indigo-800 lg:hover:text-gray-50 rounded-[0.375rem] duration-200"
       :active-class="'bg-indigo-800 text-gray-50'"
     >
       <div

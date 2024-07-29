@@ -27,12 +27,12 @@
       <SidebarGroupItem :to="'/me'" :title="'Account'">
         <template #icon> <i class="fa-solid fa-user"></i></template>
       </SidebarGroupItem>
-      <SidebarGroupItem :title="'Account'">
+      <SidebarGroupItem :title="'Upload'">
         <template #icon>
           <i class="fa-solid fa-upload"></i>
         </template>
       </SidebarGroupItem>
-      <SidebarGroupItem :title="'Account'">
+      <SidebarGroupItem :title="'Setting'">
         <template #icon>
           <i class="fa-solid fa-gear"></i>
         </template>
