@@ -14,7 +14,7 @@ export default async function useApi(
   }
 ) {
   const { apiUrl } = useRuntimeConfig().public;
-  const refresh_token = useCustomCookie(REFRESH_TOKEN);
+  const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
   options = {

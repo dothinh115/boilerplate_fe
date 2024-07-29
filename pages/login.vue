@@ -141,7 +141,6 @@ const handleLoginSubmit = async () => {
   loading.value = true;
   const user = await login(loginInfo.value);
   if (!user) failed.value = true;
-  console.log(user);
   loading.value = false;
 };
 
@@ -152,7 +151,7 @@ definePageMeta({
       const tokenId = to.query.tokenId as string;
       const error = to.query.error as string;
       const { loading, toastData } = useGetState();
-      const refreshTokenCookie = useCustomCookie(REFRESH_TOKEN);
+      const refreshTokenCookie = useCookie(REFRESH_TOKEN);
       if (tokenId) {
         loading.value = true;
         const params = {
