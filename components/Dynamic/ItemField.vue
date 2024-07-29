@@ -164,6 +164,11 @@ watch(
   }
 );
 
+watch(
+  () => data.value,
+  (newVal) => emits("update:modelValue", newVal)
+);
+
 function getEditorInit(item: string) {
   return {
     menubar: false,
