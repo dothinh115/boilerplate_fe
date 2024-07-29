@@ -42,9 +42,10 @@ export default function useAuth() {
   };
 
   const logout = async () => {
+    const refreshTokenCookie = useCookie(REFRESH_TOKEN);
     if (refreshTokenCookie.value) {
       try {
-        await $fetch("/api/logout", {
+        await useApi("logout", {
           method: "POST",
           body: {
             refreshToken: refreshTokenCookie.value,
@@ -52,13 +53,10 @@ export default function useAuth() {
         });
       } catch (error) {}
     }
-    removeToken();
-    window.location.reload();
-  };
 
-  const removeToken = () => {
     sessionStorage.removeItem(ACCESS_TOKEN);
     refreshTokenCookie.value = null;
+    window.location.reload();
   };
 
   return { login, getUser, logout, user };

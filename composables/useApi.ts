@@ -38,7 +38,12 @@ export default async function useApi(
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (!isValid && refresh_token.value && request !== "refreshtoken") {
+    if (
+      !isValid &&
+      refresh_token.value &&
+      request !== "refreshtoken" &&
+      request !== "logout"
+    ) {
       await refreshToken();
     }
     const access_token = sessionStorage.getItem(ACCESS_TOKEN);
