@@ -40,9 +40,11 @@ export default async function useApi(
     if (
       !isValid &&
       refresh_token.value &&
-      request !== "refreshtoken" &&
+      request !== "refreshToken" &&
       request !== "logout"
     ) {
+      //lúc này nếu token đã invalid thì xoá token đi luôn
+      sessionStorage.removeItem(ACCESS_TOKEN);
       await refreshToken();
     }
     const access_token = sessionStorage.getItem(ACCESS_TOKEN);
@@ -92,7 +94,7 @@ export default async function useApi(
       clientId: await useFingerSprint(),
     };
     try {
-      const refreshTokenResponse: any = await useApi("refreshtoken", {
+      const refreshTokenResponse: any = await useApi("refreshToken", {
         method: "POST",
         body,
       });
