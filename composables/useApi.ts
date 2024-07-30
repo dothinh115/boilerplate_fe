@@ -100,7 +100,8 @@ export default async function useApi(
       clientId: await useFingerSprint(),
     };
     try {
-      const refreshTokenResponse: any = await $fetch("api/refreshtoken", {
+      const refreshTokenResponse: any = await $fetch("refreshtoken", {
+        baseURL: "/api",
         method: "POST",
         body,
       });

@@ -179,6 +179,11 @@ function getEditorInit(item: string) {
     setup(editor: any) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
+        if (isFieldDisabled.value) {
+          editor.setMode("readonly");
+        } else {
+          editor.setMode("design");
+        }
         isTinyReady.value = true;
       });
       editor.on("change", () => {
