@@ -1,21 +1,34 @@
 <template>
-  <NuxtLayout>
-    <div
-      class="space-y-8 lg:w-[5 0%] md:w-[60%] w-[95%] mx-auto max-h-full rounded-[10px] h-full"
-    >
-      <div
-        class="rounded-[10px] max-h-full overflow-y-scroll hidden-scrollbar relative w-full"
-      >
-        <div
-          class="flex items-center justify-center space-x-2 title sticky top-0 z-[1000] !p-2"
+  <NuxtLayout :name="'login'">
+    <div class="relative py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-screen-sm text-center">
+        <h1
+          class="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-gray-50"
         >
-          <div>{{ error?.statusCode }}</div>
-        </div>
-        <div class="bg-gray-50 p-4">Không tìm thấy trang này</div>
+          {{ error.statusCode }}
+        </h1>
+
+        <p class="mb-4 text-xl font-light text-gray-200">
+          {{
+            error.statusCode === 404
+              ? "Không tìm thấy page này trong hệ thống"
+              : error.statusMessage
+          }}
+        </p>
+        <button
+          @click="handleClearError"
+          class="inline-flex text-white bg-indigo-500 lg:hover:bg-indigo-800 focus:ring-2 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-4 duration-200"
+        >
+          Quay về trang chủ
+        </button>
       </div>
     </div>
   </NuxtLayout>
 </template>
 <script setup>
 const error = useError();
+async function handleClearError() {
+  await navigateTo("/");
+  clearError();
+}
 </script>

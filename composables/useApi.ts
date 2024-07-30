@@ -13,7 +13,6 @@ export default async function useApi(
     };
   }
 ) {
-  const { apiUrl } = useRuntimeConfig().public;
   const refresh_token = useCookie(REFRESH_TOKEN);
   const { loading, toastData } = useGetState();
   const { logout } = useAuth();
@@ -64,15 +63,9 @@ export default async function useApi(
       if (error.data?.statusCode === 401) {
         await logout();
       } else if (error.data?.statusCode === 403) {
-        const newToast: TToastData = {
-          message: "Bạn không có quyền này!",
-          type: "error",
-        };
-        toastData.value.push(newToast);
-        router.push({ path: "/", replace: true });
-      } else if (error.data?.statusCode === 404) {
         throw showError({
           statusCode: error.data?.statusCode,
+          statusMessage: "Bạn không có quyền này!",
         });
       } else if (error.data?.statusCode === 400) {
         const newToast: TToastData = {
@@ -88,7 +81,6 @@ export default async function useApi(
           type: "error",
         };
         toastData.value.push(newToast);
-        clearError();
       }
       clearError();
     }
@@ -100,17 +92,13 @@ export default async function useApi(
       clientId: await useFingerSprint(),
     };
     try {
-      const refreshTokenResponse: any = await $fetch("refreshtoken", {
-        baseURL: "/api",
+      const refreshTokenResponse: any = await useApi("refreshtoken", {
         method: "POST",
         body,
       });
-      refresh_token.value = refreshTokenResponse.data.refreshToken;
+      refresh_token.value = refreshTokenResponse.refreshToken;
       //lưu accessToken vào session
-      sessionStorage.setItem(
-        ACCESS_TOKEN,
-        refreshTokenResponse.data.accessToken
-      );
+      sessionStorage.setItem(ACCESS_TOKEN, refreshTokenResponse.accessToken);
     } catch (error) {
       await logout();
     }
