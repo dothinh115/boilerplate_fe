@@ -22,13 +22,18 @@ export default async function useApi(
   };
 
   const isTokenValid = () => {
-    const access_token = sessionStorage.getItem(ACCESS_TOKEN);
-    if (!access_token) return false;
+    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+    if (!accessToken) return false;
+    let expiredTime = sessionStorage.getItem(TOKEN_EXPIRED_TIME);
     try {
-      const decoded: any = jwtDecode(access_token);
-      if (!decoded || !decoded.exp) return false;
+      if (!expiredTime) {
+        const decoded: any = jwtDecode(accessToken);
+        expiredTime = decoded.exp;
+        sessionStorage.setItem(TOKEN_EXPIRED_TIME, decoded.exp);
+      }
+      if (!expiredTime) return false;
       const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) return false;
+      if (Number(expiredTime) < currentTime) return false;
       return true;
     } catch (error) {
       return false;
@@ -101,6 +106,8 @@ export default async function useApi(
       refresh_token.value = refreshTokenResponse.refreshToken;
       //lưu accessToken vào session
       sessionStorage.setItem(ACCESS_TOKEN, refreshTokenResponse.accessToken);
+      const decoded: any = jwtDecode(refreshTokenResponse.accessToken);
+      sessionStorage.setItem(TOKEN_EXPIRED_TIME, decoded.exp);
     } catch (error) {
       await logout();
     }

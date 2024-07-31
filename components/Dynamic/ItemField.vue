@@ -16,7 +16,7 @@
 
     <div
       v-else-if="$typeCheck(data) === 'boolean'"
-      class="flex items-center justify-between w-full"
+      class="flex items-center justify-between w-full h-[39px]"
     >
       <Toggle v-model="data" :disabled="localSchemaValue.disabled" />
       <button
@@ -209,7 +209,6 @@ const isShowLockedButton = computed(() => {
     ($roleCheck("PATCH", route.params.post as string) || user.value.rootUser)
   )
     return true;
-  console.log($roleCheck("PATCH", route.params.post as string));
   return false;
 });
 
