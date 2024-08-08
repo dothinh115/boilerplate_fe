@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "truyenhot-cp",
       script: "./.output/server/index.mjs",
-      instances: 1,
+      exec_mode: "fork",
       autorestart: true,
       watch: false,
       env_production: {

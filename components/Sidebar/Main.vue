@@ -27,7 +27,7 @@
       <SidebarGroupItem :to="'/me'" :title="'Account'">
         <template #icon> <i class="fa-solid fa-user"></i></template>
       </SidebarGroupItem>
-      <SidebarGroupItem :title="'Upload'">
+      <SidebarGroupItem :title="'Upload'" :to="'/upload'">
         <template #icon>
           <i class="fa-solid fa-upload"></i>
         </template>

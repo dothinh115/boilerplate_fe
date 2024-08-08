@@ -206,7 +206,7 @@ const isShowLockedButton = computed(() => {
     localSchemaValue.value.disabled &&
     localSchemaKey.value !== "id" &&
     !props.new &&
-    ($roleCheck("PATCH", route.params.post as string) || user.value.rootUser)
+    user.value.rootUser
   )
     return true;
   return false;
