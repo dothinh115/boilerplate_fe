@@ -6,6 +6,9 @@
     }"
   >
     <div class="text-gray-900">{{ localSchemaKey }}:</div>
+    <div v-if="localSchemaValue.type === 'richText' && !isTinyReady">
+      <span class="gg-spinner text-gray-900"></span>
+    </div>
     <div v-if="localSchemaValue.type === 'richText'" v-show="isTinyReady">
       <Editor
         api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
@@ -136,9 +139,78 @@
       {{ error[localSchemaKey] }}
     </div>
   </div>
+  <Teleport
+    to="body"
+    v-if="localSchemaValue.type === 'richText' && isTinyReady"
+  >
+    <Modal v-model="uploadModal" :z-index="1400">
+      <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
+        <div class="flex justify-end">
+          <button
+            class="text-gray-300 text-[25px]"
+            @click="uploadModal = false"
+          >
+            <i class="fa-solid fa-x"></i>
+          </button>
+        </div>
+        <div class="bg-gray-50 rounded-lg overflow-hidden">
+          <div class="flex items-center justify-center w-full">
+            <div v-if="imgPreview" class="w-full">
+              <img
+                :src="imgPreview"
+                class="w-full max-h-[300px] object-cover"
+              />
+              <button
+                class="btn btn-red block w-full !rounded-[0px]"
+                @click="imgPreview = ''"
+              >
+                Xoá
+              </button>
+            </div>
+            <div
+              @click="uploadImageClick"
+              class="flex flex-col items-center justify-center w-full h-32 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-t-lg duration-200"
+              v-else
+            >
+              <div
+                class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4"
+              >
+                <i
+                  class="fa-solid fa-cloud-arrow-up text-gray-500 text-[40px]"
+                ></i>
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
+                  <span class="font-semibold">Click to upload</span> or drag and
+                  drop
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-500">
+                  Chỉ được upload hình ảnh
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="p-2 space-y-2">
+            <p class="text-md space-x-1">
+              <i
+                class="fa-solid fa-pencil bg-indigo-500 rounded-lg text-gray-100 p-1"
+              ></i
+              ><span>Image Alt:</span>
+            </p>
+            <input type="text" class="input" v-model="imgAlt" />
+            <button
+              class="btn btn-green block w-full"
+              @click="handleUploadImage"
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
+// import { Editor as TEditor } from "tinymce";
 
 type TProps = {
   schemaKey: string;
@@ -147,6 +219,7 @@ type TProps = {
   error: any;
   new?: boolean;
 };
+const { apiUrl } = useRuntimeConfig().public;
 const props = defineProps<TProps>();
 const emits = defineEmits(["updateData", "handleRef", "update:modelValue"]);
 const route = useRoute();
@@ -156,6 +229,12 @@ const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
 const isTinyReady = ref(false);
 const { $roleCheck } = useNuxtApp();
+const { toastData } = useGetState();
+const tinyMceEditor = ref<any | null>(null);
+const uploadModal = ref(false);
+const imgAlt = ref("");
+const imgToUpload = ref<File | null>(null);
+const imgPreview = ref("");
 
 watch(
   () => props.modelValue,
@@ -175,7 +254,8 @@ function getEditorInit(item: string) {
     width: "100%",
     height: "350px",
     toolbar:
-      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist",
+      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | customUploadButton",
+    toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
@@ -184,11 +264,19 @@ function getEditorInit(item: string) {
         } else {
           editor.setMode("design");
         }
+        tinyMceEditor.value = editor;
         isTinyReady.value = true;
       });
       editor.on("change", () => {
         item = editor.getContent();
         emits("update:modelValue", item);
+      });
+      editor.ui.registry.addButton("customUploadButton", {
+        text: "Upload Image",
+        icon: "image",
+        onAction: function () {
+          uploadModal.value = true;
+        },
       });
     },
   };
@@ -239,5 +327,58 @@ function handleRemoveFromField() {
 
 function handleUnLock() {
   localSchemaValue.value.disabled = false;
+}
+
+function uploadImageClick() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = handleSaveImgList;
+  input.click();
+}
+
+function handleSaveImgList(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+  if (files && files?.length > 0) {
+    const file = files[0];
+    imgToUpload.value = file;
+    const reader = new FileReader();
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const imageUrl = e.target?.result as string;
+      imgPreview.value = imageUrl;
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+async function handleUploadImage() {
+  const file = imgToUpload.value;
+  if (file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const newFile = await useApi("/file", {
+        method: "POST",
+        body: formData,
+      });
+      if (newFile.data) {
+        const img = newFile.data;
+        tinyMceEditor.value?.insertContent(
+          `<img src="${apiUrl}/asset/${img.id}?format=webp" alt="${imgAlt.value}"/>`
+        );
+        imgAlt.value = "";
+        uploadModal.value = false;
+      }
+    } catch (error: any) {
+      toastData.value.push({
+        message:
+          "Có lỗi xảy ra trong quá trình upload, lỗi: " + error.data.message,
+        type: "error",
+      });
+    }
+  }
 }
 </script>
