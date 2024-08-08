@@ -9,6 +9,7 @@ export default defineNuxtPlugin(() => {
             let w = value * perChar;
             if (w < 50) w = 50;
             else if (w > 300) w = 300;
+            if (key === "id") w = 100;
             result[key] = w;
           }
         });
