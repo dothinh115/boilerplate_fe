@@ -1,5 +1,5 @@
 .btn {
-  @apply p-2 rounded-[5px] duration-200 shadow-[0px_0px_1px_1px] shadow-gray-600 min-w-[80px];
+  @apply p-2 rounded-[5px] duration-200 min-w-[80px];
 
   &.btn-icon {
     @apply flex items-center space-x-2 justify-center;

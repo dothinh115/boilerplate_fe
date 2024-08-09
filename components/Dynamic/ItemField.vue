@@ -143,52 +143,13 @@
     to="body"
     v-if="localSchemaValue.type === 'richText' && isTinyReady"
   >
-    <Modal v-model="uploadModal" :z-index="1400">
-      <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
-        <div class="flex justify-end">
-          <button
-            class="text-gray-300 text-[25px]"
-            @click="uploadModal = false"
-          >
-            <i class="fa-solid fa-x"></i>
-          </button>
-        </div>
-        <div class="bg-gray-50 rounded-lg overflow-hidden">
-          <div class="flex items-center justify-center w-full">
-            <div v-if="imgPreview" class="w-full">
-              <img
-                :src="imgPreview"
-                class="w-full max-h-[300px] object-cover"
-              />
-              <button
-                class="btn btn-red block w-full !rounded-[0px]"
-                @click="imgPreview = ''"
-              >
-                Xoá
-              </button>
-            </div>
-            <div
-              @click="uploadImageClick"
-              class="flex flex-col items-center justify-center w-full h-32 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-t-lg duration-200"
-              v-else
-            >
-              <div
-                class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4"
-              >
-                <i
-                  class="fa-solid fa-cloud-arrow-up text-gray-500 text-[40px]"
-                ></i>
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
-                  <span class="font-semibold">Click to upload</span> or drag and
-                  drop
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500">
-                  Chỉ được upload hình ảnh
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="p-2 space-y-2">
+    <Modal v-model="uploadModal">
+      <Upload
+        @close-modal="uploadModal = false"
+        @submit-upload="handleUploadImage"
+      >
+        <template #html>
+          <div class="space-y-2">
             <p class="text-md space-x-1">
               <i
                 class="fa-solid fa-pencil bg-indigo-500 rounded-lg text-gray-100 p-1"
@@ -196,21 +157,15 @@
               ><span>Image Alt:</span>
             </p>
             <input type="text" class="input" v-model="imgAlt" />
-            <button
-              class="btn btn-green block w-full"
-              @click="handleUploadImage"
-            >
-              Upload
-            </button>
           </div>
-        </div>
-      </div>
+        </template>
+        <template #warning>Chỉ được upload hình ảnh</template>
+      </Upload>
     </Modal>
   </Teleport>
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
-// import { Editor as TEditor } from "tinymce";
 
 type TProps = {
   schemaKey: string;
@@ -233,8 +188,6 @@ const { toastData } = useGetState();
 const tinyMceEditor = ref<any | null>(null);
 const uploadModal = ref(false);
 const imgAlt = ref("");
-const imgToUpload = ref<File | null>(null);
-const imgPreview = ref("");
 
 watch(
   () => props.modelValue,
@@ -329,33 +282,7 @@ function handleUnLock() {
   localSchemaValue.value.disabled = false;
 }
 
-function uploadImageClick() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.onchange = handleSaveImgList;
-  input.click();
-}
-
-function handleSaveImgList(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
-  if (files && files?.length > 0) {
-    const file = files[0];
-    imgToUpload.value = file;
-    const reader = new FileReader();
-
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      const imageUrl = e.target?.result as string;
-      imgPreview.value = imageUrl;
-    };
-
-    reader.readAsDataURL(file);
-  }
-}
-
-async function handleUploadImage() {
-  const file = imgToUpload.value;
+async function handleUploadImage(file: File) {
   if (file) {
     const formData = new FormData();
     formData.append("file", file);
