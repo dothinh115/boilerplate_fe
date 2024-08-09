@@ -143,24 +143,55 @@
     to="body"
     v-if="localSchemaValue.type === 'richText' && isTinyReady"
   >
-    <Modal v-model="uploadModal">
+    <Modal
+      v-model="uploadModal"
+      :close-btn="true"
+      @update:model-value="imgAlt = ''"
+    >
       <Upload
         @close-modal="uploadModal = false"
         @submit-upload="handleUploadImage"
+        :valid-file="'image/*'"
       >
         <template #html>
-          <div class="space-y-2">
-            <p class="text-md space-x-1">
-              <i
-                class="fa-solid fa-pencil bg-indigo-500 rounded-lg text-gray-100 p-1"
-              ></i
-              ><span>Image Alt:</span>
-            </p>
-            <input type="text" class="input" v-model="imgAlt" />
-          </div>
+          <input
+            type="text"
+            class="input"
+            v-model="imgAlt"
+            placeholder="Image Alt..."
+          />
         </template>
         <template #warning>Chỉ được upload hình ảnh</template>
       </Upload>
+    </Modal>
+    <Modal
+      v-model="insertImgModal"
+      :close-btn="true"
+      @update:model-value="imgAlt = ''"
+    >
+      <div
+        class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] bg-gray-50 p-2 rounded-lg"
+      >
+        <input
+          type="text"
+          class="input"
+          placeholder="Link hoặc id của ảnh trong hệ thống..."
+          v-model="imgIdOrPath"
+        />
+        <input
+          type="text"
+          class="input"
+          v-model="imgAlt"
+          placeholder="Image Alt..."
+        />
+        <button
+          class="btn btn-green w-full"
+          @click="handleInsertImage"
+          :disabled="!imgIdOrPath"
+        >
+          Submit
+        </button>
+      </div>
     </Modal>
   </Teleport>
 </template>
@@ -187,7 +218,10 @@ const { $roleCheck } = useNuxtApp();
 const { toastData } = useGetState();
 const tinyMceEditor = ref<any | null>(null);
 const uploadModal = ref(false);
+const insertImgModal = ref(false);
 const imgAlt = ref("");
+const imgIdOrPath = ref("");
+const { loading } = useGetState();
 
 watch(
   () => props.modelValue,
@@ -207,7 +241,7 @@ function getEditorInit(item: string) {
     width: "100%",
     height: "350px",
     toolbar:
-      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | customUploadButton",
+      "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | customInsertImageButton | customUploadButton ",
     toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
@@ -225,14 +259,59 @@ function getEditorInit(item: string) {
         emits("update:modelValue", item);
       });
       editor.ui.registry.addButton("customUploadButton", {
-        text: "Upload Image",
-        icon: "image",
+        text: "IMG",
+        icon: "upload",
         onAction: function () {
           uploadModal.value = true;
         },
       });
+      editor.ui.registry.addButton("customInsertImageButton", {
+        icon: "image",
+        onAction: function () {
+          insertImgModal.value = true;
+        },
+      });
     },
   };
+}
+
+async function handleInsertImage() {
+  const isValid = isValidUrl(imgIdOrPath.value);
+  if (isValid) {
+    //nếu là url thì chèn thẳng vào editor
+    tinyMceEditor.value?.insertContent(
+      `<img src="${imgIdOrPath.value}" alt="${imgAlt.value}" width="500"/>`
+    );
+    imgIdOrPath.value = "";
+    imgAlt.value = "";
+    insertImgModal.value = false;
+  } else {
+    //nếu là id trong hệ thống thì kiểm tra hợp lệ
+    try {
+      const img = await useApi(`/asset/${imgIdOrPath.value}`);
+      tinyMceEditor.value?.insertContent(
+        `<img src="${apiUrl}/asset/${imgIdOrPath.value}?format=webp" alt="${imgAlt.value}" width="500" />`
+      );
+    } catch (error: any) {
+      toastData.value.push({
+        message: "Có lỗi xảy ra, file có thể ko tồn tại trong hệ thống",
+        type: "error",
+      });
+    } finally {
+      imgIdOrPath.value = "";
+      imgAlt.value = "";
+      insertImgModal.value = false;
+    }
+  }
+}
+
+function isValidUrl(url: string) {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 const isFieldDisabled = computed(() => {
@@ -284,6 +363,7 @@ function handleUnLock() {
 
 async function handleUploadImage(file: File) {
   if (file) {
+    loading.value = true;
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -294,7 +374,7 @@ async function handleUploadImage(file: File) {
       if (newFile.data) {
         const img = newFile.data;
         tinyMceEditor.value?.insertContent(
-          `<img src="${apiUrl}/asset/${img.id}?format=webp" alt="${imgAlt.value}"/>`
+          `<img src="${apiUrl}/asset/${img.id}?format=webp" alt="${imgAlt.value}" width="500" />`
         );
         imgAlt.value = "";
         uploadModal.value = false;
@@ -305,6 +385,8 @@ async function handleUploadImage(file: File) {
           "Có lỗi xảy ra trong quá trình upload, lỗi: " + error.data.message,
         type: "error",
       });
+    } finally {
+      loading.value = false;
     }
   }
 }

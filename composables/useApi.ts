@@ -5,7 +5,7 @@ export default async function useApi(
   request: string,
   options?: {
     body?: any;
-    method?: "POST" | "PATCH" | "GET" | "DELETE";
+    method?: "POST" | "PATCH" | "GET" | "DELETE" | "HEAD";
     baseURL?: string;
     params?: any;
     headers?: {

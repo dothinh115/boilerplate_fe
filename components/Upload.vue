@@ -1,10 +1,5 @@
 <template>
   <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
-    <div class="flex justify-end">
-      <button class="text-gray-300 text-[25px]" @click="emits('closeModal')">
-        <i class="fa-solid fa-x"></i>
-      </button>
-    </div>
     <div class="bg-gray-50 rounded-lg overflow-hidden">
       <div class="flex items-center justify-center w-full p-2 flex-wrap">
         <div
@@ -14,9 +9,6 @@
         >
           <div
             class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4 w-3/4 rounded-lg group-hover:bg-gray-200 duration-200 border-2 border-gray-400 border-dashed"
-            :class="{
-              '!border-red-500': error,
-            }"
             v-if="!preview"
           >
             <i class="fa-solid fa-cloud-arrow-up text-gray-500 text-[40px]"></i>
@@ -41,8 +33,11 @@
         <div>
           <slot name="html" />
         </div>
-        <p v-if="error" class="text-xs text-red-500">{{ error }}</p>
-        <button class="btn btn-green block w-full" @click="handleUpload">
+        <button
+          class="btn btn-green block w-full"
+          @click="handleUpload"
+          :disabled="!isValid"
+        >
           Upload
         </button>
       </div>
@@ -57,7 +52,6 @@ const props = defineProps<TProps>();
 const emits = defineEmits(["closeModal", "submitUpload"]);
 const preview = ref("");
 const file = ref<File | null>(null);
-const error = ref("");
 
 function clearPreview() {
   preview.value = "";
@@ -79,7 +73,6 @@ const backgroundStyle = computed(() => {
 
 const isValid = computed(() => {
   if (!file.value) {
-    error.value = "Hãy chọn file!";
     return false;
   }
   return true;
