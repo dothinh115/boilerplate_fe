@@ -6,9 +6,9 @@
     }"
   >
     <div class="text-gray-900">{{ localSchemaKey }}:</div>
-    <div v-if="localSchemaValue.type === 'richText' && !isTinyReady">
-      <span class="gg-spinner text-gray-900"></span>
-    </div>
+    <TinyMceLoading
+      v-if="localSchemaValue.type === 'richText' && !isTinyReady"
+    />
     <div v-if="localSchemaValue.type === 'richText'" v-show="isTinyReady">
       <Editor
         api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"

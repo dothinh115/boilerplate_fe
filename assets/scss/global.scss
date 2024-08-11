@@ -11,6 +11,9 @@
 @layer base {
 }
 
+.skeleton {
+  @apply bg-gray-300 animate-pulse rounded-md;
+}
 body {
   font-size: 14px;
   font-family: "Poppins", sans-serif;
