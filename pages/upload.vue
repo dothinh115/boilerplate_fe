@@ -65,7 +65,14 @@ const { loading, screenWidth } = useGetState();
 const folderData = ref<TFolder[]>([]);
 const fileData = ref<any[]>([]);
 const fileSchema = useState("/schema/file");
-const perPage = 15;
+const perPage = computed(() => {
+  if (screenWidth.value <= 375) return 9; //iphone SE
+  else if (screenWidth.value > 375 && screenWidth.value <= 390)
+    return 13; //iphone pro
+  else if (screenWidth.value > 390 && screenWidth.value <= 414)
+    return 14; //iphone XR
+  else return 15;
+});
 const currentPage = ref(Number(route.query.page) || 1);
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
@@ -81,12 +88,12 @@ async function getFolders() {
 async function getFiles() {
   const params = {
     sort: "-createdAt",
-    limit: perPage,
+    limit: perPage.value,
     page: currentPage.value,
     meta: "*",
   };
   const response = await useApi("/file", { params });
-  totalPages.value = Math.ceil(response.meta.totalCount / perPage);
+  totalPages.value = Math.ceil(response.meta.totalCount / perPage.value);
   fileData.value = response.data;
 }
 

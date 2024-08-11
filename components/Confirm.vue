@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="localModel" @update:model-value="cancel">
       <div
-        class="bg-gray-100 rounded-[5px] lg:w-[300px] mx-auto overflow-hidden"
+        class="bg-gray-100 rounded-[5px] lg:w-[300px] w-[95%] mx-auto overflow-hidden"
       >
         <div class="border-b border-gray-500 p-2 text-center space-y-4">
           <slot name="icon"></slot>

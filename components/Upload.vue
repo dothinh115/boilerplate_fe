@@ -8,7 +8,7 @@
           :style="backgroundStyle"
         >
           <div
-            class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4 w-3/4 rounded-lg group-hover:bg-gray-200 duration-200 border-2 border-gray-400 border-dashed"
+            class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4 md:w-3/4 w-[90%] rounded-lg group-hover:bg-gray-200 duration-200 border-2 border-gray-400 border-dashed"
             v-if="!preview"
           >
             <i class="fa-solid fa-cloud-arrow-up text-gray-500 text-[40px]"></i>
@@ -101,7 +101,6 @@ function handleChange(event: Event) {
   if (files && files?.length > 0) {
     //lưu file vào biến
     file.value = files[0];
-    console.log(file.value);
     //đọc file để preview
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {

@@ -1,5 +1,13 @@
 <template>
-  <div class="flex items-center pb-2 last:border-b-0 border-b border-blue-900">
+  <div
+    class="flex items-center pb-2 last:border-b-0 border-b border-blue-900 space-x-4"
+  >
+    <input
+      class="checkbox"
+      type="checkbox"
+      @change="handleSelect"
+      :checked="selectedList.find((x) => x === fileItem.id) ? true : false"
+    />
     <NuxtLink
       class="flex space-x-4 items-center flex-grow"
       :to="{
@@ -21,7 +29,7 @@
       >
         {{ fileItem.id }}
       </div>
-      <div class="text-gray-200 truncate w-[150px]">
+      <div class="text-gray-200 truncate w-[150px]" v-if="screenWidth >= 769">
         {{ $timeAgo(fileItem.createdAt) }}
       </div>
       <div
@@ -29,6 +37,7 @@
         :style="{
           width: `${widthData.mimeType}px`,
         }"
+        v-if="screenWidth > 1024"
       >
         {{ fileItem.mimeType }}
       </div>
@@ -37,6 +46,7 @@
         :style="{
           width: `${widthData.size}px`,
         }"
+        v-if="screenWidth >= 769"
       >
         {{ (fileItem.size / 1024 / 1024).toFixed(2) }} Mb
       </div>
@@ -103,12 +113,13 @@ export type TFile = {
 type TProps = {
   fileItem: TFile;
   widthData: any;
+  selectedList: string[];
 };
 const props = defineProps<TProps>();
-const emits = defineEmits(["change"]);
+const emits = defineEmits(["change", "select"]);
 const isMenuShowed = ref(false);
 const confirmDeleteModal = ref(false);
-const { toastData } = useGetState();
+const { toastData, screenWidth } = useGetState();
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
 
 const iconClass = computed(() => {
@@ -144,6 +155,15 @@ function handleOutsideClick(event: MouseEvent) {
   )
     return;
   isMenuShowed.value = false;
+}
+
+function handleSelect(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const checked = target.checked;
+  emits("select", {
+    checked,
+    id: props.fileItem.id,
+  });
 }
 
 async function handleDelete() {

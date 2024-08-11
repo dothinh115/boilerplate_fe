@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full h-dvh text-gray-200 overflow-y-scroll hidden-scrollbar px-6 bg-indigo-600 bg-opacity-90 space-y-8"
+    class="w-full h-dvh text-gray-200 overflow-y-scroll hidden-scrollbar xl:px-6 px-2 bg-indigo-600 bg-opacity-90 space-y-8"
   >
-    <div class="uppercase text-[20px] mt-8 ml-2">
-      <span class="bg-indigo-500 p-2 text-gray-50 rounded-[8px] ring-2"
+    <div class="uppercase xl:text-[20px] text-[16px] mt-8 ml-2">
+      <span class="bg-indigo-500 xl:p-2 p-1 text-gray-50 rounded-[8px] ring-2"
         >Control Panel</span
       >
     </div>

@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="modal" :close-btn="true" @update:model-value="handleGoBack">
       <div
-        class="bg-gray-100 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] rounded-lg overflow-hidden"
+        class="bg-gray-100 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] rounded-lg overflow-y-scroll md:max-h-[95%] max-h-[85%] hidden-scrollbar"
       >
         <div
           class="md:h-[350px] h-[250px]"
