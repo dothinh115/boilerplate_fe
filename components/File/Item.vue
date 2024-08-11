@@ -52,13 +52,19 @@
       </div>
     </NuxtLink>
     <div class="relative">
+      <div class="flex items-center space-x-2" v-if="copiedToClipboard">
+        <i class="fa-solid fa-check text-[20px] text-emerald-500"></i>
+        <span class="text-gray-100">Copied</span>
+      </div>
       <button
+        v-else
         class="w-[25px] aspect-1 bg-indigo-500 lg:hover:bg-indigo-400 text-gray-200 rounded-lg flex items-center justify-center focus:ring-2"
         @click.stop="toggleMenu"
         ref="menuButtonRef"
       >
         <i class="fa-solid fa-ellipsis"></i>
       </button>
+
       <div
         class="z-[1] bg-white rounded-lg w-44 absolute top-[calc(100%+5px)] right-0 overflow-hidden"
         v-if="isMenuShowed"
@@ -72,6 +78,15 @@
             >
               <i class="fa-solid fa-trash-can"></i>
               <span>Xoá</span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="w-full px-4 py-2 hover:bg-gray-100 text-gray-600 flex items-center space-x-2"
+              @click="handleCopyLink"
+            >
+              <i class="fa-solid fa-copy"></i>
+              <span>Copy link</span>
             </button>
           </li>
           <li>
@@ -121,6 +136,7 @@ const isMenuShowed = ref(false);
 const confirmDeleteModal = ref(false);
 const { toastData, screenWidth } = useGetState();
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
+const copiedToClipboard = ref(false);
 
 const iconClass = computed(() => {
   switch (props.fileItem.mimeType) {
@@ -165,6 +181,30 @@ function handleSelect(event: Event) {
     id: props.fileItem.id,
   });
 }
+
+function handleCopyLink() {
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  navigator.clipboard
+    .writeText(`${baseUrl}/api/asset/${props.fileItem.id}`)
+    .then(() => {
+      copiedToClipboard.value = true;
+      isMenuShowed.value = false;
+    })
+    .catch((err) => {
+      alert("Có lỗi xảy ra!");
+    });
+}
+
+watch(
+  () => copiedToClipboard.value,
+  (newVal) => {
+    if (newVal) {
+      setTimeout(() => {
+        copiedToClipboard.value = false;
+      }, 3000);
+    }
+  }
+);
 
 async function handleDelete() {
   try {
