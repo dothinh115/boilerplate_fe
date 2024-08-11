@@ -1,28 +1,6 @@
 <template>
   <div class="space-y-4">
-    <div class="flex items-center">
-      <button
-        class="text-gray-100 btn btn-red h-[30px] aspect-1 flex items-center justify-center"
-        v-if="selectedList.length > 0"
-        @click="confirmDeleteModal = true"
-      >
-        <i class="fa-solid fa-trash"></i>
-      </button>
-      <button
-        class="flex items-center space-x-4 text-gray-100 text-[20px] cursor-pointer"
-        @click.prevent="isFileShowed = !isFileShowed"
-        v-else
-      >
-        <i
-          class="fa-solid fa-chevron-up"
-          :class="{
-            'rotate-180': !isFileShowed,
-          }"
-        ></i>
-        <span> Files </span>
-      </button>
-    </div>
-    <div v-if="isFileShowed">
+    <div>
       <div class="text-gray-100" v-if="fileData.length === 0">
         Chưa có file nào ở đây...
       </div>
@@ -150,15 +128,6 @@
       </div>
     </div>
   </div>
-  <Confirm
-    v-model="confirmDeleteModal"
-    :handle="handleMultipleDelete"
-    :message="'Bạn có chắc chắn muốn xoá những file đã chọn không?'"
-  >
-    <template #icon>
-      <i class="fa-solid fa-trash text-[40px] text-red-500"></i>
-    </template>
-  </Confirm>
 </template>
 <script setup lang="ts">
 import type { TFile } from "./Item.vue";
@@ -169,15 +138,15 @@ type TProps = {
   totalPages: number;
   currentPage: number;
   pagination: (number | string)[];
+  selectedList: string[];
 };
 const props = defineProps<TProps>();
 const route = useRoute();
-const emits = defineEmits(["change"]);
+const emits = defineEmits(["change", "select", "selectAll"]);
 const isFileShowed = ref(true);
 const widthData = ref();
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const { screenWidth, toastData, loading } = useGetState();
-const selectedList = ref<string[]>([]);
 const confirmDeleteModal = ref(false);
 
 function handleChange() {
@@ -185,11 +154,10 @@ function handleChange() {
 }
 
 function handleSelect({ checked, id }: { checked: boolean; id: string }) {
-  if (checked) {
-    selectedList.value.push(id);
-  } else {
-    selectedList.value = selectedList.value.filter((x) => x !== id);
-  }
+  emits("select", {
+    checked,
+    id,
+  });
 }
 
 widthData.value = $widthCalc(
@@ -202,29 +170,6 @@ widthData.value = $widthCalc(
 function handleSelectAll(event: Event) {
   const target = event.target as HTMLInputElement;
   const checked = target.checked;
-  if (checked) {
-    selectedList.value = props.fileData.map((x) => x.id);
-  } else {
-    selectedList.value = [];
-  }
-}
-
-async function handleMultipleDelete() {
-  loading.value = true;
-  for (const item of selectedList.value) {
-    try {
-      await useApi(`/file/${item}`, {
-        method: "DELETE",
-      });
-    } catch (error: any) {
-      toastData.value.push({
-        type: "error",
-        message: error.data.message,
-      });
-    }
-  }
-  selectedList.value = [];
-  loading.value = false;
-  emits("change");
+  emits("selectAll", checked);
 }
 </script>

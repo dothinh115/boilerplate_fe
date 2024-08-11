@@ -2,7 +2,14 @@
   <div class="space-y-8">
     <div class="flex items-center justify-between">
       <div class="text-[25px] text-gray-200">upload</div>
-      <div class="relative">
+      <div class="flex items-center space-x-4">
+        <button
+          class="h-[40px] aspect-1 bg-red-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-red-800 disabled:opacity-50"
+          :disabled="selectedList.length === 0"
+          @click="confirmDeleteModal = true"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
         <NuxtLink
           class="h-[40px] aspect-1 bg-emerald-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-emerald-800"
           :to="{
@@ -49,11 +56,23 @@
       :totalPages
       :currentPage
       :pagination
+      :selectedList
       @change="handleChange"
+      @select="handleSelect"
+      @selectAll="handleSelectAll"
     />
     <!-- File -->
     <NuxtPage />
   </div>
+  <Confirm
+    v-model="confirmDeleteModal"
+    :handle="handleMultipleDelete"
+    :message="'Bạn có chắc chắn muốn xoá những file đã chọn không?'"
+  >
+    <template #icon>
+      <i class="fa-solid fa-trash text-[40px] text-red-500"></i>
+    </template>
+  </Confirm>
 </template>
 
 <script setup lang="ts">
@@ -61,10 +80,16 @@ import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
 const isMenuShowed = ref(false);
-const { loading, screenWidth } = useGetState();
+const { loading, screenWidth, toastData } = useGetState();
 const folderData = ref<TFolder[]>([]);
 const fileData = ref<any[]>([]);
 const fileSchema = useState("/schema/file");
+const currentPage = ref(Number(route.query.page) || 1);
+const totalPages = ref(0);
+const pagination = ref<(string | number)[]>([]);
+const selectedList = ref<string[]>([]);
+const confirmDeleteModal = ref(false);
+
 const perPage = computed(() => {
   if (screenWidth.value <= 375) return 9; //iphone SE
   else if (screenWidth.value > 375 && screenWidth.value <= 390)
@@ -73,9 +98,22 @@ const perPage = computed(() => {
     return 14; //iphone XR
   else return 15;
 });
-const currentPage = ref(Number(route.query.page) || 1);
-const totalPages = ref(0);
-const pagination = ref<(string | number)[]>([]);
+
+function handleSelect({ checked, id }: { checked: boolean; id: string }) {
+  if (checked) {
+    selectedList.value.push(id);
+  } else {
+    selectedList.value = selectedList.value.filter((x) => x !== id);
+  }
+}
+
+function handleSelectAll(checked: boolean) {
+  if (checked) {
+    selectedList.value = fileData.value.map((x) => x.id);
+  } else {
+    selectedList.value = [];
+  }
+}
 
 async function getFolders() {
   const params = {
@@ -108,6 +146,25 @@ async function fetchAll() {
   await getFileSchema();
   // await getFolders();
   await getFiles();
+  loading.value = false;
+}
+
+async function handleMultipleDelete() {
+  loading.value = true;
+  for (const item of selectedList.value) {
+    try {
+      await useApi(`/file/${item}`, {
+        method: "DELETE",
+      });
+    } catch (error: any) {
+      toastData.value.push({
+        type: "error",
+        message: error.data.message,
+      });
+    }
+  }
+  selectedList.value = [];
+  await fetchAll();
   loading.value = false;
 }
 
