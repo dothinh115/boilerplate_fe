@@ -1,8 +1,8 @@
 <template>
   <Transition name="fade">
     <div
-      class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70"
-      :class="zIndex ? `z-${zIndex}` : 'z-[2]'"
+      class="w-full h-full max-h-full fixed top-0 left-0 flex items-center justify-center bg-black bg-opacity-70 z-[2]"
+      :class="class"
       v-if="modelValue"
       @mousedown.self="close"
     >
@@ -21,6 +21,7 @@ type TProps = {
   modelValue: boolean;
   closeBtn?: boolean;
   zIndex?: number;
+  class?: string;
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["update:modelValue"]);

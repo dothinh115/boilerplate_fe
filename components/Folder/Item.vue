@@ -1,17 +1,17 @@
 <template>
   <div
-    class="flex space-x-4 items-center border-b border-blue-900 pb-4 last:border-b-0"
+    class="flex space-x-4 items-center border-b border-blue-900 pb-2 last:border-b-0"
   >
-    <i class="fa-solid fa-folder text-[38px] text-cyan-400"></i>
+    <i class="fa-solid fa-folder text-[25px] text-cyan-400"></i>
     <NuxtLink
       :to="{
         name: 'upload-folder-id',
         params: {
-          id: folderData.id,
+          id: folderItem.id,
         },
       }"
-      class="text-gray-200 text-[18px]"
-      >{{ folderData.name }}</NuxtLink
+      class="text-gray-200 text-[16px]"
+      >{{ folderItem.name }}</NuxtLink
     >
   </div>
 </template>
@@ -22,7 +22,7 @@ export type TFolder = {
   user: TUser;
 };
 type TProps = {
-  folderData: TFolder;
+  folderItem: TFolder;
 };
 const props = defineProps<TProps>();
 </script>

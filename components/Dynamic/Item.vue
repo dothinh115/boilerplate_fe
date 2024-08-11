@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="handleClose">
       <div
-        class="space-y-8 2xl:w-[40%] xl:w-[50%] lg:w-[70%] w-[95%] mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
+        class="space-y-8 xl:w-[60%] lg:w-[80%] w-[95%] mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
       >
         <div
           class="rounded-[10px] lg:max-h-[95vh] max-h-[80vh] overflow-y-scroll hidden-scrollbar relative w-full"
@@ -51,21 +51,15 @@
     </Modal>
   </Teleport>
 
-  <Teleport to="body">
-    <Modal v-model="deleteConfirmModal">
-      <Confirm
-        :message="'Bạn có chắc chắn muốn xoá không?'"
-        :handle="handleDelete"
-        v-model="deleteConfirmModal"
-      >
-        <template #icon>
-          <i
-            class="fa-solid fa-circle-exclamation text-[48px] text-red-600"
-          ></i>
-        </template>
-      </Confirm>
-    </Modal>
-  </Teleport>
+  <Confirm
+    :message="'Bạn có chắc chắn muốn xoá không?'"
+    :handle="handleDelete"
+    v-model="deleteConfirmModal"
+  >
+    <template #icon>
+      <i class="fa-solid fa-circle-exclamation text-[48px] text-red-600"></i>
+    </template>
+  </Confirm>
 
   <Teleport to="body">
     <Modal v-model="selectModal">
@@ -97,7 +91,7 @@ const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const selectModal = ref(false);
 const { toastData } = useGetState();
-const isFromInside = useState("isFromInside");
+const { isFromInside } = useGetState();
 const relationData = ref<{
   relation: string;
   type: "string" | "number" | "array" | undefined;

@@ -104,7 +104,6 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const route = useRoute();
-const { loading } = useGetState();
 const width = ref<{
   [key: string]: number;
 }>({});
@@ -116,9 +115,7 @@ onBeforeRouteUpdate(async (to, from) => {
     from.name?.toString().includes(to.name?.toString() as string) &&
     from.name !== to.name
   ) {
-    loading.value = true;
     emit("revalidate");
-    loading.value = false;
   }
 });
 

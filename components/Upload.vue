@@ -46,7 +46,7 @@
 </template>
 <script setup lang="ts">
 type TProps = {
-  validFile?: string;
+  accept?: string;
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["closeModal", "submitUpload"]);
@@ -88,8 +88,8 @@ function handleClick() {
   //khi click thì tạo input và click vào
   const input = document.createElement("input");
   input.type = "file";
-  if (props.validFile) {
-    input.accept = props.validFile;
+  if (props.accept) {
+    input.accept = props.accept;
   }
   input.onchange = handleChange;
   input.click();

@@ -17,6 +17,14 @@ export default function useGetState() {
   const screenWidth = useState("screenWidth", () => screen.width);
   const hideSidebar = useState("hideSidebar", () => false);
   const routes = useState<TRoute>("route", () => []);
+  const isFromInside = useState<boolean>("isFromInside", () => false);
 
-  return { toastData, loading, screenWidth, hideSidebar, routes };
+  return {
+    toastData,
+    loading,
+    screenWidth,
+    hideSidebar,
+    routes,
+    isFromInside,
+  };
 }

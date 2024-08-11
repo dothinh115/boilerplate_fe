@@ -32,32 +32,28 @@
     <div class="flex justify-center">
       <button
         class="text-gray-50 w-full aspect-1 bg-gray-500"
-        @click="logoutConfirmModel = true"
+        @click="logoutConfirmModal = true"
       >
         <i class="fa-solid fa-right-from-bracket fa-lg rotate-180"></i>
       </button>
     </div>
   </div>
-  <Teleport to="body">
-    <Modal v-model="logoutConfirmModel">
-      <Confirm
-        :message="'Bạn có chắc chắn muốn thoát ra không?'"
-        :handle="logout"
-        v-model="logoutConfirmModel"
-      >
-        <template #icon>
-          <i
-            class="fa-solid fa-right-from-bracket text-[48px] text-indigo-600 rotate-180"
-          ></i>
-        </template>
-      </Confirm>
-    </Modal>
-  </Teleport>
+  <Confirm
+    :message="'Bạn có chắc chắn muốn thoát ra không?'"
+    :handle="logout"
+    v-model="logoutConfirmModal"
+  >
+    <template #icon>
+      <i
+        class="fa-solid fa-right-from-bracket text-[48px] text-indigo-600 rotate-180"
+      ></i>
+    </template>
+  </Confirm>
 </template>
 <script setup lang="ts">
 const { hideSidebar } = useGetState();
 const { logout } = useAuth();
-const logoutConfirmModel = ref(false);
+const logoutConfirmModal = ref(false);
 function handleHideSidebar() {
   hideSidebar.value = !hideSidebar.value;
 }

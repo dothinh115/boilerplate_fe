@@ -102,7 +102,7 @@ const { user } = useAuth();
 const schemaApi = "/schema/user";
 const schema = useState<any>(schemaApi, () => {});
 const fieldData = ref<any>(user.value[route.params.field as keyof TUser]);
-const isFromInside = useState("isFromInside");
+const { isFromInside } = useGetState();
 const { loading, toastData } = useGetState();
 const { getUser } = useAuth();
 const { $typeCheck } = useNuxtApp();
@@ -231,8 +231,8 @@ await getSchema();
 definePageMeta({
   middleware: [
     async (to, from) => {
-      const isFromInside = useState("isFromInside", () => false);
-      if (to.name !== from.name) isFromInside.value = true;
+      const { isFromInside } = useGetState();
+      if (from.name) isFromInside.value = true;
       const schemaApi = "/schema/user";
       const schema = useState<any>(schemaApi, () => {});
 

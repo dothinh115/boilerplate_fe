@@ -7,7 +7,7 @@ const { id, post } = route.params;
 const { loading } = useGetState();
 const schemaApi = `/schema/${route.params.post}`;
 const dataApi = `/${post}`;
-const schema = useState<any>(schemaApi, () => {});
+const schema = useState<any>(schemaApi);
 const data = ref<any>({});
 
 async function getSchema() {
@@ -35,8 +35,8 @@ await fetchData();
 definePageMeta({
   middleware: [
     (to, from) => {
-      const isFromInside = useState("isFromInside", () => false);
-      if (to.name !== from.name) isFromInside.value = true;
+      const { isFromInside } = useGetState();
+      if (from.name) isFromInside.value = true;
     },
   ],
 });

@@ -27,7 +27,11 @@
       <SidebarGroupItem :to="'/me'" :title="'Account'">
         <template #icon> <i class="fa-solid fa-user"></i></template>
       </SidebarGroupItem>
-      <SidebarGroupItem :title="'Upload'" :to="'/upload'">
+      <SidebarGroupItem
+        :title="'Upload'"
+        :to="'/upload'"
+        v-if="$roleCheck('GET', 'file')"
+      >
         <template #icon>
           <i class="fa-solid fa-upload"></i>
         </template>
