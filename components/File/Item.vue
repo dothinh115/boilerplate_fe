@@ -22,10 +22,10 @@
       <div
         class="text-gray-200 truncate"
         :style="{
-          width: `${widthData.id}px`,
+          width: `${widthData.originalName}px`,
         }"
       >
-        {{ fileItem.id }}
+        {{ fileItem.originalName }}
       </div>
       <div class="text-gray-200 truncate w-[150px]" v-if="screenWidth >= 769">
         {{ $timeAgo(fileItem.createdAt) }}

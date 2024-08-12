@@ -17,10 +17,10 @@
             <div class="w-[20px]"></div>
             <div
               :style="{
-                width: `${widthData.id}px`,
+                width: `${widthData.originalName}px`,
               }"
             >
-              Id
+              name
             </div>
             <div class="w-[150px]" v-if="screenWidth >= 769">Thời gian</div>
             <div
