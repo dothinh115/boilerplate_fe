@@ -2,7 +2,7 @@
   <div class="space-y-8">
     <div class="flex items-center justify-between">
       <div class="text-[25px] text-gray-200">upload</div>
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center md:space-x-4 space-x-2">
         <button
           class="h-[40px] aspect-1 bg-red-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-red-800 disabled:opacity-50"
           :disabled="selectedList.length === 0"

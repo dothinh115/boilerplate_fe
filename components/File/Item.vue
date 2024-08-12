@@ -2,11 +2,9 @@
   <div
     class="flex items-center pb-2 last:border-b-0 border-b border-blue-900 space-x-4"
   >
-    <input
-      class="checkbox"
-      type="checkbox"
-      @change="handleSelect"
+    <InputCheckbox
       :checked="selectedList.find((x) => x === fileItem.id) ? true : false"
+      @change="handleChange"
     />
     <NuxtLink
       class="flex space-x-4 items-center flex-grow"
@@ -173,9 +171,7 @@ function handleOutsideClick(event: MouseEvent) {
   isMenuShowed.value = false;
 }
 
-function handleSelect(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const checked = target.checked;
+function handleChange(checked: boolean) {
   emits("select", {
     checked,
     id: props.fileItem.id,

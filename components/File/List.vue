@@ -6,13 +6,11 @@
       </div>
       <div class="space-y-2" v-else>
         <div class="flex space-x-4 items-center border-b border-blue-900 pb-2">
-          <input
-            class="checkbox"
-            type="checkbox"
-            @change="handleSelectAll"
+          <InputCheckbox
             :checked="
               selectedList.length === fileData.length && fileData.length > 0
             "
+            @change="handleSelectAll"
           />
 
           <div class="flex items-center space-x-4 text-gray-100">
@@ -167,9 +165,7 @@ widthData.value = $widthCalc(
   })
 );
 
-function handleSelectAll(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const checked = target.checked;
+function handleSelectAll(checked: boolean) {
   emits("selectAll", checked);
 }
 </script>
