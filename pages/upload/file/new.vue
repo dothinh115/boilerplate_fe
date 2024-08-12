@@ -10,6 +10,8 @@
   </Teleport>
 </template>
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
+
 const modal = ref(true);
 const router = useRouter();
 const { isFromInside } = useGetState();
@@ -19,8 +21,13 @@ const successfulUpload = ref<
     type: "success" | "fail" | "loading";
   }[]
 >([]);
+const toast = useToast();
 
 async function handleUpload(files: File[]) {
+  if (files.length > 5) {
+    toast.warning("Upload tối đa 5 files cùng lúc");
+    return;
+  }
   for (const file of files) {
     successfulUpload.value.push({
       file,

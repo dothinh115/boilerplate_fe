@@ -120,16 +120,6 @@ const backgroundStyle = computed(() => {
   };
 });
 
-watch(
-  () => files.value,
-  (newVal) => {
-    if (newVal.length > 5) {
-      toast.warning("Upload tối đa 5 files 1 lần!");
-      files.value = [];
-    }
-  }
-);
-
 const isValid = computed(() => {
   if (!file.value && files.value.length === 0) {
     return false;
