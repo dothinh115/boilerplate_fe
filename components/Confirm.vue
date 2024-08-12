@@ -5,7 +5,8 @@
         class="bg-gray-100 rounded-[5px] lg:w-[300px] md:w-[40%] w-[70%] mx-auto overflow-hidden"
       >
         <div class="border-b border-gray-500 p-2 text-center space-y-4">
-          <slot name="icon"></slot>
+          <slot name="icon" />
+          <slot name="message" />
           <div>{{ message || "Bạn có chắc chắn không?" }}</div>
         </div>
         <div class="flex">

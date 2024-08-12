@@ -80,7 +80,7 @@ import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
 const isMenuShowed = ref(false);
-const { loading, screenWidth, toastData } = useGetState();
+const { loading, screenWidth } = useGetState();
 const folderData = ref<TFolder[]>([]);
 const fileData = ref<any[]>([]);
 const fileSchema = useState("/schema/file");
@@ -152,16 +152,9 @@ async function fetchAll() {
 async function handleMultipleDelete() {
   loading.value = true;
   for (const item of selectedList.value) {
-    try {
-      await useApi(`/file/${item}`, {
-        method: "DELETE",
-      });
-    } catch (error: any) {
-      toastData.value.push({
-        type: "error",
-        message: error.data.message,
-      });
-    }
+    await useApi(`/file/${item}`, {
+      method: "DELETE",
+    });
   }
   selectedList.value = [];
   await fetchAll();

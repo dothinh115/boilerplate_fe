@@ -16,19 +16,4 @@
   </main>
 
   <Loading />
-  <Toast
-    :message="item.message"
-    :type="item.type"
-    @update:model-value="closeToast(index)"
-    v-for="(item, index) in toastData"
-    :key="index"
-    :index="index"
-  />
 </template>
-<script setup lang="ts">
-const { toastData } = useGetState();
-
-const closeToast = (index: number) => {
-  toastData.value.splice(index, 1);
-};
-</script>

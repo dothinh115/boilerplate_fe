@@ -193,6 +193,7 @@
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
+import { useToast } from "vue-toastification";
 
 type TProps = {
   schemaKey: string;
@@ -211,7 +212,7 @@ const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
 const isTinyReady = ref(false);
 const { $roleCheck } = useNuxtApp();
-const { toastData } = useGetState();
+const toast = useToast();
 const tinyMceEditor = ref<any | null>(null);
 const uploadModal = ref(false);
 const insertImgModal = ref(false);
@@ -290,10 +291,7 @@ async function handleInsertImage() {
         `<img src="/api/asset/${imgIdOrPath.value}?format=webp" alt="${imgAlt.value}" width="500" />`
       );
     } catch (error: any) {
-      toastData.value.push({
-        message: "Có lỗi xảy ra, file có thể ko tồn tại trong hệ thống",
-        type: "error",
-      });
+      toast.error("Có lỗi xảy ra, file có thể ko tồn tại trong hệ thống");
     } finally {
       imgIdOrPath.value = "";
       imgAlt.value = "";
@@ -367,28 +365,19 @@ async function handleUploadImage(file: File) {
     loading.value = true;
     const formData = new FormData();
     formData.append("file", file);
-    try {
-      const newFile = await useApi("/file", {
-        method: "POST",
-        body: formData,
-      });
-      if (newFile.data) {
-        const img = newFile.data;
-        tinyMceEditor.value?.insertContent(
-          `<img src="/api/asset/${img.id}?format=webp" alt="${imgAlt.value}" width="500" />`
-        );
-        imgAlt.value = "";
-        uploadModal.value = false;
-      }
-    } catch (error: any) {
-      toastData.value.push({
-        message:
-          "Có lỗi xảy ra trong quá trình upload, lỗi: " + error.data.message,
-        type: "error",
-      });
-    } finally {
-      loading.value = false;
+    const newFile = await useApi("/file", {
+      method: "POST",
+      body: formData,
+    });
+    if (newFile.data) {
+      const img = newFile.data;
+      tinyMceEditor.value?.insertContent(
+        `<img src="/api/asset/${img.id}?format=webp" alt="${imgAlt.value}" width="500" />`
+      );
+      imgAlt.value = "";
+      uploadModal.value = false;
     }
+    loading.value = false;
   }
 }
 </script>

@@ -5713,6 +5713,11 @@ vue-router@^4.3.0, vue-router@^4.4.0:
   dependencies:
     "@vue/devtools-api" "^6.6.3"
 
+vue-toastification@^2.0.0-rc.5:
+  version "2.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz#92798604d806ae473cfb76ed776fae294280f8f8"
+  integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
+
 vue@^3.4.21, vue@^3.4.32:
   version "3.4.36"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.4.36.tgz#b2d9af110c8e9afdf08f4eec0d9196949877447c"

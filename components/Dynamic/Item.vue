@@ -73,6 +73,8 @@
   </Teleport>
 </template>
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
+
 type TProps = {
   schema: any;
   new?: boolean;
@@ -90,8 +92,8 @@ const error = ref<{
 const deleteConfirmModal = ref(false);
 const showModal = ref(true);
 const selectModal = ref(false);
-const { toastData } = useGetState();
 const { isFromInside } = useGetState();
+const toast = useToast();
 const relationData = ref<{
   relation: string;
   type: "string" | "number" | "array" | undefined;
@@ -173,10 +175,7 @@ async function handleConfirm() {
     }
   );
   if (result) {
-    toastData.value.push({
-      message: "Thành công",
-      type: "success",
-    });
+    toast.success("Thành công");
     router.back();
   }
 }
@@ -188,10 +187,8 @@ async function handleDelete() {
   });
 
   if (result) {
-    toastData.value.push({
-      message: "Thành công",
-      type: "success",
-    });
+    toast.success("Thành công");
+
     router.back();
   }
 }

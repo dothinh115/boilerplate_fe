@@ -1,8 +1,3 @@
-export type TToastData = {
-  message: string;
-  type: "success" | "error" | "warning" | "info";
-};
-
 export type TRoute = {
   id: number;
   path: string;
@@ -12,7 +7,6 @@ export type TRoute = {
 }[];
 
 export default function useGetState() {
-  const toastData = useState<TToastData[]>("toastData", () => []);
   const loading = useState("loading", () => false);
   const screenWidth = useState("screenWidth", () => screen.width);
   const hideSidebar = useState("hideSidebar", () => false);
@@ -20,7 +14,6 @@ export default function useGetState() {
   const isFromInside = useState<boolean>("isFromInside", () => false);
 
   return {
-    toastData,
     loading,
     screenWidth,
     hideSidebar,

@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import type { TToastData } from "./useGetState";
+import { useToast } from "vue-toastification";
 
 export default async function useApi(
   request: string,
@@ -14,7 +14,8 @@ export default async function useApi(
   }
 ) {
   const refresh_token = useCookie(REFRESH_TOKEN);
-  const { loading, toastData } = useGetState();
+  const { loading } = useGetState();
+  const toast = useToast();
   const { logout } = useAuth();
   options = {
     ...options,
@@ -75,19 +76,11 @@ export default async function useApi(
           statusMessage: "Bạn không có quyền này!",
         });
       } else if (error.data?.statusCode === 400) {
-        const newToast: TToastData = {
-          message: error.data.message,
-          type: "error",
-        };
-        toastData.value.push(newToast);
+        toast.error(error.data.message);
         if (route.query.sort)
           router.push({ query: { sort: undefined }, replace: true });
       } else {
-        const newToast: TToastData = {
-          message: error.data?.message,
-          type: "error",
-        };
-        toastData.value.push(newToast);
+        toast.error(error.data.message);
       }
       clearError();
     }

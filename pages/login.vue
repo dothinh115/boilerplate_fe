@@ -88,6 +88,8 @@
   </form>
 </template>
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
+
 const { login } = useAuth();
 const failed = ref(false);
 const loginInfo = ref({
@@ -150,7 +152,8 @@ definePageMeta({
     async (to) => {
       const tokenId = to.query.tokenId as string;
       const error = to.query.error as string;
-      const { loading, toastData } = useGetState();
+      const { loading } = useGetState();
+      const toast = useToast();
       const refreshTokenCookie = useCookie(REFRESH_TOKEN);
       if (tokenId) {
         loading.value = true;
@@ -168,10 +171,7 @@ definePageMeta({
         window.location.href = to.path;
       } else if (error) {
         loading.value = false;
-        toastData.value.push({
-          message: "Đã có lỗi xảy ra",
-          type: "error",
-        });
+        toast.error("Đã có lỗi xảy ra!");
       }
     },
   ],

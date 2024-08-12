@@ -39,7 +39,7 @@
     </div>
   </div>
   <Confirm
-    :message="'Bạn có chắc chắn muốn thoát ra không?'"
+    :message="`Bạn có chắc chắn muốn thoát ra không?`"
     :handle="logout"
     v-model="logoutConfirmModal"
   >
@@ -48,11 +48,16 @@
         class="fa-solid fa-right-from-bracket text-[48px] text-indigo-600 rotate-180"
       ></i>
     </template>
+    <template #message>
+      <div>
+        {{ user.email }}
+      </div>
+    </template>
   </Confirm>
 </template>
 <script setup lang="ts">
 const { hideSidebar } = useGetState();
-const { logout } = useAuth();
+const { logout, user } = useAuth();
 const logoutConfirmModal = ref(false);
 function handleHideSidebar() {
   hideSidebar.value = !hideSidebar.value;

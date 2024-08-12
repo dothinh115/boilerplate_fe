@@ -111,6 +111,8 @@
   </Confirm>
 </template>
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
+
 export type TFile = {
   id: string;
   user: string;
@@ -132,7 +134,8 @@ const props = defineProps<TProps>();
 const emits = defineEmits(["change", "select"]);
 const isMenuShowed = ref(false);
 const confirmDeleteModal = ref(false);
-const { toastData, screenWidth } = useGetState();
+const { screenWidth } = useGetState();
+const toast = useToast();
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
 const copiedToClipboard = ref(false);
 
@@ -203,18 +206,10 @@ watch(
 );
 
 async function handleDelete() {
-  try {
-    await useApi(`/file/${props.fileItem.id}`, {
-      method: "DELETE",
-    });
-    emits("change");
-  } catch (error: any) {
-    toastData.value.push({
-      type: "error",
-      message: error.data.message,
-    });
-  } finally {
-    isMenuShowed.value = false;
-  }
+  await useApi(`/file/${props.fileItem.id}`, {
+    method: "DELETE",
+  });
+  emits("change");
+  isMenuShowed.value = false;
 }
 </script>

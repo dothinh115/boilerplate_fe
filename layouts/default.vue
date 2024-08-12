@@ -34,22 +34,11 @@
       </div>
     </section>
     <Loading />
-    <Toast
-      :message="item.message"
-      :type="item.type"
-      @update:model-value="closeToast(index)"
-      v-for="(item, index) in toastData"
-      :key="index"
-      :index="index"
-    />
   </main>
 </template>
 <script setup lang="ts">
 const toastTimeout = ref();
-const { screenWidth, toastData, hideSidebar } = useGetState();
-const closeToast = (index: number) => {
-  toastData.value.splice(index, 1);
-};
+const { screenWidth, hideSidebar } = useGetState();
 
 window.addEventListener("resize", () => {
   screenWidth.value = screen.width;
@@ -59,16 +48,4 @@ watchEffect(() => {
   if (screenWidth.value <= 768) hideSidebar.value = true;
   else hideSidebar.value = false;
 });
-
-watch(
-  () => toastData.value.length,
-  () => {
-    if (toastData.value.length > 0) {
-      clearTimeout(toastTimeout.value);
-      toastTimeout.value = setTimeout(() => {
-        toastData.value = toastData.value.slice(1);
-      }, 6000);
-    }
-  }
-);
 </script>

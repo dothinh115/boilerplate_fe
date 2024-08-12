@@ -95,6 +95,8 @@
   </Teleport>
 </template>
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
+
 const route = useRoute();
 const router = useRouter();
 const fieldModal = ref(true);
@@ -103,7 +105,8 @@ const schemaApi = "/schema/user";
 const schema = useState<any>(schemaApi, () => {});
 const fieldData = ref<any>(user.value[route.params.field as keyof TUser]);
 const { isFromInside } = useGetState();
-const { loading, toastData } = useGetState();
+const { loading } = useGetState();
+const toast = useToast();
 const { getUser } = useAuth();
 const { $typeCheck } = useNuxtApp();
 const changePasswordInfo = ref<{
@@ -166,29 +169,18 @@ async function handleConfirm() {
     if (!isChangePasswordValid.value) return;
   }
   loading.value = true;
-  try {
-    await useApi("/me", {
-      method: "PATCH",
-      body: {
-        [route.params.field as string]:
-          route.params.field === "password"
-            ? changePasswordInfo.value.password
-            : fieldData.value,
-      },
-    });
-    await getUser();
-    await handleClose();
-    toastData.value.push({
-      message: "Thành công!",
-      type: "success",
-    });
-  } catch (error: any) {
-    toastData.value.push({
-      message: error.data?.message,
-      type: "success",
-    });
-  }
-
+  await useApi("/me", {
+    method: "PATCH",
+    body: {
+      [route.params.field as string]:
+        route.params.field === "password"
+          ? changePasswordInfo.value.password
+          : fieldData.value,
+    },
+  });
+  await getUser();
+  await handleClose();
+  toast.success("Thành công");
   loading.value = false;
 }
 

@@ -144,8 +144,7 @@ const emits = defineEmits(["change", "select", "selectAll"]);
 const isFileShowed = ref(true);
 const widthData = ref();
 const { $getMaxLength, $widthCalc } = useNuxtApp();
-const { screenWidth, toastData, loading } = useGetState();
-const confirmDeleteModal = ref(false);
+const { screenWidth } = useGetState();
 
 function handleChange() {
   emits("change");

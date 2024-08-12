@@ -8,25 +8,18 @@
 <script setup lang="ts">
 const modal = ref(true);
 const router = useRouter();
-const { isFromInside, toastData, loading } = useGetState();
+const { isFromInside, loading } = useGetState();
 
 async function handleUpload(file: File) {
-  try {
-    loading.value = true;
-    const formData = new FormData();
-    formData.append("file", file);
-    await useApi("/file", {
-      method: "POST",
-      body: formData,
-    });
-    loading.value = false;
-    handleGoBack();
-  } catch (error: any) {
-    toastData.value.push({
-      message: error.data.message,
-      type: "error",
-    });
-  }
+  loading.value = true;
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await useApi("/file", {
+    method: "POST",
+    body: formData,
+  });
+  loading.value = false;
+  if (response) handleGoBack();
 }
 
 function handleGoBack() {
