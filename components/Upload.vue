@@ -125,7 +125,7 @@ watch(
   (newVal) => {
     if (newVal.length > 5) {
       toast.warning("Upload tối đa 5 files 1 lần!");
-      files.value = newVal.slice(5);
+      files.value = [];
     }
   }
 );
