@@ -153,14 +153,20 @@ async function fetchAll() {
 
 async function handleMultipleDelete() {
   loading.value = true;
+  let success = 0;
   for (const item of selectedList.value) {
-    await useApi(`/file/${item}`, {
-      method: "DELETE",
-    });
+    try {
+      const response = await useApi(`/file/${item}`, {
+        method: "DELETE",
+      });
+      if (response.statusCode === 200) success++;
+    } catch (error: any) {
+      console.log(error.data?.message);
+    }
   }
+  if (success === selectedList.value.length) toast.success("Thành công!");
   selectedList.value = [];
   await fetchAll();
-  toast.success("Thành công!");
   loading.value = false;
 }
 

@@ -63,7 +63,7 @@ export default async function useApi(
           },
         }),
       });
-      return result.data;
+      return result.data ? result.data : result;
     } catch (error: any) {
       if (loading.value) loading.value = false;
       const router = useRouter();
