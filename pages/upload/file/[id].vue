@@ -6,7 +6,7 @@
       >
         <div
           class="md:h-[350px] h-[250px]"
-          :style="`background: url('/api/asset/${fileData?.id}?format=webp?cache=120') no-repeat center / cover`"
+          :style="`background: url('/api/asset/${fileData?.id}?format=webp&cache=120') no-repeat center / cover`"
           v-if="fileData?.mimeType.startsWith('image/')"
         ></div>
         <div
