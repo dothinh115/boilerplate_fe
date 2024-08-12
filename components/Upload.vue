@@ -1,12 +1,14 @@
 <template>
   <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
     <div class="bg-gray-50 rounded-lg overflow-hidden">
-      <div class="flex items-center justify-center w-full p-2 flex-wrap">
+      <div
+        class="flex items-center justify-center w-full p-2 flex-wrap"
+        v-if="success?.length === 0"
+      >
         <div
           @click="handleClick"
           class="flex flex-col items-center justify-center w-full cursor-pointer bg-gray-100 rounded-t-lg group p-6 md:h-[350px] h-[250px]"
           :style="!multiple && backgroundStyle"
-          v-if="success?.length === 0"
         >
           <div
             class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4 md:w-3/4 w-[90%] rounded-lg group-hover:bg-gray-200 duration-200 border-2 border-gray-400 border-dashed"
@@ -34,7 +36,7 @@
         <div
           v-for="(item, index) in files"
           :key="index"
-          class="m-2 flex items-center border-b border-indigo-300 pb-2 last:border-b-0"
+          class="m-2 flex items-center border-b border-indigo-300 pb-2 last:border-b-0 last:pb-0"
         >
           <div class="w-[20px]">
             <i class="fa-solid" :class="$iconClass(item.type)"></i>
@@ -64,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="p-2 space-y-2">
+      <div class="p-2 space-y-2" v-if="success?.length === 0">
         <div>
           <slot name="html" />
         </div>
@@ -72,7 +74,6 @@
           class="btn btn-green block w-full"
           @click="handleUpload"
           :disabled="!isValid"
-          v-if="success?.length === 0"
         >
           Upload
         </button>
