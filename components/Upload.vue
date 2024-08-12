@@ -37,7 +37,7 @@
           class="m-2 flex items-center border-b border-indigo-300 pb-2 last:border-b-0"
         >
           <div class="w-[20px]">
-            <i class="fa-solid" :class="iconClass(item.type)"></i>
+            <i class="fa-solid" :class="$iconClass(item.type)"></i>
           </div>
           <div class="md:w-[300px] w-[250px] truncate text-[14px]">
             {{ item.name }}
@@ -101,24 +101,6 @@ const toast = useToast();
 function clearPreview() {
   preview.value = "";
   file.value = null;
-}
-
-function iconClass(mimeType: string) {
-  switch (mimeType) {
-    case "image/jpg":
-    case "image/png":
-    case "image/webp":
-    case "image/jpeg":
-      return "fa-image text-red-500";
-    case "application/pdf":
-      return "fa-file-pdf text-red-400";
-    case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-      return "fa-file-excel text-emerald-600";
-    case "application/zip":
-      return "fa-file-zipper text-yellow-500";
-    default:
-      return "fa-file text-gray-100";
-  }
 }
 
 const backgroundStyle = computed(() => {

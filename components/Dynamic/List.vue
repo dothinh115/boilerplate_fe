@@ -20,6 +20,9 @@
       :item="item"
       :width="width"
     />
+    <div class="p-2 bg-gray-100" v-if="data.length === 0">
+      Chưa có record nào ở đây...
+    </div>
   </div>
 
   <div

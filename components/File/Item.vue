@@ -16,7 +16,7 @@
       }"
     >
       <div class="text-[20px] w-[20px]">
-        <i class="fa-solid" :class="iconClass"></i>
+        <i class="fa-solid" :class="$iconClass(fileItem.mimeType)"></i>
       </div>
 
       <div
@@ -138,24 +138,6 @@ const { screenWidth } = useGetState();
 const toast = useToast();
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
 const copiedToClipboard = ref(false);
-
-const iconClass = computed(() => {
-  switch (props.fileItem.mimeType) {
-    case "image/jpg":
-    case "image/png":
-    case "image/webp":
-    case "image/jpeg":
-      return "fa-image text-red-500";
-    case "application/pdf":
-      return "fa-file-pdf text-red-400";
-    case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-      return "fa-file-excel text-emerald-600";
-    case "application/zip":
-      return "fa-file-zipper text-yellow-500";
-    default:
-      return "fa-file text-gray-100";
-  }
-});
 
 function toggleMenu() {
   isMenuShowed.value = !isMenuShowed.value;
