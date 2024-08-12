@@ -7,5 +7,5 @@
 }
 
 .toast-custom .toast-message {
-  @apply text-[15px];
+  @apply text-[15px] leading-none min-h-0;
 }

@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     closeOnClick: false,
     toastClassName: "toast-custom",
     bodyClassName: "toast-message",
-    timeout: 5000,
+    timeout: 9000,
   };
   nuxtApp.vueApp.use(Toast, options);
 });

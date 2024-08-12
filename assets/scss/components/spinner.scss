@@ -7,7 +7,7 @@
 .gg-spinner::before {
   box-sizing: border-box;
   position: relative;
-  display: block;
+  display: inline-block;
   width: 1rem;
   height: 1rem;
 }
@@ -16,6 +16,8 @@
 .gg-spinner::before {
   content: "";
   position: absolute;
+  top: 0;
+  left: 0;
   border-radius: 100px;
 }
 

@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from "vue-toastification";
 import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
@@ -89,6 +90,7 @@ const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
 const selectedList = ref<string[]>([]);
 const confirmDeleteModal = ref(false);
+const toast = useToast();
 
 const perPage = computed(() => {
   if (screenWidth.value <= 375) return 9; //iphone SE
@@ -158,6 +160,7 @@ async function handleMultipleDelete() {
   }
   selectedList.value = [];
   await fetchAll();
+  toast.success("Thành công!");
   loading.value = false;
 }
 
