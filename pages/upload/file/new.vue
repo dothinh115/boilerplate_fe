@@ -28,6 +28,7 @@ async function handleUpload(files: File[]) {
     toast.warning("Upload tối đa 5 files cùng lúc");
     return;
   }
+  let success = 0;
   for (const file of files) {
     successfulUpload.value.push({
       file,
@@ -41,6 +42,10 @@ async function handleUpload(files: File[]) {
     });
     const find = successfulUpload.value.find((x) => x.file === file);
     if (find) find.type = response ? "success" : "fail";
+    if (response) success++;
+  }
+  if (success === files.length) {
+    setTimeout(handleGoBack, 5000);
   }
 }
 
