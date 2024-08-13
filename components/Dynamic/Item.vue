@@ -2,10 +2,10 @@
   <Teleport to="body">
     <Modal v-model="showModal" @update:model-value="handleClose">
       <div
-        class="space-y-8 xl:w-[60%] lg:w-[80%] w-[95%] mx-auto max-h-[90%] rounded-[10px] h-fit flex items-center"
+        class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto max-h-[90%] flex items-center"
       >
         <div
-          class="rounded-[10px] lg:max-h-[95vh] max-h-[80vh] overflow-y-scroll hidden-scrollbar relative w-full"
+          class="md:rounded-[10px] md:max-h-[95vh] max-h-[100vh] overflow-y-scroll hidden-scrollbar relative w-full"
         >
           <div
             class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
