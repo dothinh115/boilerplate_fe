@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@nuxtjs/tailwindcss"],
-  // plugins: ["~/plugins/toast.ts"],
   tailwindcss: {
     cssPath: "@/assets/scss/global.scss",
     configPath: "tailwind.config.js",
