@@ -1,5 +1,9 @@
 <template>
-  <DynamicItem :schema v-model="data" />
+  <Teleport to="body">
+    <Modal v-model="modal" @update:model-value="handleClose">
+      <DynamicItem :schema :itemData="data" @close="handleClose" />
+    </Modal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 const route = useRoute();
@@ -9,6 +13,8 @@ const schemaApi = `/schema/${route.params.post}`;
 const dataApi = `/${post}`;
 const schema = useState<any>(schemaApi);
 const data = ref<any>({});
+const modal = ref(false);
+setTimeout(() => (modal.value = true), 50);
 
 async function getSchema() {
   if (schema.value) return;
@@ -29,6 +35,23 @@ async function fetchData() {
   await getSchema();
   await getData();
   loading.value = false;
+}
+
+function handleClose() {
+  useGoBack({
+    navigate: {
+      name: "route-post",
+      params: {
+        post: route.params.post,
+      },
+      query: {
+        ...route.query,
+      },
+    },
+    options: {
+      replace: true,
+    },
+  });
 }
 
 await fetchData();

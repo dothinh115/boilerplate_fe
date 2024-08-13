@@ -7,6 +7,7 @@
 @import "./components/input";
 @import "./components/box";
 @import "./components/paginate";
+@import "./components/fade";
 @layer base {
 }
 
@@ -17,21 +18,6 @@ body {
   font-size: 14px;
   font-family: "Poppins", sans-serif;
   font-weight: 400;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
 }
 
 .body-overflow-hidden {

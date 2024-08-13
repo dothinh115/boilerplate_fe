@@ -1,10 +1,7 @@
 <template>
   <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
     <div class="bg-gray-50 rounded-lg overflow-hidden">
-      <div
-        class="flex items-center justify-center w-full p-2 flex-wrap"
-        v-if="success?.length === 0"
-      >
+      <div class="flex items-center justify-center w-full p-2 flex-wrap">
         <div
           @click="handleClick"
           class="flex flex-col items-center justify-center w-full cursor-pointer bg-gray-100 rounded-t-lg group p-6 md:h-[350px] h-[250px]"
@@ -48,25 +45,13 @@
             <button
               class="text-lg text-red-500"
               @click="handleDeletePreviewItem(index)"
-              v-if="success?.length === 0"
             >
               <i class="fa-solid fa-trash"></i>
             </button>
-            <i
-              class="fa-solid fa-check text-lg text-emerald-500"
-              v-else-if="
-                success?.find((x) => x.file === item)?.type === 'success'
-              "
-            ></i>
-            <i
-              class="fa-solid fa-xmark text-lg text-red-500"
-              v-else-if="success?.find((x) => x.file === item)?.type === 'fail'"
-            ></i>
-            <span class="gg-spinner" v-else></span>
           </div>
         </div>
       </div>
-      <div class="p-2 space-y-2" v-if="success?.length === 0">
+      <div class="p-2 space-y-2">
         <div>
           <slot name="html" />
         </div>
@@ -87,10 +72,6 @@ import { useToast } from "vue-toastification";
 type TProps = {
   accept?: string;
   multiple?: boolean;
-  success?: {
-    file: File;
-    type: "success" | "fail" | "loading";
-  }[];
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["closeModal", "submitUpload"]);

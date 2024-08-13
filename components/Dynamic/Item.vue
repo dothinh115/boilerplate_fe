@@ -1,55 +1,49 @@
 <template>
-  <Teleport to="body">
-    <Modal v-model="showModal" @update:model-value="handleClose">
+  <div
+    class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto max-h-[90vh] flex items-center"
+  >
+    <div
+      class="md:rounded-[10px] md:max-h-[95vh] max-h-[100vh] overflow-y-auto hidden-scrollbar relative w-full"
+    >
       <div
-        class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto max-h-[90%] flex items-center"
+        class="flex items-center justify-between space-x-2 title py-2 sticky top-0 z-[1000] bg-white shadow-md"
       >
-        <div
-          class="md:rounded-[10px] md:max-h-[95vh] max-h-[100vh] overflow-y-scroll hidden-scrollbar relative w-full"
-        >
-          <div
-            class="flex items-center justify-between space-x-2 title !py-2 sticky top-0 z-[1000]"
-          >
-            <i
-              class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 lg:hover:bg-indigo-900 lg:hover:text-white duration-200"
-              @click="handleClose"
-            ></i>
+        <i
+          class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 lg:hover:bg-indigo-900 lg:hover:text-white transition duration-200"
+          @click="handleClose"
+        ></i>
 
-            <div class="flex items-center space-x-2 h-full">
-              <i
-                class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600 lg:hover:bg-red-600 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
-                @click="deleteConfirmModal = true"
-                v-if="data.id && $roleCheck('DELETE', route.params.post as string)"
-              ></i>
-              <i
-                class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 duration-200 h-[36px] aspect-1 flex justify-center items-center lg:hover:text-white"
-                @click="handleConfirm"
-                v-if="
-                  (data.id && $roleCheck('PATCH', route.params.post as string)) ||
-                  (!data.id && $roleCheck('POST', route.params.post as string))
-                "
-              ></i>
-            </div>
-          </div>
-          <div class="p-4 space-y-5 bg-gray-100 max-h-full">
-            <DynamicItemField
-              v-for="([schemaKey, schemaValue], index) in Object.entries(
-                schema
-              )"
-              :key="index"
-              v-model="data[schemaKey]"
-              :error
-              @updateData="updateData"
-              @handleRef="handleRelation"
-              :new
-              :schemaKey
-              :schemaValue
-            />
-          </div>
+        <div class="flex items-center space-x-2 h-full">
+          <i
+            class="fa-solid fa-trash cursor-pointer bg-white p-2 rounded-full text-red-600 lg:hover:bg-red-600 transition duration-200 h-[36px] w-[36px] flex justify-center items-center lg:hover:text-white"
+            @click="deleteConfirmModal = true"
+            v-if="data.id && $roleCheck('DELETE', route.params.post as string)"
+          ></i>
+          <i
+            class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 transition duration-200 h-[36px] w-[36px] flex justify-center items-center lg:hover:text-white"
+            @click="handleConfirm"
+            v-if="
+                (data.id && $roleCheck('PATCH', route.params.post as string)) ||
+                (!data.id && $roleCheck('POST', route.params.post as string))
+              "
+          ></i>
         </div>
       </div>
-    </Modal>
-  </Teleport>
+      <div class="p-4 space-y-5 bg-gray-100">
+        <DynamicItemField
+          v-for="([schemaKey, schemaValue], index) in Object.entries(schema)"
+          :key="index"
+          v-model="data[schemaKey]"
+          :error
+          @updateData="updateData"
+          @handleRef="handleRelation"
+          :new
+          :schemaKey
+          :schemaValue
+        />
+      </div>
+    </div>
+  </div>
 
   <Confirm
     :message="'Bạn có chắc chắn muốn xoá không?'"
@@ -78,21 +72,20 @@ import { useToast } from "vue-toastification";
 type TProps = {
   schema: any;
   new?: boolean;
-  modelValue?: any;
+  itemData?: any;
 };
 const excludedKey = ["password", "id", "slug"];
 const route = useRoute();
 const props = defineProps<TProps>();
+const emits = defineEmits(["close"]);
 const router = useRouter();
 const schema = ref<any>(props.schema);
-const data = ref<any>(props.modelValue);
+const data = ref<any>(props.itemData || {});
 const error = ref<{
   [key: string]: string;
 }>({});
 const deleteConfirmModal = ref(false);
-const showModal = ref(true);
 const selectModal = ref(false);
-const { isFromInside } = useGetState();
 const toast = useToast();
 const relationData = ref<{
   relation: string;
@@ -145,25 +138,6 @@ function errorCheck() {
   }
 }
 
-async function handleClose() {
-  if (isFromInside.value) {
-    router.back();
-  } else {
-    await navigateTo(
-      {
-        name: "route-post",
-        params: {
-          post: route.params.post,
-        },
-        query: {
-          ...route.query,
-        },
-      },
-      { replace: true }
-    );
-  }
-}
-
 async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
@@ -208,6 +182,10 @@ function handleRelation(object: {
     defaultValue,
     key,
   };
+}
+
+function handleClose() {
+  emits("close");
 }
 
 function handleSelection({

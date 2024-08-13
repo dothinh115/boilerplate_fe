@@ -73,10 +73,19 @@
       <i class="fa-solid fa-trash text-[40px] text-red-500"></i>
     </template>
   </Confirm>
+  <Teleport to="body">
+    <Modal
+      v-model="deleteModal"
+      :closeBtn="true"
+      :onUpdate:modelValue="handleClose"
+    >
+      <FileResult :list="deleteList" :type="'delete'" />
+    </Modal>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { useToast } from "vue-toastification";
+import type { TFile } from "~/components/File/Item.vue";
 import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
@@ -88,9 +97,15 @@ const fileSchema = useState("/schema/file");
 const currentPage = ref(Number(route.query.page) || 1);
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const selectedList = ref<string[]>([]);
+const selectedList = ref<TFile[]>([]);
 const confirmDeleteModal = ref(false);
-const toast = useToast();
+const deleteModal = ref(false);
+const deleteList = ref<
+  {
+    file: TFile;
+    type: "succeeded" | "failed" | "loading";
+  }[]
+>([]);
 
 const perPage = computed(() => {
   if (screenWidth.value <= 375) return 9; //iphone SE
@@ -101,17 +116,17 @@ const perPage = computed(() => {
   else return 15;
 });
 
-function handleSelect({ checked, id }: { checked: boolean; id: string }) {
+function handleSelect({ checked, file }: { checked: boolean; file: TFile }) {
   if (checked) {
-    selectedList.value.push(id);
+    selectedList.value.push(file);
   } else {
-    selectedList.value = selectedList.value.filter((x) => x !== id);
+    selectedList.value = selectedList.value.filter((x) => x !== file);
   }
 }
 
 function handleSelectAll(checked: boolean) {
   if (checked) {
-    selectedList.value = fileData.value.map((x) => x.id);
+    selectedList.value = fileData.value;
   } else {
     selectedList.value = [];
   }
@@ -152,22 +167,35 @@ async function fetchAll() {
 }
 
 async function handleMultipleDelete() {
-  loading.value = true;
-  let success = 0;
-  for (const item of selectedList.value) {
+  deleteModal.value = true;
+  const promises = [];
+  const handleSingleDelete = async (file: TFile) => {
+    deleteList.value.push({
+      file,
+      type: "loading",
+    });
     try {
-      const response = await useApi(`/file/${item}`, {
+      await useApi(`/file/${file.id}`, {
         method: "DELETE",
       });
-      if (response.statusCode === 200) success++;
+      const find = deleteList.value.find((x) => x.file === file);
+      if (find) find.type = "succeeded";
     } catch (error: any) {
+      const find = deleteList.value.find((x) => x.file === file);
+      if (find) find.type = "failed";
       console.log(error.data?.message);
     }
+  };
+  for (const file of selectedList.value) {
+    promises.push(handleSingleDelete(file));
   }
-  if (success === selectedList.value.length) toast.success("Thành công!");
-  selectedList.value = [];
+  await Promise.all(promises);
+}
+
+async function handleClose() {
   await fetchAll();
-  loading.value = false;
+  selectedList.value = [];
+  deleteList.value = [];
 }
 
 watchEffect(() => {

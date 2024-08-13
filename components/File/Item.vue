@@ -3,8 +3,8 @@
     class="flex items-center pb-2 last:border-b-0 border-b border-blue-900 space-x-4"
   >
     <InputCheckbox
-      :checked="selectedList.find((x) => x === fileItem.id) ? true : false"
-      @change="handleChange"
+      :checked="selectedList.find((x) => x.id === fileItem.id) ? true : false"
+      @change="handleSelect"
     />
     <NuxtLink
       class="flex space-x-4 items-center flex-grow"
@@ -128,7 +128,7 @@ export type TFile = {
 type TProps = {
   fileItem: TFile;
   widthData: any;
-  selectedList: string[];
+  selectedList: TFile[];
 };
 const props = defineProps<TProps>();
 const emits = defineEmits(["change", "select"]);
@@ -156,10 +156,10 @@ function handleOutsideClick(event: MouseEvent) {
   isMenuShowed.value = false;
 }
 
-function handleChange(checked: boolean) {
+function handleSelect(checked: boolean) {
   emits("select", {
     checked,
-    id: props.fileItem.id,
+    file: props.fileItem,
   });
 }
 

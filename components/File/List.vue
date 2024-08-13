@@ -136,7 +136,7 @@ type TProps = {
   totalPages: number;
   currentPage: number;
   pagination: (number | string)[];
-  selectedList: string[];
+  selectedList: TFile[];
 };
 const props = defineProps<TProps>();
 const route = useRoute();
@@ -150,10 +150,10 @@ function handleChange() {
   emits("change");
 }
 
-function handleSelect({ checked, id }: { checked: boolean; id: string }) {
+function handleSelect({ checked, file }: { checked: boolean; file: TFile }) {
   emits("select", {
     checked,
-    id,
+    file,
   });
 }
 
