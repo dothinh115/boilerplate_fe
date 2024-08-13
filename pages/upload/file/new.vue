@@ -51,7 +51,7 @@ async function handleUpload(files: File[]) {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await useApi("/file", {
+      await useApi("/file", {
         method: "POST",
         body: formData,
       });

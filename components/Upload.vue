@@ -1,11 +1,17 @@
 <template>
-  <div class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%]">
-    <div class="bg-gray-50 rounded-lg overflow-hidden">
+  <div class=""></div>
+  <div
+    class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] lg:max-h-[90vh] max-h-[80%] overflow-y-scroll hidden-scrollbar rounded-xl overflow-hidden"
+  >
+    <div class="bg-gray-50">
       <div class="flex items-center justify-center w-full p-2 flex-wrap">
         <div
           @click="handleClick"
           class="flex flex-col items-center justify-center w-full cursor-pointer bg-gray-100 rounded-t-lg group p-6 md:h-[350px] h-[250px]"
           :style="!multiple && backgroundStyle"
+          @dragover.prevent="handleDragOver"
+          @drop.prevent="handleDrop"
+          dropzone
         >
           <div
             class="flex flex-col items-center justify-center pt-5 pb-6 space-y-4 md:w-3/4 w-[90%] rounded-lg group-hover:bg-gray-200 duration-200 border-2 border-gray-400 border-dashed"
@@ -100,6 +106,16 @@ const backgroundStyle = computed(() => {
     background: `url('/default-preview.png') no-repeat center / 150px 150px`,
   };
 });
+
+function handleDragOver(event: DragEvent) {
+  event.dataTransfer!.effectAllowed = "move";
+}
+
+function handleDrop(event: DragEvent) {
+  if (event.dataTransfer?.files) {
+    files.value = Array.from(event.dataTransfer.files);
+  }
+}
 
 const isValid = computed(() => {
   if (!file.value && files.value.length === 0) {

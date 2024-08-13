@@ -79,10 +79,10 @@ export default async function useApi(
         toast.error(error.data.message);
         if (route.query.sort)
           router.push({ query: { sort: undefined }, replace: true });
-      } else {
-        toast.error(error.data.message);
       }
+      toast.error("Lỗi không xác định!");
       clearError();
+      throw error;
     }
   };
 
