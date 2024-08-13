@@ -79,7 +79,9 @@ type TProps = {
   accept?: string;
   multiple?: boolean;
 };
-const props = defineProps<TProps>();
+const props = withDefaults(defineProps<TProps>(), {
+  multiple: false,
+});
 const emits = defineEmits(["closeModal", "submitUpload"]);
 const preview = ref("");
 const file = ref<File | null>(null);
@@ -111,9 +113,39 @@ function handleDragOver(event: DragEvent) {
   event.dataTransfer!.effectAllowed = "move";
 }
 
+watch([file, files], ([newFile, newFiles]) => {
+  if (newFile) {
+    const isValid = isValidFileType(newFile);
+    if (!isValid) {
+      toast.error(`${newFile.name} không được hỗ trợ định dạng!`);
+    }
+  }
+
+  if (newFiles.length > 0) {
+    for (const item of newFiles) {
+      const isValid = isValidFileType(item);
+      if (!isValid) {
+        toast.error(`${item.name} không được hỗ trợ định dạng!`);
+      }
+    }
+  }
+});
+
 function handleDrop(event: DragEvent) {
   if (event.dataTransfer?.files) {
-    files.value = Array.from(event.dataTransfer.files);
+    if (props.multiple) {
+      files.value = Array.from(event.dataTransfer.files);
+    } else {
+      file.value = event.dataTransfer.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const imageUrl = e.target?.result as string;
+        preview.value = imageUrl;
+      };
+      reader.readAsDataURL(file.value);
+      return;
+    }
   }
 }
 
@@ -166,5 +198,15 @@ function handleChange(event: Event) {
   } else {
     files.value = Array.from(filesList);
   }
+}
+
+function isValidFileType(file: File): boolean {
+  if (props.accept) {
+    const acceptedTypes = props.accept.split(",").map((type) => type.trim());
+    return acceptedTypes.some((type) =>
+      file.type.startsWith(type.replace("*", ""))
+    );
+  }
+  return true;
 }
 </script>
