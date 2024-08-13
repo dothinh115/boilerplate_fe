@@ -6,7 +6,7 @@
       class="md:rounded-[10px] md:max-h-[95vh] max-h-[100vh] overflow-y-auto hidden-scrollbar relative w-full"
     >
       <div
-        class="flex items-center justify-between space-x-2 title py-2 sticky top-0 z-[1000] bg-white shadow-md"
+        class="flex items-center justify-between space-x-2 title sticky top-0 z-[1000] bg-white shadow-md"
       >
         <i
           class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 lg:hover:bg-indigo-900 lg:hover:text-white transition duration-200"
