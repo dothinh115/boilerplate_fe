@@ -42,7 +42,7 @@
           </div>
         </div>
         <FileItem
-          @change="handleChange"
+          @delete="handleDelete"
           v-for="(item, index) in fileData"
           :key="index"
           :fileItem="item"
@@ -146,7 +146,7 @@ const widthData = ref();
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const { screenWidth } = useGetState();
 
-function handleChange() {
+function handleDelete() {
   emits("change");
 }
 

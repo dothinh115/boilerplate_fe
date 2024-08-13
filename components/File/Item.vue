@@ -131,7 +131,7 @@ type TProps = {
   selectedList: TFile[];
 };
 const props = defineProps<TProps>();
-const emits = defineEmits(["change", "select"]);
+const emits = defineEmits(["delete", "select"]);
 const isMenuShowed = ref(false);
 const confirmDeleteModal = ref(false);
 const { screenWidth } = useGetState();
@@ -188,10 +188,15 @@ watch(
 );
 
 async function handleDelete() {
-  await useApi(`/file/${props.fileItem.id}`, {
-    method: "DELETE",
-  });
-  emits("change");
-  isMenuShowed.value = false;
+  try {
+    await useApi(`/file/${props.fileItem.id}`, {
+      method: "DELETE",
+    });
+    emits("delete");
+    isMenuShowed.value = false;
+    toast.success("Thành công!");
+  } catch (error: any) {
+    toast.error(error.data.message);
+  }
 }
 </script>
