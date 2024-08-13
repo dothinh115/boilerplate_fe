@@ -118,6 +118,15 @@ watch([file, files], ([newFile, newFiles]) => {
     const isValid = isValidFileType(newFile);
     if (!isValid) {
       toast.error(`${newFile.name} không được hỗ trợ định dạng!`);
+      file.value = null;
+    } else {
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const imageUrl = e.target?.result as string;
+        preview.value = imageUrl;
+      };
+      reader.readAsDataURL(newFile);
     }
   }
 
@@ -137,14 +146,6 @@ function handleDrop(event: DragEvent) {
       files.value = Array.from(event.dataTransfer.files);
     } else {
       file.value = event.dataTransfer.files[0];
-      const reader = new FileReader();
-
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const imageUrl = e.target?.result as string;
-        preview.value = imageUrl;
-      };
-      reader.readAsDataURL(file.value);
-      return;
     }
   }
 }
@@ -185,16 +186,7 @@ function handleChange(event: Event) {
   const filesList = target.files;
   if (!filesList || filesList?.length === 0) return;
   if (!props.multiple) {
-    //lưu file vào biến
     file.value = filesList[0];
-    //đọc file để preview
-    const reader = new FileReader();
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      const imageUrl = e.target?.result as string;
-      preview.value = imageUrl;
-    };
-    reader.readAsDataURL(file.value);
-    return;
   } else {
     files.value = Array.from(filesList);
   }
