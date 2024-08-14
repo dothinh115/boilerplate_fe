@@ -1,6 +1,8 @@
 <template>
   <div class="space-y-4 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] mx-auto">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden p-4">
+    <div
+      class="bg-white shadow-lg rounded-lg overflow-hidden p-4 md:max-h-[95vh] max-h-[80vh] overflow-y-scroll hidden-scrollbar"
+    >
       <div class="text-xl font-semibold text-gray-700 mb-4">
         {{ type === "upload" ? "Uploading..." : "Deleting..." }}
       </div>

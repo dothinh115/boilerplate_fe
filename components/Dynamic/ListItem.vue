@@ -87,5 +87,7 @@ function handleSort(field: string) {
   emits("handleSort", field);
 }
 
-width.value = $widthCalc(props.width);
+watchEffect(() => {
+  width.value = $widthCalc(props.width);
+});
 </script>

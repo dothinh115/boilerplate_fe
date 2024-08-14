@@ -43,5 +43,29 @@ export default function usePagnate(
   callback: Function
 ) {
   let pages = paginate(obj.totalPages, obj.currentPage, obj.range);
+  const route = useRoute();
+  const router = useRouter();
+  watch(
+    () => Number(route.query.page),
+    (newPage) => {
+      if (obj.totalPages > 0) {
+        if (newPage < 1) {
+          router.push({
+            query: {
+              page: 1,
+            },
+          });
+        } else if (newPage > obj.totalPages) {
+          router.push({
+            query: {
+              page: obj.totalPages,
+            },
+          });
+        }
+      }
+    },
+    { immediate: true }
+  );
+
   callback(pages);
 }

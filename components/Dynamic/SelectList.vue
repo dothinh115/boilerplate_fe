@@ -1,40 +1,45 @@
 <template>
   <div
-    class="flex flex-col justify-between h-dvh bg-gray-50 lg:w-[40%] md:w-[60%] w-[calc(100%-61px)] max-h-dvh ml-auto relative"
+    class="flex flex-col justify-between h-dvh bg-gray-100 lg:w-[40%] md:w-[60%] w-[calc(100%-61px)] max-h-dvh ml-auto relative shadow-lg rounded-l-lg"
   >
-    <div class="absolute -translate-x-full top-0 p-2 flex flex-col space-y-4">
+    <!-- Button group -->
+    <div
+      class="absolute -translate-x-full top-0 md:pr-3 pr-2 pt-2 flex flex-col space-y-4"
+    >
       <button
-        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-gray-50 lg:hover:text-red-600 duration-200"
+        class="h-[50px] aspect-1 rounded-full flex items-center justify-center bg-red-600 text-white text-[20px] lg:hover:bg-gray-50 lg:hover:text-red-600 duration-200 shadow-md"
         @click="handleCancel"
       >
         <i class="fa-solid fa-xmark"></i>
       </button>
       <button
-        class="p-2 rounded-full text-teal-600 h-[45px] aspect-1 flex items-center justify-center bg-gray-100 text-[20px] lg:hover:bg-teal-600 lg:hover:text-white duration-200"
+        class="h-[50px] aspect-1 rounded-full flex items-center justify-center bg-teal-500 text-white text-[20px] lg:hover:bg-teal-600 duration-200 shadow-md"
         @click="handleConfirm"
       >
         <i class="fa-solid fa-check"></i>
       </button>
       <button
-        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-sky-500 bg-opacity-90 text-[20px] lg:hover:bg-sky-900 lg:hover:text-gray-50 duration-200"
+        class="h-[50px] aspect-1 rounded-full flex items-center justify-center bg-sky-500 text-white text-[20px] lg:hover:bg-sky-600 duration-200 shadow-md"
         @click="handleSearch()"
       >
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
       <button
-        class="h-[45px] aspect-1 rounded-full text-gray-50 flex items-center justify-center bg-red-500 bg-opacity-90 text-[20px] lg:hover:bg-white lg:hover:text-red-500 duration-200"
+        class="h-[50px] aspect-1 rounded-full flex items-center justify-center bg-red-500 text-white text-[20px] lg:hover:bg-red-600 duration-200 shadow-md"
         @click="handleCancelSearch()"
         v-if="isFiltering"
       >
         <i class="fa-solid fa-magnifying-glass-minus"></i>
       </button>
     </div>
-    <div class="max-h-dvh overflow-auto h-full hidden-scrollbar">
-      <div class="min-w-full !mt-0 relative">
+
+    <!-- Content -->
+    <div class="max-h-dvh overflow-auto h-full hidden-scrollbar rounded-l-lg">
+      <div class="min-w-full relative">
         <div
-          class="flex border-gray-200 space-x-3 border-b text-[16px] py-2 bg-indigo-600 text-gray-50 items-center w-max min-w-full sticky top-0"
+          class="flex border-b-2 border-gray-300 text-[16px] py-3 bg-indigo-600 text-gray-50 items-center w-max min-w-full sticky top-0 shadow-md"
         >
-          <div class="min-w-[50px] h-[10px]"></div>
+          <div class="min-w-[50px]"></div>
           <DynamicSelectListItem :schema="schema" :width="width" />
         </div>
         <div class="h-full">
@@ -48,7 +53,7 @@
             @handleSelect="handleSelect"
           />
           <div
-            class="flex space-x-3 px-2 py-2 items-center text-[15px] min-w-max"
+            class="flex space-x-3 px-2 py-2 items-center text-[15px] text-gray-600"
             v-if="data.length === 0"
           >
             Chưa có record nào!
@@ -56,55 +61,67 @@
         </div>
       </div>
     </div>
-    <div>
-      <div
-        class="flex space-x-2 items-center text-[14px] p-2 w-full flex-wrap [&>a]:max-md:mb-2"
+
+    <!-- Pagination and Selected Info -->
+    <!-- <div
+      class="flex space-x-2 items-center text-[14px] p-4 w-full flex-wrap [&>a]:max-md:mb-2"
+    >
+      <button
+        @click="currentPage !== 1 && (currentPage -= 1)"
+        class="paginate"
+        :class="{
+          'opacity-50 cursor-not-allowed': currentPage === 1,
+        }"
       >
-        <button
-          @click="currentPage !== 1 && (currentPage -= 1)"
-          class="paginate"
-          :class="{
-            disabled: currentPage === 1,
-          }"
-        >
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        <button
-          v-for="(item, index) in pagination"
-          :key="index"
-          @click="typeof item === 'number' && (currentPage = Number(item))"
-          :class="{
-            '!bg-indigo-600 bg-opacity-90 !text-gray-100': item === currentPage,
-            paginate: typeof item === 'number',
-            'text-gray-800': typeof item !== 'number',
-          }"
-        >
-          {{ item }}
-        </button>
-        <button
-          @click="currentPage !== totalPages && (currentPage += 1)"
-          class="paginate"
-          :class="{
-            disabled: currentPage === totalPages,
-          }"
-        >
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
-      </div>
-      <div class="bg-indigo-600 text-gray-50 p-2">
-        Đã chọn:
-        {{
-          Array.isArray(selectedArr)
-            ? selectedArr.map((item: any) => item.id)
-            : selectedArr?.id
-        }}
-      </div>
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button
+        v-for="(item, index) in pagination"
+        :key="index"
+        @click="typeof item === 'number' && (currentPage = Number(item))"
+        :class="{
+          '!bg-indigo-600 bg-opacity-90 !text-white': item === currentPage,
+          paginate: typeof item === 'number',
+          'text-gray-800': typeof item !== 'number',
+        }"
+        class="py-1 px-3 rounded-full hover:bg-indigo-500 hover:text-white transition duration-200"
+      >
+        {{ item }}
+      </button>
+      <button
+        @click="currentPage !== totalPages && (currentPage += 1)"
+        class="paginate"
+        :class="{
+          'opacity-50 cursor-not-allowed': currentPage === totalPages,
+        }"
+      >
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div> -->
+    <div class="p-2">
+      <Paginate
+        :totalPages
+        :pagination
+        v-model:currentPage="currentPage"
+        :link="false"
+      />
+    </div>
+
+    <div class="bg-indigo-600 text-white p-4 text-center rounded-b-lg">
+      Đã chọn:
+      {{
+        Array.isArray(selectedArr)
+          ? selectedArr.map((item) => item.id).join(", ")
+          : selectedArr?.id
+      }}
     </div>
   </div>
+
+  <!-- Modal -->
   <Teleport to="body">
     <Modal v-model="modalFilter">
       <div
-        class="xl:w-[35%] lg:w-1/2 md:w-[60%] w-[95%] top-0 left-0 max-h-fit rounded-[15px] overflow-hidden duration-200 bg-gray-50 border border-gray-300 mx-2"
+        class="xl:w-[35%] lg:w-1/2 md:w-[60%] w-[95%] top-0 left-0 max-h-fit rounded-lg overflow-hidden bg-white shadow-xl border border-gray-300 mx-2"
         :class="{
           'py-2': Object.keys(searchObject).length > 0,
         }"
@@ -115,20 +132,20 @@
           :type="'object'"
           @updateSearchObject="updateSearchObject"
         />
-        <div class="p-1 space-y-2">
+        <div class="p-4 space-y-4">
           <div
             v-for="(item, index) in filterArr"
             :key="index"
             class="flex space-x-2 items-center"
           >
-            <span class="text-gray-400">filter</span>
+            <span class="text-gray-400">Filter</span>
             <input
               type="text"
-              class="rounded-full border border-gray-200 outline-none w-full py-1 px-2 text-indigo-500 !ml-1"
+              class="rounded-full border border-gray-300 outline-none w-full py-1 px-4 text-indigo-600"
               v-model="filterArr[index]"
             />
             <button
-              class="border border-gray-200 rounded-full flex-shrink-0 h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
+              class="border border-gray-300 rounded-full h-[30px] aspect-1 hover:text-red-500 hover:border-red-500 duration-200"
               @click.stop="handleRemoveFilter(index)"
             >
               <i class="fa-solid fa-minus"></i>
@@ -136,40 +153,41 @@
           </div>
 
           <button
-            class="border border-gray-200 rounded-full h-[30px] flex items-center space-x-4 w-full py-1 px-2 hover:text-indigo-800 duration-200 hover:border-indigo-400"
+            class="border border-gray-300 rounded-full h-[40px] flex items-center justify-center space-x-4 w-full py-2 px-4 hover:bg-indigo-500 hover:text-white transition duration-200"
             @click="handleAddFilter"
           >
             <i class="fa-solid fa-plus"></i>
-            <span class="text-gray-500"> Add filter... </span>
+            <span class="text-gray-500">Thêm filter...</span>
           </button>
-          <div class="flex items-center">
+          <div class="flex items-center space-x-2">
             <button
-              class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-emerald-900 duration-200"
+              class="border border-emerald-600 bg-emerald-500 rounded-l-full h-[40px] flex items-center justify-center space-x-4 w-full py-2 text-white hover:bg-emerald-600 transition duration-200"
               @click="handleApplyFilter"
             >
               <i class="fa-solid fa-check"></i>
-              <span class="text-gray-50"> Áp dụng filter </span>
+              <span>Áp dụng</span>
             </button>
             <button
-              class="border border-amber-600 bg-amber-500 rounded-r-full h-[30px] flex items-center space-x-4 py-1 px-2 text-gray-100 w-1/2 hover:bg-amber-800 duration-200"
+              class="border border-amber-600 bg-amber-500 rounded-r-full h-[40px] flex items-center justify-center space-x-4 w-full py-2 text-white hover:bg-amber-600 transition duration-200"
               @click="handleUnReviewFilter"
             >
               <i class="fa-solid fa-x"></i>
-              <span class="text-gray-50"> Xoá filter </span>
+              <span>Xóa</span>
             </button>
           </div>
           <button
-            class="border border-red-600 bg-red-500 rounded-full h-[30px] flex items-center justify-center space-x-2 py-1 px-2 text-gray-100 w-full hover:bg-red-800 duration-200"
+            class="border border-red-600 bg-red-500 rounded-full h-[40px] flex items-center justify-center space-x-2 py-2 text-white w-full hover:bg-red-600 transition duration-200"
             @click.stop="modalFilter = false"
           >
             <i class="fa-solid fa-x"></i>
-            <span class="text-gray-50"> Đóng </span>
+            <span>Đóng</span>
           </button>
         </div>
       </div>
     </Modal>
   </Teleport>
 </template>
+
 <script setup lang="ts">
 import qs from "qs";
 
@@ -202,10 +220,7 @@ const width = ref<{
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const filtering = ref(false);
 
-if (
-  props.relationData.defaultValue &&
-  Object.keys(props.relationData.defaultValue).length > 0
-) {
+if (props.relationData.defaultValue) {
   filterArr.value = [
     `[id][${props.relationData.type === "array" ? "_in" : "_eq"}]=${
       props.relationData.defaultValue
@@ -256,7 +271,6 @@ watch(
     await getData();
   }
 );
-
 async function getData() {
   const params: any = {
     meta: "*",
@@ -276,9 +290,7 @@ async function getData() {
   }
   const result: any = await useApi(api, { params });
   data.value = result.data;
-  totalPages.value = Math.ceil(
-    (result.meta.totalCount || result.meta.filterCount) / perPage
-  );
+  totalPages.value = Math.ceil(result.meta.filterCount / perPage);
 }
 
 async function getSchema() {
@@ -368,7 +380,10 @@ async function handleCancelSearch() {
 }
 
 await fetchAll();
-width.value = $widthCalc(
-  $getMaxLength({ schema: schema.value, data: data.value })
-);
+console.log(totalPages.value);
+watchEffect(() => {
+  width.value = $widthCalc(
+    $getMaxLength({ schema: schema.value, data: data.value })
+  );
+});
 </script>

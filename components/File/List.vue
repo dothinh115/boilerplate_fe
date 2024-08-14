@@ -54,77 +54,7 @@
         </FileItem>
       </div>
     </div>
-    <div
-      class="flex items-center justify-between w-full max-md:flex-wrap max-md:space-y-4"
-      :class="{
-        '!justify-end': totalPages === 1,
-      }"
-      v-if="isFileShowed"
-    >
-      <div
-        class="flex space-x-2 items-center text-[14px] w-full flex-wrap [&>a]:max-md:mb-2"
-        v-if="totalPages > 1"
-      >
-        <NuxtLink
-          :to="
-            currentPage > 1
-              ? {
-                  query: {
-                    ...route.query,
-                    page: currentPage - 1,
-                  },
-                }
-              : undefined
-          "
-          class="paginate"
-          :class="{
-            disabled: currentPage === 1,
-          }"
-        >
-          <i class="fa-solid fa-chevron-left"></i>
-        </NuxtLink>
-        <NuxtLink
-          v-for="(item, index) in pagination"
-          :key="index"
-          :to="
-            typeof item === 'number'
-              ? {
-                  query: {
-                    ...route.query,
-                    page: item,
-                  },
-                }
-              : undefined
-          "
-          :class="{
-            '!bg-indigo-600 bg-opacity-90 !text-gray-100': item === currentPage,
-            paginate: typeof item === 'number',
-            'text-gray-100': typeof item !== 'number',
-          }"
-        >
-          {{ item }}
-        </NuxtLink>
-
-        <NuxtLink
-          :to="
-            currentPage < totalPages
-              ? {
-                  query: {
-                    ...route.query,
-                    page: currentPage + 1,
-                  },
-                }
-              : undefined
-          "
-          class="paginate"
-          :class="{
-            disabled: currentPage === totalPages,
-          }"
-        >
-          <i class="fa-solid fa-chevron-right"></i>
-        </NuxtLink>
-      </div>
-    </div>
+    <Paginate v-model:currentPage="localCurrentPage" :totalPages :pagination />
   </div>
 </template>
 <script setup lang="ts">
@@ -139,12 +69,26 @@ type TProps = {
   selectedList: TFile[];
 };
 const props = defineProps<TProps>();
-const route = useRoute();
-const emits = defineEmits(["change", "select", "selectAll"]);
-const isFileShowed = ref(true);
+const emits = defineEmits([
+  "change",
+  "select",
+  "selectAll",
+  "update:currentPage",
+]);
 const widthData = ref();
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const { screenWidth } = useGetState();
+const localCurrentPage = ref(props.currentPage);
+watch(
+  () => props.currentPage,
+  (newVal) => {
+    localCurrentPage.value = newVal;
+  }
+);
+
+watch(localCurrentPage, (newVal) => {
+  emits("update:currentPage", newVal);
+});
 
 function handleDelete() {
   emits("change");
@@ -157,12 +101,14 @@ function handleSelect({ checked, file }: { checked: boolean; file: TFile }) {
   });
 }
 
-widthData.value = $widthCalc(
-  $getMaxLength({
-    schema: props.fileSchema,
-    data: props.fileData,
-  })
-);
+watchEffect(() => {
+  widthData.value = $widthCalc(
+    $getMaxLength({
+      schema: props.fileSchema,
+      data: props.fileData,
+    })
+  );
+});
 
 function handleSelectAll(checked: boolean) {
   emits("selectAll", checked);

@@ -156,7 +156,7 @@
       :data
       :schema
       :totalPages
-      :currentPage
+      v-model:currentPage="currentPage"
       :pagination
       :sortBy
       @revalidate="handleRevalidate"
