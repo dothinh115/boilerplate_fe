@@ -410,7 +410,7 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
-<style scoped>
+<style>
 /* Tùy chỉnh CSS cho khung và các thành phần khác */
 .tox-tinymce {
   border-radius: 0.375rem !important;
