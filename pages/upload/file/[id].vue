@@ -33,22 +33,27 @@
 
           <span class="text-gray-900 truncate max-w-xs">
             {{
-              fileData &&
-              fileData[key as keyof TFile] &&
-              (key === "size"
-                ? (
-                    (fileData[key as keyof TFile] as number) /
-                    1024 /
-                    1024
-                  ).toFixed(2) + " Mb"
-                : fileData[key as keyof TFile])
+              (fileData &&
+                fileData[key as keyof TFile] &&
+                (key === "size"
+                  ? (
+                      (fileData[key as keyof TFile] as number) /
+                      1024 /
+                      1024
+                    ).toFixed(2) + " Mb"
+                  : key === "user"
+                  ? fileData["user"].email
+                  : fileData[key as keyof TFile])) ||
+              "null"
             }}
           </span>
         </div>
         <template v-if="fileData?.mimeType.startsWith('image/')">
-          <div class="flex space-x-4 px-4 py-2">
+          <div
+            class="px-4 py-2 grid md:grid-cols-3 md:gap-x-2 grid-cols-1 max-md:gap-y-2"
+          >
             <div class="flex flex-col flex-grow">
-              <label for="width" class="text-gray-600 font-medium"
+              <label for="width" class="text-gray-600 font-medium block"
                 >Width:</label
               >
               <input
@@ -56,10 +61,11 @@
                 class="input"
                 placeholder="Enter width"
                 v-model="width"
+                id="width"
               />
             </div>
             <div class="flex flex-col flex-grow">
-              <label for="height" class="text-gray-600 font-medium"
+              <label for="height" class="text-gray-600 font-medium block"
                 >Height:</label
               >
               <input
@@ -67,25 +73,28 @@
                 class="input"
                 placeholder="Enter height"
                 v-model="height"
+                id="height"
               />
             </div>
-            <!-- <div class="flex flex-col flex-grow">
+            <div class="flex flex-col flex-grow">
               <label for="format" class="text-gray-600 font-medium"
                 >Format:</label
               >
-              <select class="select">
+              <select class="select" v-model="format" id="format">
                 <option value="png">PNG</option>
                 <option value="webp">WEBP</option>
                 <option value="jpg">JPG</option>
               </select>
-            </div> -->
+            </div>
           </div>
           <div class="px-4 py-2">
             <a
               class="btn btn-blue block w-full text-center"
               :href="`/api/asset/${fileData.id}?type=download${
                 width ? `&width=${width}` : ''
-              }${height ? `&height=${height}` : ''}`"
+              }${height ? `&height=${height}` : ''}${
+                format ? `&format=${format}` : ''
+              }`"
               target="_blank"
               >Tải xuống</a
             >
@@ -106,10 +115,12 @@ const fileData = ref<TFile>();
 const fileSchema = useState<Object>("/schema/file");
 const width = ref();
 const height = ref();
+const format = ref("webp");
 
 async function getFileData() {
   const params = {
     "filter[id][_eq]": route.params.id,
+    fields: "*,user.*",
   };
   const response = await useApi("/file", {
     params,

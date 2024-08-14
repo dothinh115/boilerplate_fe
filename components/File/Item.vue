@@ -115,7 +115,7 @@ import { useToast } from "vue-toastification";
 
 export type TFile = {
   id: string;
-  user: string;
+  user: TUser;
   extension: string;
   folder: string | null;
   hash: string;

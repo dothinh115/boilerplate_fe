@@ -9,6 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     timeout: 9000,
     pauseOnHover: false,
     position: POSITION.BOTTOM_LEFT,
+    draggable: false,
   };
   nuxtApp.vueApp.use(Toast, options);
 });
