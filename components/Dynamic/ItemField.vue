@@ -202,10 +202,14 @@
                 />
               </div>
             </div>
-            <div>
+            <div class="flex space-x-2 justify-end">
+              <button class="btn btn-red" @click="uploadModal = false">
+                Cancel
+              </button>
               <button
-                class="btn btn-green block w-full"
+                class="btn btn-green"
                 @click="handleInsertImage"
+                :disabled="!imgIdOrPath"
               >
                 Submit
               </button>
@@ -310,7 +314,9 @@ async function handleInsertImage() {
 
     await useApi(`/asset/${imgIdOrPath.value}`);
     tinyMceEditor.value?.insertContent(
-      `<img src="/api/asset/${imgIdOrPath.value}?format=webp" alt="${
+      `<img src="/api/asset/${imgIdOrPath.value}?format=webp${
+        imgWidth.value ? `&width=${imgWidth.value}` : ""
+      }${imgHeight.value ? `&height=${imgHeight.value}` : ""}" alt="${
         imgAlt.value
       }" ${imgWidth.value ? `width="${imgWidth.value}"` : ""} ${
         imgHeight.value ? `width="${imgHeight.value}"` : ""
