@@ -42,11 +42,12 @@ export default function usePagnate(
   },
   callback: Function
 ) {
-  let pages = paginate(obj.totalPages, obj.currentPage, obj.range);
-  const route = useRoute();
+  const pages = paginate(obj.totalPages, obj.currentPage, obj.range);
   const router = useRouter();
+  const currentPage = ref(obj.currentPage);
+
   watch(
-    () => Number(route.query.page),
+    currentPage,
     (newPage) => {
       if (obj.totalPages > 0) {
         if (newPage < 1) {
