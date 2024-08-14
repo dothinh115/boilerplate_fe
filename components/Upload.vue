@@ -65,6 +65,7 @@
           class="btn btn-green block w-full"
           @click="handleUpload"
           :disabled="!isValid"
+          v-if="submitBtn"
         >
           Upload
         </button>
@@ -78,11 +79,13 @@ import { useToast } from "vue-toastification";
 type TProps = {
   accept?: string;
   multiple?: boolean;
+  submitBtn?: boolean;
 };
 const props = withDefaults(defineProps<TProps>(), {
   multiple: false,
+  submitBtn: true,
 });
-const emits = defineEmits(["closeModal", "submitUpload"]);
+const emits = defineEmits(["closeModal", "submitUpload", "fileChange"]);
 const preview = ref("");
 const file = ref<File | null>(null);
 const files = ref<File[]>([]);
@@ -128,6 +131,7 @@ watch([file, files], ([newFile, newFiles]) => {
       };
       reader.readAsDataURL(newFile);
     }
+    emits("fileChange", newFile);
   }
 
   if (newFiles.length > 0) {
@@ -137,6 +141,7 @@ watch([file, files], ([newFile, newFiles]) => {
         toast.error(`${item.name} không được hỗ trợ định dạng!`);
       }
     }
+    emits("fileChange", newFiles);
   }
 });
 
