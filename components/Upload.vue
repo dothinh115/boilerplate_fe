@@ -22,8 +22,8 @@
               <span class="font-semibold">Click to upload</span> or drag and
               drop
             </p>
-            <p class="text-xs text-gray-500 dark:text-gray-500">
-              <slot name="warning" />
+            <p class="text-xs text-gray-500 dark:text-gray-500" v-if="message">
+              {{ message }}
             </p>
           </div>
         </div>
