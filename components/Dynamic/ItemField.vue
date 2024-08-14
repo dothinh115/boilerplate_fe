@@ -241,6 +241,7 @@ function getEditorInit(item: string) {
       ? ""
       : "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | customInsertImageButton | customUploadButton ",
     toolbar_mode: "sliding",
+
     setup(editor: any) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
@@ -381,3 +382,9 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
+<style>
+/* Tùy chỉnh CSS cho khung và các thành phần khác */
+.tox-tinymce {
+  border-radius: 0.375rem !important;
+}
+</style>
