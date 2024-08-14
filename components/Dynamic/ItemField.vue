@@ -5,7 +5,9 @@
       'space-y-1': $typeCheck(data) !== 'boolean',
     }"
   >
-    <div class="text-gray-900">{{ localSchemaKey }}:</div>
+    <label :for="localSchemaKey" class="text-gray-900"
+      >{{ localSchemaKey }}:</label
+    >
     <TinyMceLoading
       v-if="localSchemaValue.type === 'richText' && !isTinyReady"
     />
@@ -43,6 +45,7 @@
         :type="
           localSchemaKey === 'password' ? 'password' : localSchemaValue.type
         "
+        :id="localSchemaKey"
         class="input w-full"
         :class="{
           'input-error': error[localSchemaKey],
