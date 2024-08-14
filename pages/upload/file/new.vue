@@ -5,7 +5,11 @@
       :close-btn="true"
       @update:model-value="handleGoBack"
     >
-      <Upload @submit-upload="handleUpload" :multiple="true" />
+      <Upload
+        @submit-upload="handleUpload"
+        :multiple="true"
+        :message="'Upload tối đa 5 files cùng lúc'"
+      />
     </Modal>
   </Teleport>
   <Teleport to="body">

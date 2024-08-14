@@ -5,7 +5,7 @@
       'space-y-1': $typeCheck(data) !== 'boolean',
     }"
   >
-    <label :for="localSchemaKey" class="text-gray-900"
+    <label :for="localSchemaKey" class="text-gray-900 block"
       >{{ localSchemaKey }}:</label
     >
     <TinyMceLoading
@@ -152,6 +152,7 @@
         :accept="'image/*'"
         :submit-btn="false"
         @file-change="handleUploadImage"
+        :message="'Chỉ được upload hình ảnh'"
       >
         <template #html>
           <div class="space-y-4">
@@ -219,7 +220,6 @@
             </div>
           </div>
         </template>
-        <template #warning>Chỉ được upload hình ảnh</template>
       </Upload>
     </Modal>
   </Teleport>

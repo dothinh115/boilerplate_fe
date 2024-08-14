@@ -80,6 +80,7 @@ type TProps = {
   accept?: string;
   multiple?: boolean;
   submitBtn?: boolean;
+  message?: string;
 };
 const props = withDefaults(defineProps<TProps>(), {
   multiple: false,
