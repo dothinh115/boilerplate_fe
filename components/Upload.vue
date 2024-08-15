@@ -1,7 +1,7 @@
 <template>
   <div class=""></div>
   <div
-    class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] lg:max-h-[90vh] max-h-[80%] overflow-y-scroll hidden-scrollbar rounded-xl overflow-hidden"
+    class="space-y-2 xl:w-1/3 lg:w-1/2 md:w-3/4 w-[95%] lg:max-h-[90dvh] max-h-[80%] overflow-y-scroll hidden-scrollbar rounded-xl overflow-hidden"
   >
     <div class="bg-gray-50">
       <div class="flex items-center justify-center w-full p-2 flex-wrap">
