@@ -10,7 +10,7 @@
     >
     <DynamicTinyMceEditor
       v-if="localSchemaValue.type === 'richText'"
-      :disabled="schemaValue.disabled"
+      :disabled="schemaValue.disabled || !$roleCheck('PATCH', route.params.post as string)"
       v-model="data"
     />
 
@@ -149,7 +149,6 @@ const data = ref(props.modelValue);
 const localSchemaKey = ref(props.schemaKey);
 const localSchemaValue = ref({ ...props.schemaValue });
 const { user } = useAuth();
-const isTinyReady = ref(false);
 const { $roleCheck } = useNuxtApp();
 
 watch(

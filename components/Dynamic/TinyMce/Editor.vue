@@ -2,10 +2,7 @@
   <div>
     <DynamicTinyMceLoading v-if="!isTinyReady" />
     <div v-show="isTinyReady">
-      <Editor
-        api-key="ybvcxe9fj0sj6lcp90640iyvqe3epn8hz97d8hr0j8ad0g0h"
-        :init="getEditorInit(data)"
-      />
+      <Editor :init="getEditorInit(data)" class="custom-tiny-mce" />
     </div>
     <Teleport to="body">
       <Modal
@@ -92,6 +89,23 @@
   </div>
 </template>
 <script setup lang="ts">
+import "tinymce/tinymce";
+import "tinymce/icons/default/icons";
+import "tinymce/themes/silver/theme";
+import "tinymce/models/dom/model";
+import "tinymce/skins/ui/oxide/skin.css";
+import "tinymce/plugins/advlist";
+import "tinymce/plugins/autolink";
+import "tinymce/plugins/lists";
+import "tinymce/plugins/link";
+import "tinymce/plugins/image";
+import "tinymce/plugins/charmap";
+import "tinymce/plugins/preview";
+import "tinymce/plugins/code";
+import "tinymce/plugins/fullscreen";
+import "tinymce/plugins/media";
+import "tinymce/plugins/advlist";
+import "tinymce/plugins/table";
 import Editor from "@tinymce/tinymce-vue";
 
 type TProps = {
@@ -119,17 +133,17 @@ function getEditorInit(item: string) {
     menubar: false,
     width: "100%",
     height: "350px",
+    license_key: "gpl",
+    plugins: "code table",
     toolbar: props.disabled
       ? ""
-      : "styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | customUploadButton ",
+      : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | code",
     toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
         if (item) editor.setContent(item);
         if (props.disabled) {
-          editor.setMode("readonly");
-        } else {
-          editor.setMode("design");
+          editor.mode.set("readonly");
         }
         tinyMceEditor.value = editor;
         isTinyReady.value = true;
@@ -213,9 +227,34 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
-<style>
-/* Tùy chỉnh CSS cho khung và các thành phần khác */
-.tox-tinymce {
-  border-radius: 0.375rem !important;
+<style lang="scss">
+.tox.tox-tinymce {
+  @apply rounded-md ring-gray-300 sm:text-sm border-0 shadow-sm;
+}
+
+.tox.tox-tinymce.tox-edit-focus .tox-edit-area {
+  @apply before:border-none;
+}
+
+.tox.tox-tinymce .tox-edit-area {
+  font-family: "Poppins", sans-serif;
+}
+
+.tox.tox-tinymce .tox-editor-container {
+  @apply shadow-none;
+}
+
+.tox.tox-tinymce .tox-statusbar__right-container {
+  @apply hidden;
+}
+
+.tox.tox-tinymce
+  .tox-editor-container
+  .tox-editor-header
+  .tox-toolbar-overlord
+  .tox-toolbar__primary {
+  & .tox-toolbar__group {
+    @apply border-r border-gray-100;
+  }
 }
 </style>
