@@ -159,7 +159,6 @@
       v-model:currentPage="currentPage"
       :pagination
       :sortBy
-      @revalidate="handleRevalidate"
       @sort="handleSort"
     />
   </div>
@@ -400,6 +399,16 @@ watchEffect(() => {
       pagination.value = paginate;
     }
   );
+});
+
+//watch route để xem khi nào cần revalidate dữ liệu,
+onBeforeRouteUpdate(async (to, from) => {
+  if (
+    from.name?.toString().includes(to.name?.toString() as string) &&
+    from.name !== to.name
+  ) {
+    await handleRevalidate();
+  }
 });
 
 async function fetchAll() {

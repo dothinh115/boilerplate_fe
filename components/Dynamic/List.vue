@@ -41,7 +41,7 @@ const width = ref<{
   [key: string]: number;
 }>({});
 const { $getMaxLength } = useNuxtApp();
-const emits = defineEmits(["revalidate", "sort", "update:currentPage"]);
+const emits = defineEmits(["sort", "update:currentPage"]);
 const localCurrentPage = ref(props.currentPage);
 watch(
   () => props.currentPage,
@@ -52,15 +52,6 @@ watch(
 
 watch(localCurrentPage, (newVal) => {
   emits("update:currentPage", newVal);
-});
-
-onBeforeRouteUpdate(async (to, from) => {
-  if (
-    from.name?.toString().includes(to.name?.toString() as string) &&
-    from.name !== to.name
-  ) {
-    emits("revalidate");
-  }
 });
 
 function handleSort(key: string) {

@@ -26,8 +26,10 @@ type TProps = {
 const props = defineProps<TProps>();
 const emits = defineEmits(["update:modelValue"]);
 
-const close = () => {
-  emits("update:modelValue", false);
+const close = (event: MouseEvent) => {
+  if (event.button === 0) {
+    emits("update:modelValue", false);
+  }
 };
 
 onMounted(() => {
@@ -42,7 +44,7 @@ onBeforeUnmount(() => {
 
 function handleEscapePress(event: KeyboardEvent) {
   if (event.key === "Escape") {
-    close();
+    emits("update:modelValue", false);
   }
 }
 </script>
