@@ -2,7 +2,7 @@
   <div>
     <DynamicTinyMceLoading v-if="!isTinyReady" />
     <div v-show="isTinyReady">
-      <Editor :init="getEditorInit(data)" class="custom-tiny-mce" />
+      <Editor :init="getEditorInit(data)" />
     </div>
     <Teleport to="body">
       <Modal
@@ -145,6 +145,7 @@ function getEditorInit(item: string) {
         if (props.disabled) {
           editor.mode.set("readonly");
         }
+        const plugins = editor.plugins;
         tinyMceEditor.value = editor;
         isTinyReady.value = true;
       });
@@ -170,6 +171,11 @@ function isValidUrl(url: string) {
     return false;
   }
 }
+
+onBeforeUnmount(() => {
+  isTinyReady.value = false;
+  console.log(isTinyReady.value);
+});
 
 async function handleInsertImage() {
   const isValid = isValidUrl(imgIdOrPath.value);
@@ -227,6 +233,11 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
+<style scoped lang="scss">
+textarea {
+  @apply hidden;
+}
+</style>
 <style lang="scss">
 .tox.tox-tinymce {
   @apply rounded-md ring-gray-300 sm:text-sm border-0 shadow-sm;
