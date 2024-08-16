@@ -238,7 +238,7 @@ const route = useRoute();
 const dataApi = `/${route.params.post}`;
 const schemaApi = `/schema/${route.params.post}`;
 const filterArr = ref<string[]>([""]);
-const perPage = 20;
+const perPage = 100;
 const currentPage = ref(Number(route.query.page) || 1);
 const sortBy = ref<string>((route.query.sort as string) || "-createdAt,-id");
 const filtering = ref(false);
@@ -255,10 +255,7 @@ const router = useRouter();
 async function getList() {
   const params: any = {
     limit: perPage,
-    page:
-      filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")
-        ? 1
-        : currentPage.value,
+    page: currentPage.value,
     meta: "*",
     sort: sortBy.value,
   };
@@ -364,6 +361,12 @@ function handleSort(key: string) {
     });
   }
 }
+
+watch(filterArr, ([newVal, oldVal]) => {
+  if (newVal && newVal.length !== oldVal.length) {
+    currentPage.value = 1;
+  }
+});
 
 watch(
   () => route.query.page,

@@ -380,7 +380,6 @@ async function handleCancelSearch() {
 }
 
 await fetchAll();
-console.log(totalPages.value);
 watchEffect(() => {
   width.value = $widthCalc(
     $getMaxLength({ schema: schema.value, data: data.value })

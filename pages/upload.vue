@@ -183,7 +183,6 @@ async function handleMultipleDelete() {
     } catch (error: any) {
       const find = deleteList.value.find((x) => x.file === file);
       if (find) find.type = "failed";
-      console.log(error.data?.message);
     }
   };
   for (const file of selectedList.value) {

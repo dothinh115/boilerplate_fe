@@ -135,7 +135,8 @@ function getEditorInit(item: string) {
     height: "350px",
     license_key: "gpl",
     plugins: "code table",
-    content_style: "body { font-family:Poppins,sans-serif; font-size:14px }",
+    content_style:
+      "body { font-family:Poppins,sans-serif; font-size: 0.875rem }",
     toolbar: props.disabled
       ? ""
       : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | code",
@@ -176,11 +177,6 @@ function isValidUrl(url: string) {
     return false;
   }
 }
-
-onBeforeUnmount(() => {
-  isTinyReady.value = false;
-  console.log(isTinyReady.value);
-});
 
 async function handleInsertImage() {
   const isValid = isValidUrl(imgIdOrPath.value);
