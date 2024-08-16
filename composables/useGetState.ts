@@ -12,6 +12,7 @@ export default function useGetState() {
   const hideSidebar = useState("hideSidebar", () => false);
   const routes = useState<TRoute>("route", () => []);
   const isFromInside = useState<boolean>("isFromInside", () => false);
+  const shouldRevalidate = useState<boolean>("shouldRevalidate", () => false);
 
   return {
     loading,
@@ -19,5 +20,6 @@ export default function useGetState() {
     hideSidebar,
     routes,
     isFromInside,
+    shouldRevalidate,
   };
 }

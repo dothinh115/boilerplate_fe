@@ -33,6 +33,7 @@ const uploadList = ref<
   }[]
 >([]);
 const toast = useToast();
+const { shouldRevalidate } = useGetState();
 
 setTimeout(() => {
   uploadModal.value = true;
@@ -71,6 +72,7 @@ async function handleUpload(files: File[]) {
     promises.push(handleSingleUpload(file));
   }
   await Promise.all(promises);
+  shouldRevalidate.value = true;
 }
 
 function handleGoBack() {

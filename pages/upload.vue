@@ -90,7 +90,7 @@ import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
 const isMenuShowed = ref(false);
-const { loading, screenWidth } = useGetState();
+const { loading, screenWidth, shouldRevalidate } = useGetState();
 const folderData = ref<TFolder[]>([]);
 const fileData = ref<any[]>([]);
 const fileSchema = useState("/schema/file");
@@ -220,12 +220,25 @@ watch(
     }
   }
 );
-onBeforeRouteUpdate(async (to, from) => {
-  if (
-    from.name?.toString().includes(to.name?.toString() as string) &&
-    from.name !== to.name
-  ) {
-    await fetchAll();
+
+async function revalidate() {
+  loading.value = true;
+  await getFiles();
+  loading.value = false;
+}
+// onBeforeRouteUpdate(async (to, from) => {
+//   if (
+//     from.name?.toString().includes(to.name?.toString() as string) &&
+//     from.name !== to.name
+//   ) {
+//     await fetchAll();
+//   }
+// });
+
+watch(shouldRevalidate, async (newVal) => {
+  if (newVal) {
+    await revalidate();
+    shouldRevalidate.value = false;
   }
 });
 

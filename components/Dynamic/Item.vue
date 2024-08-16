@@ -93,6 +93,7 @@ const relationData = ref<{
   defaultValue: string | number | string[] | number[];
   key: string;
 }>();
+const { shouldRevalidate } = useGetState();
 
 if (Object.keys(data.value).length === 0) {
   for (const key in schema.value) {
@@ -150,6 +151,7 @@ async function handleConfirm() {
   );
   if (result) {
     toast.success("Thành công");
+    shouldRevalidate.value = true;
     router.back();
   }
 }
@@ -162,7 +164,7 @@ async function handleDelete() {
 
   if (result) {
     toast.success("Thành công");
-
+    shouldRevalidate.value = true;
     router.back();
   }
 }

@@ -245,7 +245,7 @@ const filtering = ref(false);
 const data = ref<any>(null);
 const totalPages = ref(0);
 const schema = useState<any>(schemaApi);
-const { loading, screenWidth } = useGetState();
+const { loading, screenWidth, shouldRevalidate } = useGetState();
 const searchObject = useState<any>("searchObject", () => ({}));
 const modalFilter = ref(false);
 const isSearching = ref(false);
@@ -402,12 +402,19 @@ watchEffect(() => {
 });
 
 //watch route để xem khi nào cần revalidate dữ liệu,
-onBeforeRouteUpdate(async (to, from) => {
-  if (
-    from.name?.toString().includes(to.name?.toString() as string) &&
-    from.name !== to.name
-  ) {
+// onBeforeRouteUpdate(async (to, from) => {
+//   if (
+//     from.name?.toString().includes(to.name?.toString() as string) &&
+//     from.name !== to.name
+//   ) {
+//     await handleRevalidate();
+//   }
+// });
+
+watch(shouldRevalidate, async (newVal) => {
+  if (newVal) {
     await handleRevalidate();
+    shouldRevalidate.value = false;
   }
 });
 
