@@ -135,13 +135,17 @@ function getEditorInit(item: string) {
     height: "350px",
     license_key: "gpl",
     plugins: "code table",
+    content_style: "body { font-family:Poppins,sans-serif; font-size:14px }",
     toolbar: props.disabled
       ? ""
       : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | code",
     toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
-        if (item) editor.setContent(item);
+        if (item) {
+          const html = useMarkdown().markdownToHtml(item);
+          editor.setContent(html);
+        }
         if (props.disabled) {
           editor.mode.set("readonly");
         }
@@ -151,7 +155,8 @@ function getEditorInit(item: string) {
       });
       editor.on("change", () => {
         item = editor.getContent();
-        emits("update:modelValue", item);
+        const markdown = useMarkdown().htmlToMarkdown(item);
+        emits("update:modelValue", markdown);
       });
       editor.ui.registry.addButton("customUploadButton", {
         icon: "image",
@@ -247,7 +252,7 @@ textarea {
   @apply before:border-none;
 }
 
-.tox.tox-tinymce .tox-edit-area {
+.mce-content-body {
   font-family: "Poppins", sans-serif;
 }
 

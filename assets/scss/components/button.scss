@@ -1,5 +1,5 @@
 .btn {
-  @apply md:p-2 p-1 rounded-[5px] duration-200 disabled:opacity-70 disabled:!bg-gray-700;
+  @apply md:p-2 p-1 rounded-[5px] duration-200 disabled:opacity-70 disabled:bg-gray-700 #{!important};
 
   &.btn-icon {
     @apply flex items-center space-x-2 justify-center;
@@ -22,7 +22,7 @@
 }
 
 .select {
-  @apply p-2 rounded-[5px] duration-200 disabled:opacity-70 disabled:!bg-gray-700;
+  @apply p-2 rounded-[5px] duration-200 disabled:opacity-70 disabled:bg-gray-700 #{!important};
   & option {
     @apply bg-gray-100 text-gray-300;
   }
