@@ -89,22 +89,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import "tinymce/tinymce";
 import "tinymce/icons/default/icons";
-import "tinymce/themes/silver/theme";
 import "tinymce/models/dom/model";
-import "tinymce/skins/ui/oxide/skin.css";
-import "tinymce/plugins/advlist";
 import "tinymce/plugins/autolink";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/link";
 import "tinymce/plugins/image";
-import "tinymce/plugins/charmap";
 import "tinymce/plugins/preview";
 import "tinymce/plugins/code";
 import "tinymce/plugins/fullscreen";
 import "tinymce/plugins/media";
-import "tinymce/plugins/advlist";
 import "tinymce/plugins/table";
 import Editor from "@tinymce/tinymce-vue";
 
@@ -134,12 +128,13 @@ function getEditorInit(item: string) {
     width: "100%",
     height: "350px",
     license_key: "gpl",
-    plugins: "code table",
+    plugins: "code table media link autolink fullscreen lists preview",
     content_style:
-      "body { font-family:Poppins,sans-serif; font-size: 0.875rem }",
+      "body { font-family:Poppins,sans-serif; font-size: 0.875rem }" +
+      "body a { text-decoration:none }",
     toolbar: props.disabled
       ? ""
-      : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | code",
+      : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
@@ -246,10 +241,6 @@ textarea {
 
 .tox.tox-tinymce.tox-edit-focus .tox-edit-area {
   @apply before:border-none;
-}
-
-.mce-content-body {
-  font-family: "Poppins", sans-serif;
 }
 
 .tox.tox-tinymce .tox-editor-container {
