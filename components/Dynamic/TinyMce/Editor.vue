@@ -140,7 +140,7 @@ function getEditorInit(item: string) {
       toolbar_mode: "wrap",
       toolbar: props.disabled
         ? ""
-        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
+        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | media link | code fullscreen | preview",
     },
     toolbar_mode: "wrap",
     setup(editor: any) {
@@ -152,7 +152,6 @@ function getEditorInit(item: string) {
         if (props.disabled) {
           editor.mode.set("readonly");
         }
-        const plugins = editor.plugins;
         tinyMceEditor.value = editor;
         isTinyReady.value = true;
       });
@@ -161,12 +160,12 @@ function getEditorInit(item: string) {
         const markdown = useMarkdown().htmlToMarkdown(item);
         emits("update:modelValue", markdown);
       });
-      editor.ui.registry.addButton("customUploadButton", {
-        icon: "image",
-        onAction: function () {
-          uploadModal.value = true;
-        },
-      });
+      // editor.ui.registry.addButton("customUploadButton", {
+      //   icon: "image",
+      //   onAction: function () {
+      //     uploadModal.value = true;
+      //   },
+      // });
     },
   };
 }
@@ -266,9 +265,5 @@ textarea {
   & .tox-toolbar__group {
     @apply border-r border-gray-100;
   }
-}
-
-.tox.tox.tox-tinymce .tox-toolbar {
-  @apply flex;
 }
 </style>
