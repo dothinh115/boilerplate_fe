@@ -139,7 +139,6 @@ function getEditorInit(item: string) {
         "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
-    inline: true,
     setup(editor: any) {
       editor.on("init", () => {
         if (item) {
@@ -232,7 +231,7 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
-<style scoped lang="scss">
+<!-- <style scoped lang="scss">
 textarea {
   @apply hidden;
 }
@@ -263,4 +262,4 @@ textarea {
     @apply border-r border-gray-100;
   }
 }
-</style>
+</style> -->
