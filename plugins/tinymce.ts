@@ -1,8 +1,7 @@
-import "tinymce/tinymce";
-import "tinymce/themes/silver/theme";
-import "tinymce/skins/ui/oxide/skin.css";
-import "tinymce/icons/default/icons.min.js";
-import "tinymce/models/dom/model";
-import "tinymce/skins/ui/oxide/content.js";
+import "@/public/tinymce/tinymce.min";
+import "@/public/tinymce/skins/ui/oxide/skin";
+import "@/public/tinymce/models/dom/model.min";
+import "@/public/tinymce/themes/silver/theme.min";
+import "@/public/tinymce/icons/default/icons.min";
 
 export default defineNuxtPlugin(() => {});

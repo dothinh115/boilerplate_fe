@@ -2,7 +2,7 @@
   <div>
     <DynamicTinyMceLoading v-if="!isTinyReady" />
     <div v-show="isTinyReady">
-      <Editor :init="getEditorInit(data)" />
+      <Editor api-key="no-api-key" :init="getEditorInit(data)" />
     </div>
     <Teleport to="body">
       <Modal
@@ -89,16 +89,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import "tinymce/plugins/autolink";
-import "tinymce/plugins/lists";
-import "tinymce/plugins/link";
-import "tinymce/plugins/image";
-import "tinymce/plugins/preview";
-import "tinymce/plugins/code";
-import "tinymce/plugins/fullscreen";
-import "tinymce/plugins/media";
-import "tinymce/plugins/table";
 import Editor from "@tinymce/tinymce-vue";
+
+import "@/public/tinymce/plugins/lists/plugin.min";
+import "@/public/tinymce/plugins/link/plugin.min";
+import "@/public/tinymce/plugins/image/plugin.min";
+import "@/public/tinymce/plugins/preview/plugin.min";
+import "@/public/tinymce/plugins/code/plugin.min";
+import "@/public/tinymce/plugins/fullscreen/plugin.min";
+import "@/public/tinymce/plugins/media/plugin.min";
+import "@/public/tinymce/plugins/table/plugin.min";
 
 type TProps = {
   disabled?: boolean;
@@ -122,20 +122,24 @@ const data = ref<any>(props.modelValue);
 
 function getEditorInit(item: string) {
   return {
+    base_url: "/public/tinymce",
+    suffix: ".min",
     menubar: false,
     width: "100%",
     height: "350px",
     license_key: "gpl",
-    plugins: "code table media link autolink fullscreen lists preview",
+    plugins: "code",
     content_style:
       "body { font-family:Poppins,sans-serif; font-size: 0.875rem }" +
       "body a { text-decoration:none }",
     toolbar:
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
-      plugins: "autosave lists autolink",
-      toolbar: "undo bold italic styles",
+      // plugins: "code table media link autolink fullscreen lists preview",
       menubar: false,
+      toolbar_mode: "sliding",
+      toolbar:
+        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
