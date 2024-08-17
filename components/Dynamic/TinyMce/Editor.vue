@@ -124,7 +124,6 @@ const data = ref<any>(props.modelValue);
 
 function getEditorInit(item: string) {
   return {
-    menubar: false,
     width: "100%",
     height: "350px",
     license_key: "gpl",
@@ -132,9 +131,9 @@ function getEditorInit(item: string) {
     content_style:
       "body { font-family:Poppins,sans-serif; font-size: 0.875rem }" +
       "body a { text-decoration:none }",
-    toolbar: props.disabled
-      ? ""
-      : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
+    menubar: props.disabled ? false : true,
+    toolbar:
+      "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
       menubar: true,
       plugins: "code table media link autolink fullscreen lists preview",
