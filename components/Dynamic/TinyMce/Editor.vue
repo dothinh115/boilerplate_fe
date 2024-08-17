@@ -269,6 +269,6 @@ textarea {
 }
 
 .tox.tox.tox-tinymce .tox-toolbar {
-  @apply block;
+  @apply flex;
 }
 </style>
