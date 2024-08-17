@@ -134,12 +134,14 @@ function getEditorInit(item: string) {
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
       plugins: "code table media link autolink fullscreen lists preview",
-      menubar: true, // Bật menu cho mobile
+      menubar: false,
       toolbar_mode: "sliding",
       toolbar:
         "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
+    target_list: false,
+
     setup(editor: any) {
       editor.on("init", () => {
         if (item) {
