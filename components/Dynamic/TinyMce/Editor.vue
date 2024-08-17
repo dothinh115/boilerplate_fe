@@ -135,6 +135,11 @@ function getEditorInit(item: string) {
     toolbar: props.disabled
       ? ""
       : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
+    mobile: {
+      theme: "mobile",
+      toolbar:
+        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
+    },
     toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
