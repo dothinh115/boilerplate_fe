@@ -109,13 +109,15 @@ import type { TFile } from "~/components/File/Item.vue";
 
 const route = useRoute();
 const router = useRouter();
-const modal = ref(true);
+const modal = ref(false);
 const { isFromInside, loading } = useGetState();
 const fileData = ref<TFile>();
 const fileSchema = useState<Object>("/schema/file");
 const width = ref();
 const height = ref();
 const format = ref("webp");
+
+setTimeout(() => (modal.value = true), 50);
 
 async function getFileData() {
   const params = {
