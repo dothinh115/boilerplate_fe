@@ -90,7 +90,6 @@
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
-
 import "@/public/tinymce/plugins/lists/plugin.min";
 import "@/public/tinymce/plugins/link/plugin.min";
 import "@/public/tinymce/plugins/image/plugin.min";
@@ -135,11 +134,7 @@ function getEditorInit(item: string) {
     toolbar:
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
-      // plugins: "code table media link autolink fullscreen lists preview",
-      menubar: false,
       toolbar_mode: "sliding",
-      toolbar:
-        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
