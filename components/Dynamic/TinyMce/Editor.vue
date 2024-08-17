@@ -134,7 +134,8 @@ function getEditorInit(item: string) {
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
       plugins: "code table media link autolink fullscreen lists preview",
-      toolbar_mode: "wrap",
+      menubar: true, // Bật menu cho mobile
+      toolbar_mode: "sliding",
       toolbar:
         "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
@@ -231,7 +232,7 @@ async function handleUploadImage(file: File) {
   }
 }
 </script>
-<!-- <style scoped lang="scss">
+<style scoped lang="scss">
 textarea {
   @apply hidden;
 }
@@ -262,4 +263,4 @@ textarea {
     @apply border-r border-gray-100;
   }
 }
-</style> -->
+</style>
