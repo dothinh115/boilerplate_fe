@@ -89,8 +89,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import "tinymce/icons/default/icons";
-import "tinymce/models/dom/model";
 import "tinymce/plugins/autolink";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/link";
@@ -140,9 +138,9 @@ function getEditorInit(item: string) {
       toolbar_mode: "wrap",
       toolbar: props.disabled
         ? ""
-        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | media link | code fullscreen | preview",
+        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
-    toolbar_mode: "wrap",
+    toolbar_mode: "sliding",
     setup(editor: any) {
       editor.on("init", () => {
         if (item) {
@@ -160,12 +158,12 @@ function getEditorInit(item: string) {
         const markdown = useMarkdown().htmlToMarkdown(item);
         emits("update:modelValue", markdown);
       });
-      // editor.ui.registry.addButton("customUploadButton", {
-      //   icon: "image",
-      //   onAction: function () {
-      //     uploadModal.value = true;
-      //   },
-      // });
+      editor.ui.registry.addButton("customUploadButton", {
+        icon: "image",
+        onAction: function () {
+          uploadModal.value = true;
+        },
+      });
     },
   };
 }
