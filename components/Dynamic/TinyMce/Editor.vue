@@ -133,12 +133,10 @@ function getEditorInit(item: string) {
     toolbar:
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
-      theme: "silver",
       plugins: "code table media link autolink fullscreen lists preview",
       toolbar_mode: "wrap",
-      toolbar: props.disabled
-        ? ""
-        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
+      toolbar:
+        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
