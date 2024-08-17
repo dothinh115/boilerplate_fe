@@ -12,8 +12,12 @@ export default defineNuxtPlugin(() => {
             if (key === "id") w = 120;
             else if (screenWidth.value <= 375) {
               w = 200;
-            } else if (screenWidth.value > 375 && screenWidth.value <= 430) {
-              w = 230;
+            } else if (screenWidth.value > 375 && screenWidth.value <= 390) {
+              w = 210;
+            } else if (screenWidth.value > 390 && screenWidth.value <= 430) {
+              w = 220;
+            } else if (screenWidth.value > 430 && screenWidth.value <= 500) {
+              w = 250;
             } else w = 300;
           }
 
