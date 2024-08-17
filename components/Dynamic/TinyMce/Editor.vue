@@ -133,11 +133,9 @@ function getEditorInit(item: string) {
     toolbar:
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
-      plugins: "code table media link autolink fullscreen lists preview",
+      plugins: "autosave lists autolink",
+      toolbar: "undo bold italic styles",
       menubar: false,
-      toolbar_mode: "sliding",
-      toolbar:
-        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
