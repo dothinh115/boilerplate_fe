@@ -189,7 +189,7 @@ async function handleMultipleDelete() {
     promises.push(handleSingleDelete(file));
   }
   await Promise.all(promises);
-  await revalidate();
+  await getFiles();
 }
 
 async function handleClose() {
