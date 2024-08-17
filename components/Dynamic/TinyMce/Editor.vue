@@ -136,16 +136,11 @@ function getEditorInit(item: string) {
       ? ""
       : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
-      toolbar: [
-        "bold",
-        "italic",
-        "underline",
-        "alignleft",
-        "aligncenter",
-        "alignright",
-        "bullist",
-        "numlist",
-      ], // Định nghĩa lại toolbar cho mobile
+      menubar: true,
+      plugins: "code table media link autolink fullscreen lists preview",
+      toolbar: props.disabled
+        ? ""
+        : "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
