@@ -89,6 +89,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import "tinymce/tinymce";
+import "tinymce/themes/silver/theme";
+import "tinymce/skins/ui/oxide/skin.css";
+import "tinymce/icons/default/icons.min.js";
+import "tinymce/models/dom/model";
+import "tinymce/skins/ui/oxide/content.js";
 import "tinymce/plugins/autolink";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/link";
@@ -140,8 +146,6 @@ function getEditorInit(item: string) {
         "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
-    target_list: false,
-
     setup(editor: any) {
       editor.on("init", () => {
         if (item) {
