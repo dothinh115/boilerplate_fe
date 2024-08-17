@@ -267,4 +267,8 @@ textarea {
     @apply border-r border-gray-100;
   }
 }
+
+.tox.tox.tox-tinymce .tox-toolbar {
+  @apply block;
+}
 </style>
