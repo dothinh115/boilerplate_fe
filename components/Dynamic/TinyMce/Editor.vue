@@ -127,14 +127,18 @@ function getEditorInit(item: string) {
     width: "100%",
     height: "350px",
     license_key: "gpl",
-    plugins: "code",
+    plugins: "code lists table media link fullscreen preview",
     content_style:
       "body { font-family:Poppins,sans-serif; font-size: 0.875rem }" +
       "body a { text-decoration:none }",
     toolbar:
       "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     mobile: {
+      // plugins: "code table media link autolink fullscreen lists preview",
+      menubar: false,
       toolbar_mode: "sliding",
+      toolbar:
+        "undo redo | blocks | bold italic | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist | table | customUploadButton | media link | code fullscreen | preview",
     },
     toolbar_mode: "sliding",
     setup(editor: any) {
