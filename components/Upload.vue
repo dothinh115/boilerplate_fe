@@ -10,6 +10,7 @@
           class="flex flex-col items-center justify-center w-full cursor-pointer bg-gray-100 rounded-t-lg group p-6 md:h-[350px] h-[250px]"
           :style="!multiple && backgroundStyle"
           @dragover.prevent="handleDragOver"
+          @dragleave.prevent="handleDragLeave"
           @drop.prevent="handleDrop"
           dropzone
         >
@@ -18,14 +19,25 @@
             v-if="!preview"
           >
             <i class="fa-solid fa-cloud-arrow-up text-gray-500 text-[40px]"></i>
-            <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
-              <span class="font-semibold">Click to upload</span> or drag and
-              drop
-            </p>
-            <p class="text-xs text-gray-500 dark:text-gray-500" v-if="message">
-              {{ message }}
-            </p>
+            <div v-if="isDragOver">
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
+                thả file của bạn vào đây
+              </p>
+            </div>
+            <div v-else>
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
+                <span class="font-semibold">Click để upload</span> hoặc kéo thả
+                file của bạn vào đây
+              </p>
+              <p
+                class="text-xs text-gray-500 dark:text-gray-500 text-center"
+                v-if="message"
+              >
+                {{ message }}
+              </p>
+            </div>
           </div>
+          <div v-else-if="!preview && isDragOver">drop</div>
         </div>
         <button
           class="btn btn-red w-full !rounded-t-none"
@@ -91,6 +103,7 @@ const preview = ref("");
 const file = ref<File | null>(null);
 const files = ref<File[]>([]);
 const toast = useToast();
+const isDragOver = ref(false);
 
 function clearPreview() {
   preview.value = "";
@@ -114,7 +127,11 @@ const backgroundStyle = computed(() => {
 });
 
 function handleDragOver(event: DragEvent) {
-  event.dataTransfer!.effectAllowed = "move";
+  if (!isDragOver.value) isDragOver.value = true;
+}
+
+function handleDragLeave(event: DragEvent) {
+  if (isDragOver.value) isDragOver.value = false;
 }
 
 watch([file, files], ([newFile, newFiles]) => {

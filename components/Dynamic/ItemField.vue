@@ -12,6 +12,7 @@
       v-if="localSchemaValue.type === 'richText'"
       :disabled="schemaValue.disabled || !$roleCheck('PATCH', route.params.post as string)"
       v-model="data"
+      :error="error[localSchemaKey]"
     />
 
     <div
@@ -30,10 +31,10 @@
     <div
       class="flex space-x-2"
       v-else-if="
-        $typeCheck(data) === 'string' ||
-        $typeCheck(data) === 'number' ||
+        localSchemaValue.type === 'string' ||
+        localSchemaValue.type === 'number' ||
         $typeCheck(data) === null ||
-        $typeCheck(data) === 'array'
+        localSchemaValue.type === 'array'
       "
     >
       <input
@@ -53,15 +54,13 @@
       <div
         class="flex flex-wrap"
         v-else-if="
-          (localSchemaValue.relation && data) || $typeCheck(data) === 'array'
-        "
-        v-if="
-          ($typeCheck(data) === 'array' && data.length > 0) ||
-          ($typeCheck(data) !== 'array' && data)
+          ((localSchemaValue.relation && data) ||
+            localSchemaValue.type === 'array') &&
+          (data.length > 0 || data)
         "
       >
         <div
-          v-if="$typeCheck(data) === 'array'"
+          v-if="localSchemaValue.type === 'array'"
           v-for="(item, index) in data"
           :key="index"
           class="flex items-center justify-center mr-2 mb-2"

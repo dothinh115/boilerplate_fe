@@ -4,6 +4,8 @@ export type TUser = {
   email: string;
   rootUser: boolean;
   role: number;
+  username: string;
+  isEditedUsername: string;
 };
 export default function useAuth() {
   //refreshToken lưu ở cookie, access lưu ở session
