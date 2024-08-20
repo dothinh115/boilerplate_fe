@@ -3,7 +3,8 @@ import { joinURL } from "ufo";
 import { REFRESH_TOKEN } from "@/utils/constants";
 
 export default defineEventHandler(async (event: H3Event) => {
-  const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
+  // const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
+  const apiUrl = "https://api.truyenhot.info";
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath); // Ghép thành api hoàn chỉnh
 
