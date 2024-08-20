@@ -33,7 +33,6 @@ export default defineEventHandler(async (event: H3Event) => {
       event.node.res.setHeader(name, value);
     });
     const responseData = await response.json();
-    console.log(responseData);
     if (!response.ok) {
       throw createError({
         message: responseData.message,
@@ -47,7 +46,7 @@ export default defineEventHandler(async (event: H3Event) => {
   } catch (error: any) {
     const { statusCode } = error;
 
-    event.node.res.statusCode = statusCode || 500;
+    event.node.res.statusCode = statusCode;
     return event.node.res.end(JSON.stringify(error));
   }
 });
