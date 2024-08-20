@@ -13,7 +13,9 @@ export default async function useApi(
     };
   }
 ) {
-  const refresh_token = useCookie(REFRESH_TOKEN);
+  const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+  const accessTokenCookie = useCookie(ACCESS_TOKEN);
+  const accessTokenExpiredTime = useCookie(TOKEN_EXPIRED_TIME);
   const { loading } = useGetState();
   const toast = useToast();
   const { logout } = useAuth();
@@ -23,14 +25,14 @@ export default async function useApi(
   };
 
   const isTokenValid = () => {
-    const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+    const accessToken = accessTokenCookie.value;
     if (!accessToken) return false;
-    let expiredTime = sessionStorage.getItem(TOKEN_EXPIRED_TIME);
+    let expiredTime = accessTokenExpiredTime.value;
     try {
       if (!expiredTime) {
         const decoded: any = jwtDecode(accessToken);
         expiredTime = decoded.exp;
-        sessionStorage.setItem(TOKEN_EXPIRED_TIME, decoded.exp);
+        accessTokenExpiredTime.value = expiredTime;
       }
       if (!expiredTime) return false;
       const currentTime = Math.floor(Date.now() / 1000);
@@ -45,23 +47,18 @@ export default async function useApi(
     const isValid = isTokenValid();
     if (
       !isValid &&
-      refresh_token.value &&
+      refreshTokenCookie.value &&
       request !== "refreshToken" &&
       request !== "logout"
     ) {
       //lúc này nếu token đã invalid thì xoá token đi luôn
-      sessionStorage.removeItem(ACCESS_TOKEN);
+      accessTokenCookie.value = null;
+      accessTokenExpiredTime.value = null;
       await refreshToken();
     }
-    const access_token = sessionStorage.getItem(ACCESS_TOKEN);
     try {
       const result: any = await $fetch(request, {
         ...options,
-        ...(access_token && {
-          headers: {
-            authorization: "Bearer " + access_token,
-          },
-        }),
       });
       return result.data ? result.data : result;
     } catch (error: any) {
@@ -89,19 +86,14 @@ export default async function useApi(
 
   const refreshToken = async () => {
     const body = {
-      refreshToken: refresh_token.value,
+      refreshToken: refreshTokenCookie.value,
       clientId: await useFingerSprint(),
     };
     try {
-      const refreshTokenResponse: any = await useApi("refreshToken", {
+      await useApi("refreshToken", {
         method: "POST",
         body,
       });
-      refresh_token.value = refreshTokenResponse.refreshToken;
-      //lưu accessToken vào session
-      sessionStorage.setItem(ACCESS_TOKEN, refreshTokenResponse.accessToken);
-      const decoded: any = jwtDecode(refreshTokenResponse.accessToken);
-      sessionStorage.setItem(TOKEN_EXPIRED_TIME, decoded.exp);
     } catch (error) {
       await logout();
     }

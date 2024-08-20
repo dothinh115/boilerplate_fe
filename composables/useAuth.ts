@@ -8,14 +8,13 @@ export type TUser = {
   isEditedUsername: string;
 };
 export default function useAuth() {
-  //refreshToken lưu ở cookie, access lưu ở session
-  const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+  const accessTokenCookie = useCookie(ACCESS_TOKEN);
   const user = useState<TUser>("user");
 
   const getUser = async () => {
     try {
-      const fetchUserResult: any = await useApi("/me");
-      if (fetchUserResult.data) user.value = fetchUserResult.data;
+      const response: any = await useApi("/me");
+      if (response.data) user.value = response.data;
       return user.value;
     } catch (error) {
       await logout();
@@ -28,20 +27,14 @@ export default function useAuth() {
         ...data,
         clientId: await useFingerSprint(),
       };
-      const result: any = await useApi("/login", {
+      const response: any = await useApi("/login", {
         method: "POST",
         body: data,
       });
-      if (result) {
-        refreshTokenCookie.value = result?.refreshToken;
-        //lưu accessToken vào session
-        sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
-
-        const fetchUser = await getUser();
-        if (fetchUser) window.location.reload();
+      if (response) {
+        window.location.reload();
+        return response;
       }
-
-      return result;
     } catch (error) {
       clearError();
     }
@@ -49,6 +42,7 @@ export default function useAuth() {
 
   const logout = async () => {
     const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+    const accessTokenExpiredTime = useCookie(TOKEN_EXPIRED_TIME);
     if (refreshTokenCookie.value) {
       try {
         await useApi("logout", {
@@ -60,8 +54,9 @@ export default function useAuth() {
       } catch (error) {}
     }
 
-    sessionStorage.removeItem(ACCESS_TOKEN);
+    accessTokenCookie.value = null;
     refreshTokenCookie.value = null;
+    accessTokenExpiredTime.value = null;
     window.location.reload();
   };
 

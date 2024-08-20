@@ -145,6 +145,7 @@ definePageMeta({
       const { loading } = useGetState();
       const toast = useToast();
       const refreshTokenCookie = useCookie(REFRESH_TOKEN);
+      const accessTokenCookie = useCookie(ACCESS_TOKEN);
       if (tokenId) {
         loading.value = true;
         const params = {
@@ -155,7 +156,7 @@ definePageMeta({
         });
         if (tokenData) {
           const { accessToken, refreshToken } = tokenData;
-          sessionStorage.setItem(ACCESS_TOKEN, accessToken);
+          accessTokenCookie.value = accessToken;
           refreshTokenCookie.value = refreshToken;
         }
         window.location.href = to.path;
