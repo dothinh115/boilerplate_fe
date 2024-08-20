@@ -11,7 +11,7 @@
         <div
           class="space-y-2"
           :class="{
-            '!border-red-500': loginError.email || failed,
+            '!border-red-500': loginError.email,
           }"
         >
           <div class="flex space-x-2">
@@ -24,7 +24,7 @@
             placeholder="Email"
             v-model.trim="loginInfo.email"
             :class="{
-              'input-error': loginError.email || failed,
+              'input-error': loginError.email,
             }"
           />
         </div>
@@ -39,7 +39,7 @@
         <div
           class="space-y-2"
           :class="{
-            '!border-red-500': loginError.email || failed,
+            '!border-red-500': loginError.email,
           }"
         >
           <div class="flex space-x-2">
@@ -52,7 +52,7 @@
             placeholder="Password"
             v-model.trim="loginInfo.password"
             :class="{
-              'input-error': loginError.password || failed,
+              'input-error': loginError.password,
             }"
           />
         </div>
@@ -64,15 +64,7 @@
         </div>
       </div>
     </div>
-    <div class="w-full text-red-300 text-[12px] ml-4 !my-2" v-if="failed">
-      Email hoặc mật khẩu không đúng!
-    </div>
-    <div
-      class="mt-8 space-y-2"
-      :class="{
-        '!mt-2': failed,
-      }"
-    >
+    <div class="mt-8 space-y-2">
       <button
         class="btn btn-green w-full flex items-center justify-center space-x-2"
       >
@@ -91,7 +83,6 @@
 import { useToast } from "vue-toastification";
 
 const { login } = useAuth();
-const failed = ref(false);
 const loginInfo = ref({
   email: "",
   password: "",
@@ -142,7 +133,6 @@ const handleLoginSubmit = async () => {
   if (!isValid.value) return;
   loading.value = true;
   const user = await login(loginInfo.value);
-  if (!user) failed.value = true;
   loading.value = false;
 };
 

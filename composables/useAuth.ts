@@ -23,24 +23,28 @@ export default function useAuth() {
   };
 
   const login = async (data: TLogin) => {
-    data = {
-      ...data,
-      clientId: await useFingerSprint(),
-    };
-    const result: any = await useApi("/login", {
-      method: "POST",
-      body: data,
-    });
-    if (result) {
-      refreshTokenCookie.value = result?.refreshToken;
-      //lưu accessToken vào session
-      sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
+    try {
+      data = {
+        ...data,
+        clientId: await useFingerSprint(),
+      };
+      const result: any = await useApi("/login", {
+        method: "POST",
+        body: data,
+      });
+      if (result) {
+        refreshTokenCookie.value = result?.refreshToken;
+        //lưu accessToken vào session
+        sessionStorage.setItem(ACCESS_TOKEN, result?.accessToken);
 
-      const fetchUser = await getUser();
-      if (fetchUser) window.location.reload();
+        const fetchUser = await getUser();
+        if (fetchUser) window.location.reload();
+      }
+
+      return result;
+    } catch (error) {
+      clearError();
     }
-
-    return result;
   };
 
   const logout = async () => {
