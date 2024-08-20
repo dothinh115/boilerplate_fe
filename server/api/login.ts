@@ -21,33 +21,33 @@ export default defineEventHandler(async (event: H3Event) => {
 
   const body = await readBody(event);
 
-  try {
-    const response = await fetch(target, {
-      method,
-      headers,
-      ...(body && { body: JSON.stringify(body) }),
-    });
+  // try {
+  const response = await fetch(target, {
+    method,
+    headers,
+    ...(body && { body: JSON.stringify(body) }),
+  });
 
-    const status = response.status;
-    response.headers.forEach((value, name) => {
-      event.node.res.setHeader(name, value);
+  const status = response.status;
+  response.headers.forEach((value, name) => {
+    event.node.res.setHeader(name, value);
+  });
+  const responseData = await response.json();
+  if (!response.ok) {
+    throw createError({
+      message: responseData.message,
+      statusCode: status,
     });
-    const responseData = await response.json();
-    if (!response.ok) {
-      throw createError({
-        message: responseData.message,
-        statusCode: status,
-      });
-    }
-    const { refreshToken } = responseData.data;
-    setCookie(event, REFRESH_TOKEN, refreshToken);
-    event.node.res.statusCode = status;
-    return event.node.res.end(JSON.stringify(responseData));
-  } catch (error: any) {
-    console.error("Error Details:", error);
-    const statusCode = error.statusCode || 500;
-    const message = error.message || "Internal Server Error";
-    event.node.res.statusCode = statusCode;
-    return event.node.res.end(JSON.stringify({ message, statusCode, target }));
   }
+  const { refreshToken } = responseData.data;
+  setCookie(event, REFRESH_TOKEN, refreshToken);
+  event.node.res.statusCode = status;
+  return event.node.res.end(JSON.stringify(responseData));
+  // } catch (error: any) {
+  //   console.error("Error Details:", error);
+  //   const statusCode = error.statusCode || 500;
+  //   const message = error.message || "Internal Server Error";
+  //   event.node.res.statusCode = statusCode;
+  //   return event.node.res.end(JSON.stringify({ message, statusCode }));
+  // }
 });
