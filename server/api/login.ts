@@ -3,8 +3,7 @@ import { joinURL } from "ufo";
 import { REFRESH_TOKEN } from "@/utils/constants";
 
 export default defineEventHandler(async (event: H3Event) => {
-  // const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
-  const apiUrl = "https://api.truyenhot.info";
+  const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath); // Ghép thành api hoàn chỉnh
 
@@ -49,6 +48,6 @@ export default defineEventHandler(async (event: H3Event) => {
     const statusCode = error.statusCode || 500;
     const message = error.message || "Internal Server Error";
     event.node.res.statusCode = statusCode;
-    return event.node.res.end(JSON.stringify({ message, statusCode }));
+    return event.node.res.end(JSON.stringify({ message, statusCode, target }));
   }
 });
