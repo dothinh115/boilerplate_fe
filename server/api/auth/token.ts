@@ -30,9 +30,9 @@ export default defineEventHandler(async (event: H3Event) => {
   const method = event.node.req.method;
   const headers: Record<string, string> = {};
   for (const [key, value] of Object.entries(event.node.req.headers)) {
-    if (typeof value === "string") {
+    if (typeof value === "string" && key.toLowerCase() !== "connection") {
       headers[key] = value;
-    } else if (Array.isArray(value)) {
+    } else if (Array.isArray(value) && key.toLowerCase() !== "connection") {
       headers[key] = value.join(", ");
     }
   }
