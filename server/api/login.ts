@@ -44,9 +44,10 @@ export default defineEventHandler(async (event: H3Event) => {
     event.node.res.statusCode = status;
     return event.node.res.end(JSON.stringify(responseData));
   } catch (error: any) {
-    const { statusCode } = error;
-
+    console.error("Error Details:", error);
+    const statusCode = error.statusCode || 500;
+    const message = error.message || "Internal Server Error";
     event.node.res.statusCode = statusCode;
-    return event.node.res.end(JSON.stringify(error));
+    return event.node.res.end(JSON.stringify({ message, statusCode }));
   }
 });
