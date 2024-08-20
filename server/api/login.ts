@@ -46,7 +46,8 @@ export default defineEventHandler(async (event: H3Event) => {
     return event.node.res.end(JSON.stringify(responseData));
   } catch (error: any) {
     const { statusCode } = error;
-    if (statusCode) event.node.res.statusCode = statusCode;
+
+    event.node.res.statusCode = statusCode || 500;
     return event.node.res.end(JSON.stringify(error));
   }
 });
