@@ -60,7 +60,6 @@ export default defineEventHandler(async (event: H3Event) => {
     setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
 
     event.node.res.statusCode = status;
-    console.log(responseData);
     return event.node.res.end(JSON.stringify(responseData));
   } catch (error: any) {
     const { statusCode } = error;
