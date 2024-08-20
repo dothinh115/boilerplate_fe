@@ -12,6 +12,7 @@
         v-for="(route, index) in routes.filter(
           (x) =>
             x.method === 'GET' &&
+            !x.isHidden &&
             (x.roles.includes(user.role) ||
               x.isProtected === false ||
               user.rootUser)
@@ -45,9 +46,8 @@
   </div>
 </template>
 <script setup lang="ts">
-const { hideSidebar, routes } = useGetState();
+const { routes } = useGetState();
 const { user } = useAuth();
-const { screenWidth } = useGetState();
 async function handleFetchRoute() {
   const params = {
     limit: 0,

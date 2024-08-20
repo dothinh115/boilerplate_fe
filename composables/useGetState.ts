@@ -4,6 +4,7 @@ export type TRoute = {
   method: string;
   roles: number[];
   isProtected: boolean;
+  isHidden: boolean;
 }[];
 
 export default function useGetState() {
