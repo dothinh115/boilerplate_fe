@@ -144,21 +144,14 @@ definePageMeta({
       const error = to.query.error as string;
       const { loading } = useGetState();
       const toast = useToast();
-      const refreshTokenCookie = useCookie(REFRESH_TOKEN);
-      const accessTokenCookie = useCookie(ACCESS_TOKEN);
       if (tokenId) {
         loading.value = true;
         const params = {
           tokenId,
         };
-        const tokenData = await useApi("auth/token", {
+        await useApi("auth/token", {
           params,
         });
-        if (tokenData) {
-          const { accessToken, refreshToken } = tokenData;
-          accessTokenCookie.value = accessToken;
-          refreshTokenCookie.value = refreshToken;
-        }
         window.location.href = to.path;
       } else if (error) {
         loading.value = false;

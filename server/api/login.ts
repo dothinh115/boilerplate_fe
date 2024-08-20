@@ -33,6 +33,7 @@ export default defineEventHandler(async (event: H3Event) => {
       event.node.res.setHeader(name, value);
     });
     const responseData = await response.json();
+    console.log(responseData);
     if (!response.ok) {
       throw createError({
         message: responseData.message,
