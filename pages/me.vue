@@ -15,7 +15,7 @@
       <!-- Information list -->
       <template v-for="(key, index) in Object.keys(schema)" :key="index">
         <NuxtLink
-          v-if="key !== 'rootUser'"
+          v-if="!schema[key].hidden"
           :to="
             isEnabled(key)
               ? {
