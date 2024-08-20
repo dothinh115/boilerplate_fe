@@ -12,9 +12,9 @@ export default defineEventHandler(async (event: H3Event) => {
   const headers: Record<string, string> = {};
   //bên trong headers có 1 vài giá trị là string nên ko thể đưa vào request dc mà phải chuyển nó về thành chuỗi
   for (const [key, value] of Object.entries(event.node.req.headers)) {
-    if (typeof value === "string") {
+    if (typeof value === "string" && key.toLowerCase() !== "connection") {
       headers[key] = value;
-    } else if (Array.isArray(value)) {
+    } else if (Array.isArray(value) && key.toLowerCase() !== "connection") {
       headers[key] = value.join(", ");
     }
   }
