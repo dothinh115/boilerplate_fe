@@ -1,6 +1,6 @@
 import { H3Event } from "h3";
 import { joinURL } from "ufo";
-import { REFRESH_TOKEN } from "@/utils/constants";
+import { REFRESH_TOKEN, ACCESS_TOKEN } from "@/utils/constants";
 
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
@@ -21,9 +21,13 @@ export default defineEventHandler(async (event: H3Event) => {
           }
         }
         const responseData = JSON.parse(result);
-        const { refreshToken } = responseData.data;
+        const { refreshToken, accessToken } = responseData.data;
         setCookie(event, REFRESH_TOKEN, refreshToken);
-        event.node.res.end(JSON.stringify(responseData));
+        setCookie(event, ACCESS_TOKEN, accessToken);
+        const status = response.status;
+        event.node.res.end(
+          JSON.stringify({ statusCode: status, message: "Login thành công!" })
+        );
       }
     },
   });

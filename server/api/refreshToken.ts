@@ -31,7 +31,13 @@ export default defineEventHandler(async (event: H3Event) => {
         setCookie(event, REFRESH_TOKEN, refreshToken);
         setCookie(event, ACCESS_TOKEN, accessToken);
         setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
-        event.node.res.end(JSON.stringify(responseData));
+        const status = response.status;
+        event.node.res.end(
+          JSON.stringify({
+            statusCode: status,
+            message: "Refresh token thành công!",
+          })
+        );
       }
     },
   });
