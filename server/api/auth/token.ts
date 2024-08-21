@@ -1,5 +1,6 @@
-import { H3Event, createError, setCookie } from "h3";
+import { H3Event, setCookie } from "h3";
 import { joinURL, withQuery } from "ufo";
+import type { QueryObject } from "ufo";
 import {
   REFRESH_TOKEN,
   ACCESS_TOKEN,
@@ -7,9 +8,12 @@ import {
 } from "@/utils/constants";
 import { jwtDecode } from "jwt-decode";
 
-const parseQueryString = (reqUrl: string | undefined, baseUrl: string) => {
+const parseQueryString = (
+  reqUrl: string | undefined,
+  baseUrl: string
+): QueryObject => {
   const url = new URL(reqUrl || "", baseUrl);
-  const queryObject: any = {};
+  const queryObject: QueryObject = {};
   const params = new URLSearchParams(url.searchParams);
   params.forEach((value, key) => {
     queryObject[key] = value;
@@ -20,10 +24,10 @@ const parseQueryString = (reqUrl: string | undefined, baseUrl: string) => {
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
   const url = event.node.req.url;
-  const queryString = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
+  const queryObject = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
-  const target = queryString
-    ? withQuery(joinURL(apiUrl, replacedPath), queryString)
+  const target = queryObject
+    ? withQuery(joinURL(apiUrl, replacedPath), queryObject)
     : joinURL(apiUrl, replacedPath);
 
   return await proxyRequest(event, target, {
