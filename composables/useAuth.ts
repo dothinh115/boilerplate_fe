@@ -27,14 +27,11 @@ export default function useAuth() {
         ...data,
         clientId: await useFingerSprint(),
       };
-      const response: any = await useApi("/login", {
+      await useApi("/login", {
         method: "POST",
         body: data,
       });
-      if (response) {
-        window.location.reload();
-        return response;
-      }
+      window.location.reload();
     } catch (error) {
       clearError();
     }

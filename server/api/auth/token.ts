@@ -26,44 +26,27 @@ export default defineEventHandler(async (event: H3Event) => {
     ? withQuery(joinURL(apiUrl, replacedPath), queryString)
     : joinURL(apiUrl, replacedPath);
 
-  // Lấy phương thức HTTP và headers từ yêu cầu ban đầu
-  const method = event.node.req.method;
-  const headers: Record<string, string> = {};
-  for (const [key, value] of Object.entries(event.node.req.headers)) {
-    if (typeof value === "string" && key.toLowerCase() !== "connection") {
-      headers[key] = value;
-    } else if (Array.isArray(value) && key.toLowerCase() !== "connection") {
-      headers[key] = value.join(", ");
-    }
-  }
-
-  try {
-    const response = await fetch(target, {
-      method,
-      headers,
-    });
-    const status = response.status;
-    response.headers.forEach((value, name) => {
-      event.node.res.setHeader(name, value);
-    });
-    const responseData = await response.json();
-    if (!response.ok) {
-      throw createError({
-        message: responseData.message,
-        statusCode: status,
-      });
-    }
-    const { refreshToken, accessToken } = responseData.data;
-    const decoded: any = jwtDecode(accessToken);
-    setCookie(event, REFRESH_TOKEN, refreshToken);
-    setCookie(event, ACCESS_TOKEN, accessToken);
-    setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
-
-    event.node.res.statusCode = status;
-    return event.node.res.end(JSON.stringify(responseData));
-  } catch (error: any) {
-    const { statusCode } = error;
-    if (statusCode) event.node.res.statusCode = statusCode;
-    return event.node.res.end(JSON.stringify(error));
-  }
+  return await proxyRequest(event, target, {
+    async onResponse(event, response) {
+      const responseBodyStream = response.body;
+      if (responseBodyStream instanceof ReadableStream && response.ok) {
+        const reader = responseBodyStream.getReader();
+        let result = "";
+        let done, value;
+        while (!done) {
+          ({ done, value } = await reader.read());
+          if (value) {
+            result += new TextDecoder().decode(value);
+          }
+        }
+        const responseData = JSON.parse(result);
+        const { refreshToken, accessToken } = responseData.data;
+        const decoded: any = jwtDecode(accessToken);
+        setCookie(event, REFRESH_TOKEN, refreshToken);
+        setCookie(event, ACCESS_TOKEN, accessToken);
+        setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
+        event.node.res.end(JSON.stringify(responseData));
+      }
+    },
+  });
 });
