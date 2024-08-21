@@ -1,10 +1,12 @@
 <template>
-  <div class="relative flex items-center cursor-pointer">
+  <div class="relative flex items-center cursor-pointer w-fit">
     <input
       type="checkbox"
       class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-full before:w-full before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-gray-300 checked:bg-indigo-500"
       :checked
       @change="change"
+      v-model="localModel"
+      :id
     />
     <span
       class="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100"
@@ -28,13 +30,17 @@
 </template>
 <script setup lang="ts">
 type TProps = {
-  checked: boolean;
+  checked?: boolean;
+  modelValue?: boolean;
+  id?: string;
 };
-defineProps<TProps>();
-const emits = defineEmits(["change"]);
+const props = defineProps<TProps>();
+const localModel = ref(props.modelValue);
+const emits = defineEmits(["change", "update:modelValue"]);
 function change(event: Event) {
   const target = event.target as HTMLInputElement;
   const checked = target.checked;
   emits("change", checked);
+  emits("update:modelValue", checked);
 }
 </script>

@@ -16,7 +16,7 @@
         >
           <div class="flex space-x-2">
             <IconUser class="text-gray-900" />
-            <span>Email address</span>
+            <span>Email</span>
           </div>
           <input
             type="email"
@@ -44,12 +44,12 @@
         >
           <div class="flex space-x-2">
             <IconPassword class="text-gray-900" />
-            <span>Password</span>
+            <span>Mật khẩu</span>
           </div>
           <input
             type="password"
             class="input"
-            placeholder="Password"
+            placeholder="Mật khẩu"
             v-model.trim="loginInfo.password"
             :class="{
               'input-error': loginError.password,
@@ -62,6 +62,12 @@
         >
           {{ loginError.password }}
         </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <InputCheckbox v-model="loginInfo.remember" id="remember-me" />
+        <label class="text-xs text-gray-700 cursor-pointer" for="remember-me"
+          >Ghi nhớ đăng nhập</label
+        >
       </div>
     </div>
     <div class="mt-8 space-y-2">
@@ -86,6 +92,7 @@ const { login } = useAuth();
 const loginInfo = ref({
   email: "",
   password: "",
+  remember: false,
 });
 
 const loginError = ref<{ [key: string]: string }>({
@@ -113,6 +120,7 @@ watch(
 const isValid = computed(() => {
   let result = true;
   Object.entries(loginInfo.value).map(([key, value]) => {
+    if (key === "remember") return;
     if (!value) {
       result = false;
       loginError.value[key] = `${
@@ -132,7 +140,7 @@ const isValid = computed(() => {
 const handleLoginSubmit = async () => {
   if (!isValid.value) return;
   loading.value = true;
-  const user = await login(loginInfo.value);
+  await login(loginInfo.value);
   loading.value = false;
 };
 

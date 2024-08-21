@@ -35,7 +35,7 @@ export default async function useApi(
         accessTokenExpiredTime.value = expiredTime;
       }
       if (!expiredTime) return false;
-      const currentTime = Math.floor(Date.now() / 1000);
+      const currentTime = Math.floor(Date.now() / 1000) + 1;
       if (Number(expiredTime) < currentTime) return false;
       return true;
     } catch (error) {

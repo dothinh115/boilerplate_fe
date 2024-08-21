@@ -1,10 +1,6 @@
 import { H3Event, setCookie } from "h3";
 import { joinURL } from "ufo";
-import {
-  REFRESH_TOKEN,
-  ACCESS_TOKEN,
-  TOKEN_EXPIRED_TIME,
-} from "@/utils/constants";
+import { ACCESS_TOKEN, TOKEN_EXPIRED_TIME } from "@/utils/constants";
 import { jwtDecode } from "jwt-decode";
 
 export default defineEventHandler(async (event: H3Event) => {
@@ -15,6 +11,7 @@ export default defineEventHandler(async (event: H3Event) => {
   return await proxyRequest(event, target, {
     async onResponse(event, response) {
       const responseBodyStream = response.body;
+
       if (responseBodyStream instanceof ReadableStream && response.ok) {
         const reader = responseBodyStream.getReader();
         let result = "";
@@ -26,11 +23,16 @@ export default defineEventHandler(async (event: H3Event) => {
           }
         }
         const responseData = JSON.parse(result);
-        const { refreshToken, accessToken } = responseData.data;
-        const decoded: any = jwtDecode(accessToken);
-        setCookie(event, REFRESH_TOKEN, refreshToken);
-        setCookie(event, ACCESS_TOKEN, accessToken);
-        setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
+        const { accessToken } = responseData.data;
+        const accessTokenDecoded: any = jwtDecode(accessToken);
+        const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
+
+        setCookie(event, ACCESS_TOKEN, accessToken, {
+          expires: accessTokenExpires,
+        });
+        setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
+          expires: accessTokenExpires,
+        });
         const status = response.status;
         event.node.res.end(
           JSON.stringify({
