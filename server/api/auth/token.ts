@@ -45,10 +45,15 @@ export default defineEventHandler(async (event: H3Event) => {
         }
         const responseData = JSON.parse(result);
         const { refreshToken, accessToken } = responseData.data;
-        const decoded: any = jwtDecode(accessToken);
+        const accessTokenDecoded: any = jwtDecode(accessToken);
+        const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
         setCookie(event, REFRESH_TOKEN, refreshToken);
-        setCookie(event, ACCESS_TOKEN, accessToken);
-        setCookie(event, TOKEN_EXPIRED_TIME, decoded.exp);
+        setCookie(event, ACCESS_TOKEN, accessToken, {
+          expires: accessTokenExpires,
+        });
+        setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
+          expires: accessTokenExpires,
+        });
         const status = response.status;
         event.node.res.end(
           JSON.stringify({ statusCode: status, message: "Login thành công!" })
