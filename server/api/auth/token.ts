@@ -20,7 +20,7 @@ const parseQueryString = (reqUrl: string | undefined, baseUrl: string) => {
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
   const url = event.node.req.url;
-  const queryString = parseQueryString(url, apiUrl);
+  const queryString = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = queryString
     ? withQuery(joinURL(apiUrl, replacedPath), queryString)
