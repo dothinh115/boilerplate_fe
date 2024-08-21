@@ -49,6 +49,8 @@ export default defineEventHandler(async (event: H3Event) => {
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
+          secure: true,
+          sameSite: "lax",
           expires: accessTokenExpires,
         });
         const status = response.status;

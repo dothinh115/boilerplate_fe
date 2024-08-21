@@ -47,11 +47,22 @@ export default defineEventHandler(async (event: H3Event) => {
         const { refreshToken, accessToken } = responseData.data;
         const accessTokenDecoded: any = jwtDecode(accessToken);
         const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
-        setCookie(event, REFRESH_TOKEN, refreshToken);
+        const refreshTokenDecoded: any = jwtDecode(refreshToken);
+        const refreshTokenExpires = new Date(refreshTokenDecoded.exp * 1000);
+
+        setCookie(event, REFRESH_TOKEN, refreshToken, {
+          secure: true,
+          sameSite: "lax",
+          expires: refreshTokenExpires,
+        });
         setCookie(event, ACCESS_TOKEN, accessToken, {
+          secure: true,
+          sameSite: "lax",
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
+          secure: true,
+          sameSite: "lax",
           expires: accessTokenExpires,
         });
         const status = response.status;
