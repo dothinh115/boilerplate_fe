@@ -27,7 +27,7 @@ export default function useAuth() {
         ...data,
         clientId: await useFingerSprint(),
       };
-      await useApi("/login", {
+      await useApi("login", {
         method: "POST",
         body: data,
       });

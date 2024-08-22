@@ -1,20 +1,20 @@
 <template>
   <form
-    class="w-[320px] h-fit space-y-2 relative"
+    class="w-[320px] h-fit space-y-4 relative"
     @submit.prevent="handleLoginSubmit"
   >
     <div class="flex justify-center">
       <IconLoginAdmin class="text-gray-200 w-[100px]" />
     </div>
-    <div class="space-y-2 bg-gray-50 p-3 rounded-[15px] text-gray-900">
-      <div class="space-y-1">
+    <div class="space-y-4 bg-gray-50 p-4 rounded-xl text-gray-900 shadow-md">
+      <div class="space-y-2">
         <div
-          class="space-y-2"
+          class="space-y-1"
           :class="{
             '!border-red-500': loginError.email,
           }"
         >
-          <div class="flex space-x-2">
+          <div class="flex items-center space-x-2">
             <IconUser class="text-gray-900" />
             <span>Email</span>
           </div>
@@ -28,21 +28,18 @@
             }"
           />
         </div>
-        <div
-          class="w-full text-red-500 text-[12px] ml-2"
-          v-if="loginError.email"
-        >
+        <div class="text-red-500 text-sm" v-if="loginError.email">
           {{ loginError.email }}
         </div>
       </div>
       <div>
         <div
-          class="space-y-2"
+          class="space-y-1"
           :class="{
-            '!border-red-500': loginError.email,
+            '!border-red-500': loginError.password,
           }"
         >
-          <div class="flex space-x-2">
+          <div class="flex items-center space-x-2">
             <IconPassword class="text-gray-900" />
             <span>Mật khẩu</span>
           </div>
@@ -56,25 +53,23 @@
             }"
           />
         </div>
-        <div
-          class="w-full text-red-500 text-[12px] ml-2"
-          v-if="loginError.password"
-        >
+        <div class="text-red-500 text-sm" v-if="loginError.password">
           {{ loginError.password }}
         </div>
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2 text-gray-700">
         <InputCheckbox v-model="loginInfo.remember" id="remember-me" />
-        <label class="text-xs text-gray-700 cursor-pointer" for="remember-me"
-          >Ghi nhớ đăng nhập</label
-        >
+        <label class="text-sm cursor-pointer" for="remember-me">
+          Ghi nhớ đăng nhập
+        </label>
       </div>
     </div>
-    <div class="mt-8 space-y-2">
+    <div class="mt-6 space-y-2">
       <button
         class="btn btn-green w-full flex items-center justify-center space-x-2"
       >
-        <span>Đăng nhập</span> <span class="gg-spinner" v-if="loading"></span>
+        <span>Đăng nhập</span>
+        <span class="gg-spinner" v-if="loading"></span>
       </button>
       <div
         class="relative flex items-center justify-center text-gray-200 before:absolute before:contents-[''] before:block before:h-[1px] before:w-full before:bg-gray-100 before:z-[1]"

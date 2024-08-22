@@ -13,7 +13,6 @@ export default async function useApi(
     };
   }
 ) {
-  const refreshTokenCookie = useCookie(REFRESH_TOKEN);
   const accessTokenCookie = useCookie(ACCESS_TOKEN);
   const accessTokenExpiredTime = useCookie(TOKEN_EXPIRED_TIME);
   const { loading } = useGetState();
@@ -45,15 +44,7 @@ export default async function useApi(
 
   const fetch = async () => {
     const isValid = isTokenValid();
-    if (
-      !isValid &&
-      refreshTokenCookie.value &&
-      request !== "refreshToken" &&
-      request !== "logout"
-    ) {
-      //lúc này nếu token đã invalid thì xoá token đi luôn
-      accessTokenCookie.value = null;
-      accessTokenExpiredTime.value = null;
+    if (!isValid && request !== "logout" && request !== "login") {
       await refreshToken();
     }
     try {
@@ -86,13 +77,13 @@ export default async function useApi(
 
   const refreshToken = async () => {
     const body = {
-      refreshToken: refreshTokenCookie.value,
       clientId: await useFingerSprint(),
     };
     try {
-      await useApi("refreshToken", {
+      await $fetch("refreshToken", {
         method: "POST",
         body,
+        baseURL: "/api",
       });
     } catch (error) {
       await logout();
