@@ -10,11 +10,13 @@ export default defineEventHandler(async (event) => {
     ...body,
     clientId,
   };
+  console.log(target);
   try {
     const response: any = await $fetch(target, {
       method: "POST",
       body: modifiedBody,
     });
+    console.log("response", response);
     return event.node.res.end(response.data);
   } catch (error: any) {
     throw createError({ ...error });
