@@ -8,7 +8,6 @@ export type TUser = {
   isEditedUsername: string;
 };
 export default function useAuth() {
-  const accessTokenCookie = useCookie(ACCESS_TOKEN);
   const user = useState<TUser>("user");
 
   const getUser = async () => {
@@ -17,7 +16,7 @@ export default function useAuth() {
       if (response.data) user.value = response.data;
       return user.value;
     } catch (error) {
-      await logout();
+      // await logout();
     }
   };
 
@@ -38,23 +37,12 @@ export default function useAuth() {
   };
 
   const logout = async () => {
-    const refreshTokenCookie = useCookie(REFRESH_TOKEN);
-    const accessTokenExpiredTime = useCookie(TOKEN_EXPIRED_TIME);
-    if (refreshTokenCookie.value) {
-      try {
-        await useApi("logout", {
-          method: "POST",
-          body: {
-            refreshToken: refreshTokenCookie.value,
-          },
-        });
-      } catch (error) {}
+    try {
+      await useApi("logout");
+    } catch (error) {
+    } finally {
+      window.location.reload();
     }
-
-    accessTokenCookie.value = null;
-    refreshTokenCookie.value = null;
-    accessTokenExpiredTime.value = null;
-    window.location.reload();
   };
 
   return { login, getUser, logout, user };

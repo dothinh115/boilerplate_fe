@@ -51,16 +51,19 @@ export default defineEventHandler(async (event: H3Event) => {
         const refreshTokenExpires = new Date(refreshTokenDecoded.exp * 1000);
 
         setCookie(event, REFRESH_TOKEN, refreshToken, {
+          httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: refreshTokenExpires,
         });
         setCookie(event, ACCESS_TOKEN, accessToken, {
+          httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
+          httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,

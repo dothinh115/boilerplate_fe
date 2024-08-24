@@ -1,7 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const refreshToken = useCookie(REFRESH_TOKEN);
   const { user, getUser } = useAuth();
-  if (refreshToken.value && !user.value) {
+  if (!user.value) {
     await getUser();
   }
 
@@ -9,6 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo("/", { replace: true });
   }
 
-  if (to.name !== "login" && !user.value)
+  if (to.name !== "login" && !user.value) {
     return navigateTo("/login", { replace: true });
+  }
 });

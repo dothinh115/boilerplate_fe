@@ -1,4 +1,3 @@
-import { jwtDecode } from "jwt-decode";
 import { useToast } from "vue-toastification";
 
 export default async function useApi(
@@ -13,8 +12,6 @@ export default async function useApi(
     };
   }
 ) {
-  const accessTokenCookie = useCookie(ACCESS_TOKEN);
-  const accessTokenExpiredTime = useCookie(TOKEN_EXPIRED_TIME);
   const { loading } = useGetState();
   const toast = useToast();
   const { logout } = useAuth();
@@ -23,30 +20,7 @@ export default async function useApi(
     baseURL: "/api",
   };
 
-  const isTokenValid = () => {
-    const accessToken = accessTokenCookie.value;
-    if (!accessToken) return false;
-    let expiredTime = accessTokenExpiredTime.value;
-    try {
-      if (!expiredTime) {
-        const decoded: any = jwtDecode(accessToken);
-        expiredTime = decoded.exp;
-        accessTokenExpiredTime.value = expiredTime;
-      }
-      if (!expiredTime) return false;
-      const currentTime = Math.floor(Date.now() / 1000) + 1;
-      if (Number(expiredTime) < currentTime) return false;
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-
   const fetch = async () => {
-    const isValid = isTokenValid();
-    if (!isValid && request !== "logout" && request !== "login") {
-      await refreshToken();
-    }
     try {
       const result: any = await $fetch(request, {
         ...options,
@@ -68,25 +42,10 @@ export default async function useApi(
         if (route.query.sort)
           router.push({ query: { sort: undefined }, replace: true });
       } else {
-        toast.error(error.data ? error.data.message : "Lỗi không xác định!");
+        toast.error(error.data.message);
       }
       clearError();
       throw error;
-    }
-  };
-
-  const refreshToken = async () => {
-    const body = {
-      clientId: await useFingerSprint(),
-    };
-    try {
-      await $fetch("refreshToken", {
-        method: "POST",
-        body,
-        baseURL: "/api",
-      });
-    } catch (error) {
-      await logout();
     }
   };
 
