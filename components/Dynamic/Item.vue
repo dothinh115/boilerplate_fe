@@ -1,12 +1,12 @@
 <template>
   <div
-    class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto max-h-[90dvh] flex items-center"
+    class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto flex items-center min-h-[100dvh] flex-col"
   >
     <div
-      class="md:rounded-[10px] md:max-h-[95dvh] max-h-[100dvh] overflow-y-auto hidden-scrollbar relative w-full"
+      class="md:rounded-[10px] md:max-h-[95dvh] max-h-[100dvh] overflow-y-auto hidden-scrollbar relative w-full flex-grow flex flex-col"
     >
       <div
-        class="flex items-center justify-between space-x-2 title sticky top-0 z-[1000] bg-white shadow-md"
+        class="flex items-center justify-between space-x-2 title sticky top-0 z-[1000] bg-white shadow-md flex-shrink-0"
       >
         <i
           class="fa-solid fa-arrow-left-long cursor-pointer bg-white p-2 rounded-full text-indigo-600 lg:hover:bg-indigo-900 lg:hover:text-white transition duration-200"
@@ -29,7 +29,7 @@
           ></i>
         </div>
       </div>
-      <div class="p-4 space-y-5 bg-gray-100">
+      <div class="p-4 space-y-5 bg-gray-100 flex-grow">
         <DynamicItemField
           v-for="([schemaKey, schemaValue], index) in Object.entries(schema)"
           :key="index"
@@ -66,6 +66,7 @@
     </Modal>
   </Teleport>
 </template>
+
 <script setup lang="ts">
 import { useToast } from "vue-toastification";
 
