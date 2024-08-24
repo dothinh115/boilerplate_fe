@@ -8,19 +8,16 @@ import {
 } from "@/utils/constants";
 import { jwtDecode } from "jwt-decode";
 
-//hàm check token valid
 const isTokenValid = (event: H3Event) => {
-  const accessToken = getCookie(event, ACCESS_TOKEN); //lấy accessToken từ cookie
+  const accessToken = getCookie(event, ACCESS_TOKEN);
   if (!accessToken) return false;
 
-  //lấy exp time từ cookie
   let expiredTime: string | number | undefined = getCookie(
     event,
     TOKEN_EXPIRED_TIME
   );
 
   try {
-    //nếu ko có exp time thì decode token lấy và set luôn vào cookie
     if (!expiredTime) {
       const decoded = jwtDecode(accessToken);
       if (!decoded.exp) return false;
@@ -32,7 +29,6 @@ const isTokenValid = (event: H3Event) => {
         expires: accessTokenExpires,
       });
     }
-    //so sánh thời gian hiện tại và exp time, nếu đã hết hạn thì return false
 
     const currentTime = Math.floor(Date.now() / 1000) + 1;
     if (Number(expiredTime) < currentTime) {
@@ -44,16 +40,14 @@ const isTokenValid = (event: H3Event) => {
   return true;
 };
 
-//logic refresh token
 const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
-  const target = joinURL(apiUrl, "refreshToken"); //ghép api refreshToken hoàn chỉnh
-  const refreshToken = getCookie(event, REFRESH_TOKEN); //lấy refreshToken từ cookie
-  const clientId = getCookie(event, CLIENT_ID); //lấy clientId từ cookie
+  const target = joinURL(apiUrl, "refreshToken");
+  const refreshToken = getCookie(event, REFRESH_TOKEN);
+  const clientId = getCookie(event, CLIENT_ID);
   const body = {
     refreshToken,
     clientId,
   };
-  //nếu ko có token hoặc clientId thì trả lỗi
   if (!refreshToken || !clientId) {
     throw createError({
       statusCode: 400,
@@ -62,7 +56,6 @@ const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
   }
 
   try {
-    //khi có cả 2 rồi thì tiến hành post api để renew access token
     const response: any = await $fetch(target, {
       method: "POST",
       body,
@@ -73,7 +66,6 @@ const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
     if (accessToken) {
       const accessTokenDecoded: any = jwtDecode(accessToken);
       const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
-      //lần lượt set cookie cho access token và exp time
       setCookie(event, ACCESS_TOKEN, accessToken, {
         httpOnly: true,
         secure: true,
@@ -86,7 +78,7 @@ const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
         sameSite: "lax",
         expires: accessTokenExpires,
       });
-      return accessToken; //trả ra accessToken mới để gắn vào headers vì token cũ đã hết hạn
+      return accessToken;
     } else {
       throw createError({
         statusCode: 400,
@@ -100,10 +92,10 @@ const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
 };
 
 export default defineEventHandler(async (event: H3Event) => {
-  const { apiUrl } = useRuntimeConfig().public; //lấy api thực từ env
-  const replacedPath = event.path.replace(/^\/api\//, ""); //bỏ prefix /api
-  const target = joinURL(apiUrl, replacedPath); //ghép thành api hoàn chỉnh
-  let accessToken = getCookie(event, ACCESS_TOKEN); //lấy access token từ cookie
+  const { apiUrl } = useRuntimeConfig().public;
+  const replacedPath = event.path.replace(/^\/api\//, "");
+  const target = joinURL(apiUrl, replacedPath);
+  let accessToken = getCookie(event, ACCESS_TOKEN);
   const refreshToken = getCookie(event, REFRESH_TOKEN);
 
   const tokenValid = isTokenValid(event);
@@ -116,7 +108,6 @@ export default defineEventHandler(async (event: H3Event) => {
         message: "Refresh token thất bại!",
       });
     }
-    //nếu token cũ hết hạn thì phải set lại token mới vào biến
     accessToken = newAccessToken;
   }
   return await proxyRequest(event, target, {
