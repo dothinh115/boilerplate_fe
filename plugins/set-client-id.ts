@@ -12,6 +12,7 @@ export default defineNuxtPlugin(async () => {
 
     if (clientId) {
       clientIdCookie.value = clientId;
+      console.log("Cookie has been set:", clientIdCookie.value);
     } else {
       console.error(
         "Failed to set cookie: useFingerSprint did not return a value"
