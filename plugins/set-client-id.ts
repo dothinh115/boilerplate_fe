@@ -2,7 +2,6 @@ import { CLIENT_ID } from "@/utils/constants";
 export default defineNuxtPlugin(async () => {
   try {
     const clientIdCookie = useCookie(CLIENT_ID, {
-      httpOnly: true,
       sameSite: "lax",
       secure: false,
     });
