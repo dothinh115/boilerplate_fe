@@ -12,11 +12,9 @@
 <script lang="ts" setup>
 const baseUrl = `${window.location.protocol}//${window.location.host}`;
 async function handleLoginWithGoogle() {
-  const clientId = await useFingerSprint();
   const authUrl = await useApi("/auth/google/url", {
     method: "POST",
     body: {
-      clientId,
       redirectTo: `${baseUrl}/login`,
     },
   });
