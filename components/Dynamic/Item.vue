@@ -1,6 +1,6 @@
 <template>
   <div
-    class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto flex items-center min-h-[100dvh] flex-col"
+    class="space-y-8 xl:w-[60%] lg:w-[80%] md:w-[95%] w-full mx-auto flex items-center max-md:min-h-[100dvh] flex-col"
   >
     <div
       class="md:rounded-[10px] md:max-h-[95dvh] max-h-[100dvh] overflow-y-auto hidden-scrollbar relative w-full flex-grow flex flex-col"

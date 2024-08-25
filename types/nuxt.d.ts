@@ -1,13 +1,7 @@
-import { ofetch } from "ofetch";
+import { $Fetch } from "ofetch";
 
-declare module "#app" {
+declare module "nuxt/app" {
   interface NuxtApp {
-    $apiFetch: $Fetch;
-  }
-}
-
-declare module "@vue/runtime-core" {
-  interface ComponentCustomProperties {
     $apiFetch: $Fetch;
   }
 }
