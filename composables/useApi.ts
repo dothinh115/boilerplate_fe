@@ -1,10 +1,7 @@
 import type { FetchOptions } from "ofetch";
 
-export default async function useApi(request: string, options: FetchOptions) {
+export default async function useApi(request: string, options?: FetchOptions) {
   const { $apiFetch } = useNuxtApp();
-  options = {
-    ...options,
-  };
 
   const fetch = async () => {
     const result: any = await $apiFetch(request, {

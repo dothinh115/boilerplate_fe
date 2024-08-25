@@ -10,8 +10,9 @@
 </template>
 
 <script lang="ts" setup>
-const baseUrl = `${window.location.protocol}//${window.location.host}`;
 async function handleLoginWithGoogle() {
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+
   const authUrl = await useApi("/auth/google/url", {
     method: "POST",
     body: {

@@ -5,14 +5,14 @@
         <h1
           class="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-gray-50"
         >
-          {{ error.statusCode }}
+          {{ error?.statusCode }}
         </h1>
 
         <p class="mb-4 text-xl font-light text-gray-200">
           {{
-            error.statusCode === 404
+            error?.statusCode === 404
               ? "Không tìm thấy page này trong hệ thống"
-              : error.statusMessage
+              : error?.statusMessage
           }}
         </p>
         <button
