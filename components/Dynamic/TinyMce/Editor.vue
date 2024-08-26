@@ -146,7 +146,7 @@ const imgAlt = ref("");
 const imgIdOrPath = ref("");
 const imgWidth = ref(500);
 const imgHeight = ref(500);
-const { loading } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const data = ref<any>(props.modelValue);
 const editorEl = ref<HTMLDivElement | null>(null);
 const mentionList = ref<TUser[]>([]);
@@ -354,7 +354,7 @@ async function handleInsertImage() {
 
 async function handleUploadImage(file: File) {
   if (file) {
-    loading.value = true;
+    startLoading();
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -366,9 +366,10 @@ async function handleUploadImage(file: File) {
         const img = newFile.data;
         imgIdOrPath.value = img.id;
       }
-      loading.value = false;
     } catch (error: any) {
       imgIdOrPath.value = error.data.fileId;
+    } finally {
+      finishLoading();
     }
   }
 }

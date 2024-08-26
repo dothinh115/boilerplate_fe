@@ -145,10 +145,10 @@ definePageMeta({
     async (to) => {
       const tokenId = to.query.tokenId as string;
       const error = to.query.error as string;
-      const { loading } = useGetState();
+      const { startLoading, finishLoading } = useLoading();
       const toast = useToast();
       if (tokenId) {
-        loading.value = true;
+        startLoading();
         const params = {
           tokenId,
         };
@@ -157,7 +157,7 @@ definePageMeta({
         });
         window.location.href = to.path;
       } else if (error) {
-        loading.value = false;
+        finishLoading();
         toast.error("Đã có lỗi xảy ra!");
       }
     },

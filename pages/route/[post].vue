@@ -245,7 +245,8 @@ const filtering = ref(false);
 const data = ref<any>(null);
 const totalPages = ref(0);
 const schema = useState<any>(schemaApi);
-const { loading, screenWidth, shouldRevalidate } = useGetState();
+const { screenWidth, shouldRevalidate } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const searchObject = useState<any>("searchObject", () => ({}));
 const modalFilter = ref(false);
 const isSearching = ref(false);
@@ -296,9 +297,9 @@ const isFiltering = computed(() => {
 });
 
 async function handleRevalidate() {
-  loading.value = true;
+  startLoading();
   await getList();
-  loading.value = false;
+  finishLoading();
 }
 
 watchEffect(() => {
@@ -314,10 +315,10 @@ function handleReviewFilter() {
 }
 
 async function handleApplyFilter() {
-  loading.value = true;
+  startLoading();
   await handleRevalidate();
   currentPage.value = 1;
-  loading.value = false;
+  finishLoading();
   if (screenWidth.value < 768) modalFilter.value = false;
   else isSearching.value = false;
 }
@@ -329,10 +330,10 @@ async function handleUnReviewFilter() {
 
 async function handleUnApplyFilter() {
   handleUnReviewFilter();
-  loading.value = true;
+  startLoading();
   await handleRevalidate();
   currentPage.value = 1;
-  loading.value = false;
+  finishLoading();
 }
 
 function handleAddFilter() {
@@ -373,9 +374,9 @@ watch(
   async (newValue) => {
     currentPage.value = Number(newValue);
     if (!route.query.page) currentPage.value = 1;
-    loading.value = true;
+    startLoading();
     await handleRevalidate();
-    loading.value = false;
+    finishLoading();
   }
 );
 
@@ -384,9 +385,9 @@ watch(
   async (newVal) => {
     if (newVal) {
       sortBy.value = newVal as string;
-      loading.value = true;
+      startLoading();
       await handleRevalidate();
-      loading.value = false;
+      finishLoading();
     }
   }
 );
@@ -422,10 +423,10 @@ watch(shouldRevalidate, async (newVal) => {
 });
 
 async function fetchAll() {
-  loading.value = true;
+  startLoading();
   await getSchema();
   await getList();
-  loading.value = false;
+  finishLoading();
 }
 
 function updateSearchObject(data: any) {

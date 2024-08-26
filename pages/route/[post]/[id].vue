@@ -8,7 +8,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const { id, post } = route.params;
-const { loading } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const schemaApi = `/schema/${route.params.post}`;
 const dataApi = `/${post}`;
 const schema = useState<any>(schemaApi);
@@ -31,10 +31,10 @@ async function getData() {
 }
 
 async function fetchData() {
-  loading.value = true;
+  startLoading();
   await getSchema();
   await getData();
-  loading.value = false;
+  finishLoading();
 }
 
 function handleClose() {

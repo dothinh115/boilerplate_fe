@@ -90,7 +90,8 @@ import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
 const isMenuShowed = ref(false);
-const { loading, screenWidth, shouldRevalidate } = useGetState();
+const { screenWidth, shouldRevalidate } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const folderData = ref<TFolder[]>([]);
 const fileData = ref<any[]>([]);
 const fileSchema = useState("/schema/file");
@@ -159,11 +160,11 @@ async function getFileSchema() {
 }
 
 async function fetchAll() {
-  loading.value = true;
+  startLoading();
   await getFileSchema();
   // await getFolders();
   await getFiles();
-  loading.value = false;
+  finishLoading();
 }
 
 async function handleMultipleDelete() {
@@ -222,9 +223,9 @@ watch(
 );
 
 async function revalidate() {
-  loading.value = true;
+  startLoading();
   await getFiles();
-  loading.value = false;
+  finishLoading();
 }
 // onBeforeRouteUpdate(async (to, from) => {
 //   if (

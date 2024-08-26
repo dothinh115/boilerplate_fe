@@ -21,5 +21,5 @@
   </Teleport>
 </template>
 <script setup lang="ts">
-const { loading } = useGetState();
+const { loading } = useLoading();
 </script>

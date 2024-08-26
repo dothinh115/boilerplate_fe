@@ -37,7 +37,6 @@
   </main>
 </template>
 <script setup lang="ts">
-const toastTimeout = ref();
 const { screenWidth, hideSidebar } = useGetState();
 
 window.addEventListener("resize", () => {

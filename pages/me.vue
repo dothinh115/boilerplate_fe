@@ -54,7 +54,7 @@
 const { user } = useAuth();
 const schemaApi = "/schema/user";
 const schema = useState<any>(schemaApi, () => {});
-const { loading } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 
 function isEnabled(key: string) {
   if (
@@ -77,10 +77,10 @@ function isEnabled(key: string) {
 
 async function getSchema() {
   if (schema.value) return;
-  loading.value = true;
+  startLoading();
   const result: any = await useApi(schemaApi);
   schema.value = result;
-  loading.value = false;
+  finishLoading();
 }
 
 await getSchema();

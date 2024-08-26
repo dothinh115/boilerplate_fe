@@ -107,7 +107,7 @@ const schema = useState<any>(schemaApi);
 const field = route.params.field as string;
 const fieldData = ref<any>(user.value[field as keyof TUser] || false);
 const { isFromInside } = useGetState();
-const { loading } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const toast = useToast();
 const { getUser } = useAuth();
 
@@ -193,7 +193,7 @@ async function handleConfirm() {
   if (route.params.field === "password") {
     if (!isChangePasswordValid.value) return;
   }
-  loading.value = true;
+  startLoading();
   await useApi("/me", {
     method: "PATCH",
     body: {
@@ -206,7 +206,7 @@ async function handleConfirm() {
   await getUser();
   await handleClose();
   toast.success("Thành công");
-  loading.value = false;
+  finishLoading();
 }
 
 watch(

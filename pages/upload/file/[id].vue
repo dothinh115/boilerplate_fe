@@ -110,7 +110,8 @@ import type { TFile } from "~/components/File/Item.vue";
 const route = useRoute();
 const router = useRouter();
 const modal = ref(false);
-const { isFromInside, loading } = useGetState();
+const { isFromInside } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const fileData = ref<TFile>();
 const fileSchema = useState<Object>("/schema/file");
 const width = ref();
@@ -147,10 +148,10 @@ function handleGoBack() {
 }
 
 async function fetchAll() {
-  loading.value = true;
+  startLoading();
   await getFileSchema();
   await getFileData();
-  loading.value = false;
+  finishLoading();
 }
 
 await fetchAll();

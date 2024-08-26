@@ -8,18 +8,17 @@
 <script setup lang="ts">
 const route = useRoute();
 const modal = ref(false);
-const { loading } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const schemaApi = `/schema/${route.params.post}`;
 const schema = useState<any>(schemaApi);
 setTimeout(() => (modal.value = true), 50);
 
 async function getSchema() {
   if (schema.value) return;
-  loading.value = true;
-
+  startLoading();
   const result: any = await useApi(schemaApi);
   schema.value = result.data;
-  loading.value = false;
+  finishLoading();
 }
 
 function handleClose() {

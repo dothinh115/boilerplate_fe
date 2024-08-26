@@ -8,15 +8,13 @@ export type TRoute = {
 }[];
 
 export default function useGetState() {
-  const loading = useState("loading", () => false);
-  const screenWidth = useState("screenWidth");
+  const screenWidth = useState<number>("screenWidth");
   const hideSidebar = useState("hideSidebar", () => false);
   const routes = useState<TRoute>("route", () => []);
   const isFromInside = useState<boolean>("isFromInside", () => false);
   const shouldRevalidate = useState<boolean>("shouldRevalidate", () => false);
 
   return {
-    loading,
     screenWidth,
     hideSidebar,
     routes,

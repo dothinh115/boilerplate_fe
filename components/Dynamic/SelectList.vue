@@ -205,7 +205,8 @@ const data = ref<any>([]);
 const api = `/${props.relationData.relation}`;
 const schemaApi = `/schema/${props.relationData.relation}`;
 const schema = useState<any>(schemaApi);
-const { loading, screenWidth } = useGetState();
+const { screenWidth } = useGetState();
+const { startLoading, finishLoading } = useLoading();
 const currentPage = ref(1);
 const perPage = 20;
 const totalPages = ref(0);
@@ -300,10 +301,10 @@ async function getSchema() {
 }
 
 async function fetchAll() {
-  loading.value = true;
+  startLoading();
   await getSchema();
   await getData();
-  loading.value = false;
+  finishLoading();
 }
 
 watchEffect(() => {
@@ -344,10 +345,10 @@ function handleAddFilter() {
 }
 
 async function handleApplyFilter() {
-  loading.value = true;
+  startLoading();
   await getData();
   currentPage.value = 1;
-  loading.value = false;
+  finishLoading();
   modalFilter.value = false;
 }
 
@@ -374,9 +375,9 @@ function handleReviewFilter() {
 
 async function handleCancelSearch() {
   filterArr.value = [];
-  loading.value = true;
+  startLoading();
   await getData();
-  loading.value = false;
+  finishLoading();
 }
 
 await fetchAll();
