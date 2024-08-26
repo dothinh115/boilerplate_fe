@@ -10,7 +10,6 @@ const finishLoading = () => {
 };
 
 watch(loadingProcess, (newVal) => {
-  console.log(newVal);
   loading.value = newVal > 0;
 });
 
