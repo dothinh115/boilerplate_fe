@@ -15,19 +15,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
     async onResponseError(error) {
-      const { status, _data } = error.response;
+      clearError();
+      const { status } = error.response;
       if (status === 401) {
-        clearError();
         await logout();
       } else if (status === 403) {
-        clearError();
         throw showError({
           statusCode: status,
           statusMessage: "Bạn không có quyền này!",
         });
-      } else {
-        clearError();
-        toast.error(_data.message);
       }
     },
   });

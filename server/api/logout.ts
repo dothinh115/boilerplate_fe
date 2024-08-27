@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         refreshToken,
       },
     });
-
+    event.node.res.setHeader("Content-Type", "application/json; charset=utf-8");
     return event.node.res.end({
       statusCode: 200,
       message: "Logout thành công!",

@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: process.env.API_URL,
+      cookiePath: process.env.COOKIE_PATH,
     },
   },
   modules: ["@nuxtjs/tailwindcss"],

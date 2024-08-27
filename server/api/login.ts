@@ -8,7 +8,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 export default defineEventHandler(async (event: H3Event) => {
-  const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
+  const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath); // Ghép thành api hoàn chỉnh
   const body = await readBody(event);
@@ -33,6 +33,8 @@ export default defineEventHandler(async (event: H3Event) => {
         const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
         const refreshTokenExpires = new Date(refreshTokenDecoded.exp * 1000);
         setCookie(event, REFRESH_TOKEN, refreshToken, {
+          domain: cookiePath,
+          httpOnly: true,
           secure: true,
           sameSite: "lax",
           ...(isRemember
@@ -44,13 +46,14 @@ export default defineEventHandler(async (event: H3Event) => {
               }),
         });
         setCookie(event, ACCESS_TOKEN, accessToken, {
+          domain: cookiePath,
           httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
-          httpOnly: true,
+          domain: cookiePath,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,

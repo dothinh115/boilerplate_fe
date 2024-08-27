@@ -22,7 +22,7 @@ const parseQueryString = (
 };
 
 export default defineEventHandler(async (event: H3Event) => {
-  const { apiUrl } = useRuntimeConfig().public; // Lấy api thực từ env
+  const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
   const url = event.node.req.url;
   const queryObject = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
@@ -51,19 +51,21 @@ export default defineEventHandler(async (event: H3Event) => {
         const refreshTokenExpires = new Date(refreshTokenDecoded.exp * 1000);
 
         setCookie(event, REFRESH_TOKEN, refreshToken, {
+          domain: cookiePath,
           httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: refreshTokenExpires,
         });
         setCookie(event, ACCESS_TOKEN, accessToken, {
+          domain: cookiePath,
           httpOnly: true,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
-          httpOnly: true,
+          domain: cookiePath,
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,
