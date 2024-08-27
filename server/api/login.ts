@@ -59,6 +59,11 @@ export default defineEventHandler(async (event: H3Event) => {
           expires: accessTokenExpires,
         });
         const status = response.status;
+        event.node.res.setHeader(
+          "Content-Type",
+          "application/json; charset=utf-8"
+        );
+
         event.node.res.end(
           JSON.stringify({ statusCode: status, message: "Login thành công!" })
         );

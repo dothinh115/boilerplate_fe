@@ -15,6 +15,8 @@ export default defineEventHandler(async (event) => {
       method: "POST",
       body: modifiedBody,
     });
+    event.node.res.setHeader("Content-Type", "application/json; charset=utf-8");
+
     return event.node.res.end(response.data);
   } catch (error: any) {
     throw createError({ ...error });

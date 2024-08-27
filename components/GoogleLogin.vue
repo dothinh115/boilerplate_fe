@@ -17,7 +17,7 @@ async function handleLoginWithGoogle() {
   const authUrl = await $apiFetch("/auth/google/url", {
     method: "POST",
     body: {
-      redirectTo: `${baseUrl}/login`,
+      redirectTo: `${baseUrl}/api/auth/token`,
     },
   });
   window.location.href = authUrl;

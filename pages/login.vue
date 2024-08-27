@@ -141,26 +141,5 @@ const handleLoginSubmit = async () => {
 
 definePageMeta({
   layout: "login",
-  middleware: [
-    async (to) => {
-      const tokenId = to.query.tokenId as string;
-      const error = to.query.error as string;
-      const { startLoading, finishLoading } = useLoading();
-      const toast = useToast();
-      if (tokenId) {
-        startLoading();
-        const params = {
-          tokenId,
-        };
-        await useApi("auth/token", {
-          params,
-        });
-        window.location.href = to.path;
-      } else if (error) {
-        finishLoading();
-        toast.error("Đã có lỗi xảy ra!");
-      }
-    },
-  ],
 });
 </script>

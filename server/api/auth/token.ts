@@ -1,4 +1,4 @@
-import { H3Event, setCookie } from "h3";
+import { H3Event, setCookie, sendRedirect } from "h3";
 import { joinURL, withQuery } from "ufo";
 import type { QueryObject } from "ufo";
 import {
@@ -23,7 +23,9 @@ const parseQueryString = (
 
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
-  const url = event.node.req.url;
+  const baseUrl = event.node.req.headers.host;
+  const protocol = event.node.req.headers["x-forwarded-proto"];
+  const url = `${protocol}://${baseUrl}`;
   const queryObject = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = queryObject
@@ -71,9 +73,15 @@ export default defineEventHandler(async (event: H3Event) => {
           expires: accessTokenExpires,
         });
         const status = response.status;
-        event.node.res.end(
-          JSON.stringify({ statusCode: status, message: "Login thành công!" })
-        );
+        // event.node.res.setHeader(
+        //   "Content-Type",
+        //   "application/json; charset=utf-8"
+        // );
+        // event.node.res.end(
+        //   JSON.stringify({ statusCode: status, message: "Login thành công!" })
+        // );
+        event.node.res.setHeader("Content-Type", "text/html");
+        return sendRedirect(event, url, status);
       }
     },
   });
