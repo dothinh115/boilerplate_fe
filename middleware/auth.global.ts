@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       const { tokenId, ...remainQuery } = to.query;
       return navigateTo(
         {
-          name: to.name,
+          name: "login",
           query: remainQuery,
         },
         { replace: true }
