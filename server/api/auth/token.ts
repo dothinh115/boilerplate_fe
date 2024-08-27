@@ -24,7 +24,7 @@ const parseQueryString = (
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
   const baseUrl = event.node.req.headers.host;
-  const protocol = event.node.req.headers["x-forwarded-proto"];
+  const protocol = event.node.req.headers["x-forwarded-proto"] || "http";
   const url = `${protocol}://${baseUrl}`;
   const queryObject = parseQueryString(url, apiUrl); //phân tích lấy query string từ url
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
@@ -72,16 +72,8 @@ export default defineEventHandler(async (event: H3Event) => {
           sameSite: "lax",
           expires: accessTokenExpires,
         });
-        const status = response.status;
-        // event.node.res.setHeader(
-        //   "Content-Type",
-        //   "application/json; charset=utf-8"
-        // );
-        // event.node.res.end(
-        //   JSON.stringify({ statusCode: status, message: "Login thành công!" })
-        // );
-        event.node.res.setHeader("Content-Type", "text/html");
-        return sendRedirect(event, url, status);
+        event.node.res.statusCode = 301;
+        event.node.res.setHeader("Location", url).end();
       }
     },
   });
