@@ -10,7 +10,6 @@ export type TUser = {
 export default function useAuth() {
   const user = useState<TUser>("user");
   const { $apiFetch } = useNuxtApp();
-
   const getUser = async () => {
     try {
       const response: any = await useApi("/me");
@@ -22,6 +21,8 @@ export default function useAuth() {
   };
 
   const login = async (data: TLogin) => {
+    const route = useRoute();
+
     try {
       data = {
         ...data,
@@ -31,7 +32,9 @@ export default function useAuth() {
         method: "POST",
         body: data,
       });
-      window.location.reload();
+      if (route.query.next) {
+        window.location.href = route.query.next as string;
+      } else window.location.reload();
     } catch (error) {
       clearError();
     }

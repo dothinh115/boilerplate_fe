@@ -13,11 +13,10 @@
 const { $apiFetch } = useNuxtApp();
 async function handleLoginWithGoogle() {
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
-
   const authUrl = await $apiFetch("/auth/google/url", {
     method: "POST",
     body: {
-      redirectTo: `${baseUrl}/api/auth/token`,
+      redirectTo: `${window.location.href}`,
     },
   });
   window.location.href = authUrl;

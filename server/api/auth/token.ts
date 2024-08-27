@@ -9,9 +9,6 @@ import { jwtDecode } from "jwt-decode";
 
 export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
-  const baseUrl = event.node.req.headers.host;
-  const protocol = event.node.req.headers["x-forwarded-proto"] || "http";
-  const url = `${protocol}://${baseUrl}`;
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath);
 
@@ -55,8 +52,16 @@ export default defineEventHandler(async (event: H3Event) => {
           sameSite: "lax",
           expires: accessTokenExpires,
         });
-        event.node.res.statusCode = 301;
-        event.node.res.setHeader("Location", url).end();
+        event.node.res.setHeader(
+          "Content-Type",
+          "application/json; charset=utf-8"
+        );
+        event.node.res.end(
+          JSON.stringify({
+            statusCode: 201,
+            message: "Login thành công!",
+          })
+        );
       }
     },
   });

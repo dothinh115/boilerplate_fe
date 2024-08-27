@@ -8,41 +8,8 @@ import {
   CLIENT_ID,
 } from "@/utils/constants";
 
-// export const isTokenValid = (event: H3Event) => {
-//   const accessToken = getCookie(event, ACCESS_TOKEN);
-//   if (!accessToken) return false;
-
-//   let expiredTime: string | number | undefined = getCookie(
-//     event,
-//     TOKEN_EXPIRED_TIME
-//   );
-
-//   try {
-//     if (!expiredTime) {
-//       const decoded = jwtDecode(accessToken);
-//       if (!decoded.exp) return false;
-//       expiredTime = decoded.exp;
-//       const accessTokenExpires = new Date(+expiredTime * 1000);
-//       setCookie(event, TOKEN_EXPIRED_TIME, expiredTime.toString(), {
-//         secure: true,
-//         sameSite: "lax",
-//         expires: accessTokenExpires,
-//       });
-//     }
-
-//     const currentTime = Math.floor(Date.now() / 1000) + 1;
-//     if (Number(expiredTime) < currentTime) {
-//       return false;
-//     }
-//   } catch (error) {
-//     return false;
-//   }
-//   return true;
-// };
-
 export const isTokenValid = (expTime: string | null) => {
   if (!expTime) return false;
-  console.log(expTime);
   const currentTime = Math.floor(Date.now() / 1000);
   if (Number(expTime) < currentTime) {
     return false;
