@@ -1,4 +1,4 @@
-import { getCookie, setCookie, createError } from "h3";
+import { getCookie, setCookie } from "h3";
 import { jwtDecode } from "jwt-decode";
 import {
   ACCESS_TOKEN,
@@ -21,13 +21,16 @@ export default defineEventHandler(async (event) => {
   const refreshToken = getCookie(event, REFRESH_TOKEN);
   const clientId = getCookie(event, CLIENT_ID);
   const { cookiePath, apiUrl } = useRuntimeConfig().public;
-  const target = joinURL(apiUrl, "refreshToken");
+  const target = joinURL(apiUrl, "refresh-token");
 
   const body = {
     refreshToken,
     clientId,
   };
-
+  if (!refreshToken || !clientId) {
+    console.log("Không đủ thông tin!");
+    return;
+  }
   try {
     const response: any = await $fetch(target, {
       method: "POST",
