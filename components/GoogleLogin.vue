@@ -1,12 +1,13 @@
 <template>
-  <button
-    type="button"
-    class="w-full duration-200 justify-center text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 space-x-1"
-    @click="handleLoginWithGoogle"
-  >
-    <i class="fa-brands fa-google"></i>
-    <span>Đăng nhập với Google</span>
-  </button>
+  <div>
+    <button
+      type="button"
+      class="bg-gray-500 max-lg:bg-orange-600 max-lg:text-white rounded-full w-8 h-8 max-lg:w-12 max-lg:h-12 max-lg:text-[1.125rem] flex items-center justify-center text-gray-200 mx-auto lg:hover:bg-orange-600 lg:hover:text-white duration-200"
+      @click="handleLoginWithGoogle"
+    >
+      <i class="fa-brands fa-google"></i>
+    </button>
+  </div>
 </template>
 
 <script lang="ts" setup>
