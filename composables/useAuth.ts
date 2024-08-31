@@ -5,7 +5,7 @@ export type TUser = {
   rootUser: boolean;
   role: number;
   username: string;
-  isEditedUsername: string;
+  isEditedUsername: boolean;
 };
 export default function useAuth() {
   const user = useState<TUser>("user");
