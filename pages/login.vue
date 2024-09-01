@@ -7,7 +7,7 @@
       <IconLoginAdmin class="text-gray-200 w-[100px]" />
     </div>
     <div class="space-y-4 bg-gray-50 p-4 rounded-xl text-gray-900 shadow-md">
-      <div class="space-y-2">
+      <div class="space-y-1">
         <div
           class="space-y-1"
           :class="{
@@ -28,11 +28,11 @@
             }"
           />
         </div>
-        <div class="text-red-500 text-sm" v-if="loginError.email">
+        <div class="text-red-500 text-xs" v-if="loginError.email">
           {{ loginError.email }}
         </div>
       </div>
-      <div>
+      <div class="space-y-1">
         <div
           class="space-y-1"
           :class="{
@@ -53,7 +53,7 @@
             }"
           />
         </div>
-        <div class="text-red-500 text-sm" v-if="loginError.password">
+        <div class="text-red-500 text-xs" v-if="loginError.password">
           {{ loginError.password }}
         </div>
       </div>
