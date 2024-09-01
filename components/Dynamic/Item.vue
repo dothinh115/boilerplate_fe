@@ -143,30 +143,34 @@ function errorCheck() {
 async function handleConfirm() {
   errorCheck();
   if (!isValid.value) return;
-  const result = await useApi(
-    `/${route.params.post}${data.value.id ? "/" + data.value.id : ""}`,
-    {
-      method: data.value.id ? "PATCH" : "POST",
-      body: data.value,
-    }
-  );
-  if (result) {
+  try {
+    await useApi(
+      `/${route.params.post}${data.value.id ? "/" + data.value.id : ""}`,
+      {
+        method: data.value.id ? "PATCH" : "POST",
+        body: data.value,
+      }
+    );
     toast.success("Thành công");
     shouldRevalidate.value = true;
     router.back();
+  } catch (error: any) {
+    toast.error(error?.data.message);
   }
 }
 
 async function handleDelete() {
   if (!data.value) return;
-  const result = await useApi(`/${route.params.post}/${data.value.id}`, {
-    method: "DELETE",
-  });
+  try {
+    await useApi(`/${route.params.post}/${data.value.id}`, {
+      method: "DELETE",
+    });
 
-  if (result) {
     toast.success("Thành công");
     shouldRevalidate.value = true;
     router.back();
+  } catch (error: any) {
+    toast.error(error?.data.message);
   }
 }
 

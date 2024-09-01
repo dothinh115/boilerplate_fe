@@ -1,4 +1,6 @@
 import type { TLogin } from "~/utils/models/login.model";
+import { useToast } from "vue-toastification";
+
 export type TUser = {
   id: string;
   email: string;
@@ -8,6 +10,7 @@ export type TUser = {
   isEditedUsername: boolean;
 };
 export default function useAuth() {
+  const toast = useToast();
   const user = useState<TUser>("user");
   const { $apiFetch } = useNuxtApp();
   const getUser = async () => {
@@ -35,7 +38,8 @@ export default function useAuth() {
       if (route.query.next) {
         window.location.href = route.query.next as string;
       } else window.location.reload();
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error?.data.message);
       clearError();
     }
   };

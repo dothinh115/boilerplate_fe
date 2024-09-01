@@ -81,8 +81,6 @@
   </form>
 </template>
 <script setup lang="ts">
-import { useToast } from "vue-toastification";
-
 const { login } = useAuth();
 const loginInfo = ref({
   email: "",

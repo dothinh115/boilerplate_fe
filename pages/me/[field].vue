@@ -194,19 +194,24 @@ async function handleConfirm() {
     if (!isChangePasswordValid.value) return;
   }
   startLoading();
-  await useApi("/me", {
-    method: "PATCH",
-    body: {
-      [route.params.field as string]:
-        route.params.field === "password"
-          ? changePasswordInfo.value.password
-          : fieldData.value,
-    },
-  });
-  await getUser();
-  await handleClose();
-  toast.success("Thành công");
-  finishLoading();
+  try {
+    await useApi("/me", {
+      method: "PATCH",
+      body: {
+        [route.params.field as string]:
+          route.params.field === "password"
+            ? changePasswordInfo.value.password
+            : fieldData.value,
+      },
+    });
+    await getUser();
+    await handleClose();
+    toast.success("Thành công");
+  } catch (error: any) {
+    toast.error(error.data.message);
+  } finally {
+    finishLoading();
+  }
 }
 
 watch(
