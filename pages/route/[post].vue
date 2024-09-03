@@ -234,6 +234,7 @@
 </template>
 <script setup lang="ts">
 import qs from "qs";
+import { useToast } from "vue-toastification";
 const route = useRoute();
 const dataApi = `/${route.params.post}`;
 const schemaApi = `/schema/${route.params.post}`;
@@ -242,7 +243,7 @@ const perPage = 20;
 const currentPage = ref(Number(route.query.page) || 1);
 const sortBy = ref<string>((route.query.sort as string) || "-createdAt,-id");
 const filtering = ref(false);
-const data = ref<any>(null);
+const data = ref<any>([]);
 const totalPages = ref(0);
 const schema = useState<any>(schemaApi);
 const { screenWidth, shouldRevalidate } = useGetState();
@@ -252,7 +253,7 @@ const modalFilter = ref(false);
 const isSearching = ref(false);
 const pagination = ref<(string | number)[]>([]);
 const router = useRouter();
-
+const toast = useToast();
 async function getList() {
   const params: any = {
     limit: perPage,
@@ -270,13 +271,17 @@ async function getList() {
   } else {
     filtering.value = false;
   }
-  const result: any = await useApi(dataApi, { params });
-  totalPages.value = Math.ceil(
-    (filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")
-      ? result.meta.filterCount
-      : result.meta.totalCount) / perPage
-  );
-  data.value = result.data;
+  try {
+    const result: any = await useApi(dataApi, { params });
+    totalPages.value = Math.ceil(
+      (filterArr.value.length > 0 && filterArr.value.every((x) => x !== "")
+        ? result.meta.filterCount
+        : result.meta.totalCount) / perPage
+    );
+    data.value = result.data;
+  } catch (error: any) {
+    toast.error(error.message);
+  }
 }
 
 async function getSchema() {

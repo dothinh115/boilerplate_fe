@@ -2,7 +2,6 @@ import { useToast } from "vue-toastification";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const { $apiFetch } = useNuxtApp();
-  const { user, getUser } = useAuth();
 
   const toast = useToast();
   if (to.query.tokenId) {
@@ -14,6 +13,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         params,
       });
       const { tokenId, ...remainQuery } = to.query;
+      toast.success("Đăng nhập thành công!");
+
       return navigateTo(
         {
           name: to.name,
@@ -32,17 +33,5 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         { replace: true }
       );
     }
-  }
-
-  if (!user.value) {
-    await getUser();
-  }
-
-  if (to.name === "login" && user.value) {
-    return navigateTo("/", { replace: true });
-  }
-
-  if (to.name !== "login" && !user.value) {
-    return navigateTo(`/login?next=${to.fullPath}`, { replace: true });
   }
 });

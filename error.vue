@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout :name="'login'">
+  <NuxtLayout name="login">
     <div class="relative py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-screen-sm text-center">
         <h1
@@ -12,7 +12,7 @@
           {{
             error?.statusCode === 404
               ? "Không tìm thấy page này trong hệ thống"
-              : error?.statusMessage
+              : error?.message
           }}
         </p>
         <button
@@ -25,8 +25,12 @@
     </div>
   </NuxtLayout>
 </template>
-<script setup>
+<script setup lang="ts">
+type TProps = {
+  error: any;
+};
 const error = useError();
+defineProps<TProps>();
 async function handleClearError() {
   await navigateTo("/");
   clearError();

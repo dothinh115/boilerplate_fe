@@ -1,8 +1,6 @@
-import { useToast } from "vue-toastification";
-
 export default defineNuxtPlugin((nuxtApp) => {
-  const toast = useToast();
   const { logout } = useAuth();
+  const { loading } = useLoading();
 
   const apiFetch = $fetch.create({
     baseURL: "/api",
@@ -15,14 +13,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
     async onResponseError(error) {
-      clearError();
       const { status } = error.response;
+      loading.value = false;
+
       if (status === 401) {
         await logout();
       } else if (status === 403) {
         throw showError({
           statusCode: status,
-          statusMessage: "Bạn không có quyền này!",
+          message: "Bạn không có quyền này!",
         });
       }
     },
