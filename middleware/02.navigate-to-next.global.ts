@@ -8,8 +8,6 @@ export default defineNuxtRouteMiddleware((to) => {
     } catch (error) {}
   }
   if (nextUrl) {
-    console.log(nextUrl);
-
     return navigateTo(nextUrl, { external: true });
   }
 });
