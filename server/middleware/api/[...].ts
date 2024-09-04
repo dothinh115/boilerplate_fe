@@ -12,6 +12,9 @@ import { isTokenValid } from "~/utils/functions/common";
 const excludedPath = ["login", "register", "auth"];
 
 export default defineEventHandler(async (event) => {
+  if (!/^\/api/.test(event.node.req.url as string)) {
+    return;
+  }
   const expTime = getCookie(event, TOKEN_EXPIRED_TIME);
   const isValid = isTokenValid(expTime ?? null);
   const realPath = event.node.req.url?.replace(/^\/api\//, "");

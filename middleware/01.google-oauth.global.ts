@@ -12,9 +12,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       await $apiFetch("auth/token", {
         params,
       });
+
       const { tokenId, ...remainQuery } = to.query;
       toast.success("Đăng nhập thành công!");
-
       return navigateTo(
         {
           name: to.name,

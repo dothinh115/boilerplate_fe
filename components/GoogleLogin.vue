@@ -21,9 +21,19 @@ const loading = ref(false);
 async function handleLoginWithGoogle() {
   loading.value = true;
   try {
-    const url = `${window.location.protocol}//${window.location.host}${
+    let nextUrl: string | null = null;
+    try {
+      const url = new URL(route.query.next as string);
+      nextUrl = url.href;
+    } catch (error) {
+      console.log(`${route.query.next} không phải là url hợp lệ`);
+    }
+    let url = `${window.location.protocol}//${window.location.host}${
       route.query.next ? route.query.next : ""
     }`;
+    if (nextUrl) {
+      url = `${window.location.protocol}//${window.location.host}?next=${nextUrl}`;
+    }
     const authUrl = await $apiFetch("/auth/google/url", {
       method: "POST",
       body: {
