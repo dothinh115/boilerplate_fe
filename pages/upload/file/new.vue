@@ -62,9 +62,11 @@ async function handleUpload(files: File[]) {
       });
       const find = uploadList.value.find((x) => x.file === file);
       if (find) find.type = "succeeded";
-    } catch (error) {
+    } catch (error: any) {
       const find = uploadList.value.find((x) => x.file === file);
       if (find) find.type = "failed";
+      const { message } = JSON.parse(error.data.message);
+      toast.error(message);
     }
   };
 
