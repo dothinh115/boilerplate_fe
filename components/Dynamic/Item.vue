@@ -23,8 +23,7 @@
             class="fa-solid fa-check cursor-pointer bg-white p-2 rounded-full text-teal-600 lg:hover:bg-teal-900 transition duration-200 h-[36px] w-[36px] flex justify-center items-center lg:hover:text-white"
             @click="handleConfirm"
             v-if="
-                (data.id && $roleCheck('PATCH', route.params.post as string)) ||
-                (!data.id && $roleCheck('POST', route.params.post as string))
+                (data.id && $roleCheck('PATCH', route.params.post as string) && !props.new) || props.new
               "
           ></i>
         </div>

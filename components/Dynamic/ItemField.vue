@@ -102,14 +102,15 @@
       <button
         class="bg-teal-700 h-[30px] aspect-1 rounded-[5px] flex items-center justify-center text-gray-50 text-[24px] duration-200"
         :class="{
-          'mb-2': $typeCheck(data) === 'array',
-          'opacity-50': !$roleCheck('PATCH', route.params.post as string),
+          'mb-2': localSchemaValue.type === 'array',
+          'opacity-50': !$roleCheck('PATCH', route.params.post as string) && !props.new,
           'lg:hover:bg-teal-500': $roleCheck('PATCH', route.params.post as string)
         }"
         v-if="localSchemaValue.relation"
         @click.stop="
           localSchemaValue.relation &&
-            $roleCheck('PATCH', route.params.post as string) &&
+            $roleCheck('POST', route.params.post as string) &&
+            props.new &&
             handleRelation(
               localSchemaValue.relation,
               localSchemaValue.type,
