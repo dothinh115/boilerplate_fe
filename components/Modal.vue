@@ -6,11 +6,12 @@
       v-if="modelValue"
       @mousedown.self="close"
     >
-      <div class="absolute top-[2%] left-[2%] z-[1000]" v-if="closeBtn">
-        <i
-          class="fa-regular fa-circle-xmark text-[40px] text-gray-100 cursor-pointer"
-          @click="close"
-        ></i>
+      <div
+        class="absolute top-[2%] left-[2%] z-[1000] w-12 h-12 flex items-center justify-center bg-gray-700 rounded-full cursor-pointer lg:hover:bg-gray-600 duration-200"
+        v-if="closeBtn"
+        @click="close"
+      >
+        <i class="fa-solid fa-x text-[20px] text-gray-100"></i>
       </div>
       <slot />
     </div>
