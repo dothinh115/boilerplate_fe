@@ -30,11 +30,14 @@
                 type === "upload" ? "Uploaded" : "Deleted"
               }}</span>
             </div>
-
-            <i
-              class="fa-solid fa-xmark text-lg text-red-500"
+            <div
+              class="flex items-center space-x-2"
               v-else-if="item.type === 'failed'"
-            ></i>
+            >
+              <i class="fa-solid fa-xmark text-lg text-red-500"></i>
+              <span class="text-xs">Failed</span>
+            </div>
+
             <span class="gg-spinner" v-else></span>
           </Transition>
         </div>
