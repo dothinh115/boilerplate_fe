@@ -10,7 +10,7 @@
     >
     <DynamicTinyMceEditor
       v-if="localSchemaValue.type === 'richText'"
-      :disabled="schemaValue.disabled || !$roleCheck('PATCH', route.params.post as string)"
+      :disabled="schemaValue.disabled || (!$roleCheck('PATCH', route.params.post as string) && !props.new)"
       v-model="data"
       :error="error[localSchemaKey]"
     />
