@@ -166,7 +166,7 @@ watch([file, files], ([newFile, newFiles]) => {
 function handleDrop(event: DragEvent) {
   if (event.dataTransfer?.files) {
     if (props.multiple) {
-      files.value = Array.from(event.dataTransfer.files);
+      files.value = [...files.value, ...Array.from(event.dataTransfer.files)];
     } else {
       file.value = event.dataTransfer.files[0];
     }
