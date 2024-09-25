@@ -6,7 +6,7 @@ import {
 import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event) => {
-  const { apiUrl } = useRuntimeConfig().public;
+  const { apiUrl, cookiePath } = useRuntimeConfig().public;
   const target = joinURL(apiUrl, "logout");
   const refreshToken = getCookie(event, REFRESH_TOKEN);
 
@@ -31,8 +31,20 @@ export default defineEventHandler(async (event) => {
     // });
   } finally {
     //sau đó thì xoá mọi cookie liên quan ở phía client
-    deleteCookie(event, REFRESH_TOKEN);
-    deleteCookie(event, ACCESS_TOKEN);
-    deleteCookie(event, TOKEN_EXPIRED_TIME);
+    deleteCookie(event, REFRESH_TOKEN, {
+      domain: cookiePath,
+      path: "/",
+      secure: true,
+    });
+    deleteCookie(event, ACCESS_TOKEN, {
+      domain: cookiePath,
+      path: "/",
+      secure: true,
+    });
+    deleteCookie(event, TOKEN_EXPIRED_TIME, {
+      domain: cookiePath,
+      path: "/",
+      secure: true,
+    });
   }
 });
