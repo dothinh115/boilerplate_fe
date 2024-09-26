@@ -110,8 +110,9 @@
         v-if="localSchemaValue.relation"
         @click.stop="
           localSchemaValue.relation &&
-            $roleCheck('POST', route.params.post as string) &&
-            props.new &&
+            (($roleCheck('POST', route.params.post as string) && props.new) ||
+              ($roleCheck('PATCH', route.params.post as string) &&
+                !props.new)) &&
             handleRelation(
               localSchemaValue.relation,
               localSchemaValue.type,
