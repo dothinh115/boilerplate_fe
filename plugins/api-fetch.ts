@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       loading.value = false;
 
       if (status === 401) {
-        // await logout();
+        await logout();
       } else if (status === 403) {
         throw showError({
           statusCode: status,
