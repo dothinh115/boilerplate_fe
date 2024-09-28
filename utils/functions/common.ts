@@ -1,6 +1,6 @@
 import { H3Event } from "h3";
 import { jwtDecode } from "jwt-decode";
-import { joinURL } from "ufo";
+import { getCookie } from "h3";
 import {
   ACCESS_TOKEN,
   TOKEN_EXPIRED_TIME,
@@ -17,24 +17,22 @@ export const isTokenValid = (expTime: string | null) => {
   return true;
 };
 
-export const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
-  const target = joinURL(apiUrl, "refreshToken");
-  const { cookiePath } = useRuntimeConfig().public;
+export const refreshTokenFunc = async (event: H3Event) => {
+  const { cookiePath, apiUrl } = useRuntimeConfig().public;
   const refreshToken = getCookie(event, REFRESH_TOKEN);
   const clientId = getCookie(event, CLIENT_ID);
+  if (!refreshToken || !clientId) {
+    return false;
+  }
+
   const body = {
     refreshToken,
     clientId,
   };
-  if (!refreshToken || !clientId) {
-    throw createError({
-      statusCode: 400,
-      message: "Token không hợp lệ!",
-    });
-  }
 
   try {
-    const response: any = await $fetch(target, {
+    const response: any = await $fetch("refresh-token", {
+      baseURL: apiUrl,
       method: "POST",
       body,
     });
@@ -58,17 +56,7 @@ export const refreshTokenFunc = async (event: H3Event, apiUrl: string) => {
         sameSite: "lax",
         expires: accessTokenExpires,
       });
-      return event.node.res.end(
-        JSON.stringify({
-          statusCode: 201,
-          message: "Refresh token thành công!",
-        })
-      );
-    } else {
-      throw createError({
-        statusCode: 400,
-        message: "Có lỗi xảy ra khi refresh token",
-      });
+      return accessToken;
     }
   } catch (error) {
     console.log(error);
