@@ -8,6 +8,11 @@ export default defineEventHandler(async (event: H3Event) => {
 
   let headers: Record<string, string> = {};
   Object.entries(event.node.req.headers).forEach(([key, value]) => {
+    if (
+      ["host", "content-length", "connection", "accept-encoding"].includes(key)
+    ) {
+      return;
+    }
     if (typeof value === "string") {
       headers[key] = value;
     } else if (Array.isArray(value)) {
