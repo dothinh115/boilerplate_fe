@@ -7,6 +7,14 @@
 </template>
 <script setup lang="ts">
 const route = useRoute();
+const { $roleCheck } = useNuxtApp();
+const accessible = $roleCheck("POST", route.params.post as string);
+if (!accessible) {
+  throw showError({
+    statusCode: 403,
+    message: "Bạn không có quyền này!",
+  });
+}
 const modal = ref(false);
 const { startLoading, finishLoading } = useLoading();
 const schemaApi = `/schema/${route.params.post}`;
@@ -39,16 +47,4 @@ function handleClose() {
 }
 
 await getSchema();
-
-definePageMeta({
-  middleware: (to) => {
-    const { $roleCheck } = useNuxtApp();
-    const accessible = $roleCheck("POST", to.params.post as string);
-    if (!accessible) {
-      return navigateTo({
-        name: "route-post",
-      });
-    }
-  },
-});
 </script>
