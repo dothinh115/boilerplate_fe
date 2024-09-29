@@ -39,4 +39,16 @@ function handleClose() {
 }
 
 await getSchema();
+
+definePageMeta({
+  middleware: (to) => {
+    const { $roleCheck } = useNuxtApp();
+    const accessible = $roleCheck("POST", to.params.post as string);
+    if (!accessible) {
+      return navigateTo({
+        name: "route-post",
+      });
+    }
+  },
+});
 </script>
