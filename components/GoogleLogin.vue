@@ -18,6 +18,7 @@ const { $apiFetch } = useNuxtApp();
 const route = useRoute();
 const toast = useToast();
 const loading = ref(false);
+const clientId = await useFingerSprint();
 async function handleLoginWithGoogle() {
   loading.value = true;
   try {
@@ -38,6 +39,7 @@ async function handleLoginWithGoogle() {
       method: "POST",
       body: {
         redirectTo: url,
+        clientId,
       },
     });
     window.location.href = authUrl;

@@ -2,6 +2,7 @@ import {
   REFRESH_TOKEN,
   ACCESS_TOKEN,
   TOKEN_EXPIRED_TIME,
+  CLIENT_ID,
 } from "@/utils/constants";
 import { joinURL } from "ufo";
 
@@ -42,6 +43,11 @@ export default defineEventHandler(async (event) => {
       secure: true,
     });
     deleteCookie(event, TOKEN_EXPIRED_TIME, {
+      domain: cookiePath,
+      path: "/",
+      secure: true,
+    });
+    deleteCookie(event, CLIENT_ID, {
       domain: cookiePath,
       path: "/",
       secure: true,

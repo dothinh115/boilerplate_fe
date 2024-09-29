@@ -4,6 +4,7 @@ import {
   REFRESH_TOKEN,
   ACCESS_TOKEN,
   TOKEN_EXPIRED_TIME,
+  CLIENT_ID,
 } from "@/utils/constants";
 import { jwtDecode } from "jwt-decode";
 
@@ -57,6 +58,19 @@ export default defineEventHandler(async (event: H3Event) => {
           secure: true,
           sameSite: "lax",
           expires: accessTokenExpires,
+        });
+        setCookie(event, CLIENT_ID, body.clientId, {
+          domain: cookiePath,
+          httpOnly: true,
+          secure: true,
+          sameSite: "lax",
+          ...(isRemember
+            ? {
+                expires: refreshTokenExpires,
+              }
+            : {
+                maxAge: 60 * 60 * 24, //1 ngày
+              }),
         });
         const status = response.status;
         event.node.res.setHeader(
