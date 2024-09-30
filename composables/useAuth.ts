@@ -12,7 +12,6 @@ export type TUser = {
 export default function useAuth() {
   const toast = useToast();
   const user = useState<TUser>("user");
-  const { $apiFetch } = useNuxtApp();
   const getUser = async () => {
     try {
       const response: any = await useApi("/me");
@@ -31,7 +30,7 @@ export default function useAuth() {
         ...data,
         clientId: await useFingerSprint(),
       };
-      await $apiFetch("login", {
+      await useApi("login", {
         method: "POST",
         body: data,
       });
