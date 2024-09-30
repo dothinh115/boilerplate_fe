@@ -2,13 +2,11 @@ import { useToast } from "vue-toastification";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const { $apiFetch } = useNuxtApp();
-  const clientId = await useFingerSprint();
   const toast = useToast();
   if (to.query.tokenId) {
     try {
       const params = {
         tokenId: to.query.tokenId,
-        clientId,
       };
       await $apiFetch("auth/token", {
         params,

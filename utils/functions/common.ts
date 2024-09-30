@@ -20,14 +20,12 @@ export const isTokenValid = (expTime: string | null) => {
 export const refreshTokenFunc = async (event: H3Event) => {
   const { cookiePath, apiUrl } = useRuntimeConfig().public;
   const refreshToken = getCookie(event, REFRESH_TOKEN);
-  const clientId = getCookie(event, CLIENT_ID);
-  if (!refreshToken || !clientId) {
+  if (!refreshToken) {
     return false;
   }
 
   const body = {
     refreshToken,
-    clientId,
   };
 
   try {

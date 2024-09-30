@@ -1,10 +1,9 @@
-import { H3Event, setCookie, getQuery } from "h3";
+import { H3Event, setCookie } from "h3";
 import { joinURL } from "ufo";
 import {
   REFRESH_TOKEN,
   ACCESS_TOKEN,
   TOKEN_EXPIRED_TIME,
-  CLIENT_ID,
 } from "@/utils/constants";
 import { jwtDecode } from "jwt-decode";
 
@@ -12,7 +11,6 @@ export default defineEventHandler(async (event: H3Event) => {
   const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath);
-  const { clientId } = getQuery(event);
   return await proxyRequest(event, target, {
     async onResponse(event, response) {
       const responseBodyStream = response.body;
@@ -34,13 +32,6 @@ export default defineEventHandler(async (event: H3Event) => {
         const refreshTokenExpires = new Date(refreshTokenDecoded.exp * 1000);
 
         setCookie(event, REFRESH_TOKEN, refreshToken, {
-          domain: cookiePath,
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          expires: refreshTokenExpires,
-        });
-        setCookie(event, CLIENT_ID, clientId as string, {
           domain: cookiePath,
           httpOnly: true,
           secure: true,
