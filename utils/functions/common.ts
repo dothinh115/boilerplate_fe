@@ -46,14 +46,14 @@ export const refreshTokenFunc = async (event: H3Event) => {
         domain: cookiePath,
         httpOnly: true,
         secure: true,
-        sameSite: "lax",
+        sameSite: "strict",
         expires: accessTokenExpires,
       });
       setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
         domain: cookiePath,
         httpOnly: true,
         secure: true,
-        sameSite: "lax",
+        sameSite: "strict",
         expires: accessTokenExpires,
       });
       return accessToken;

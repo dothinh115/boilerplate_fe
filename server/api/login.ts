@@ -37,7 +37,7 @@ export default defineEventHandler(async (event: H3Event) => {
           domain: cookiePath,
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "strict",
           ...(isRemember
             ? {
                 expires: refreshTokenExpires,
@@ -50,20 +50,20 @@ export default defineEventHandler(async (event: H3Event) => {
           domain: cookiePath,
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "strict",
           expires: accessTokenExpires,
         });
         setCookie(event, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, {
           domain: cookiePath,
           secure: true,
-          sameSite: "lax",
+          sameSite: "strict",
           expires: accessTokenExpires,
         });
         setCookie(event, CLIENT_ID, body.clientId, {
           domain: cookiePath,
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "strict",
           ...(isRemember
             ? {
                 expires: refreshTokenExpires,
