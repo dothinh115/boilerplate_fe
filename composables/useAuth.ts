@@ -13,13 +13,9 @@ export default function useAuth() {
   const toast = useToast();
   const user = useState<TUser>("user");
   const getUser = async () => {
-    try {
-      const response: any = await useApi("/me");
-      if (response.data) user.value = response.data;
-      return user.value;
-    } catch (error) {
-      // await logout();
-    }
+    const response: any = await useApi("/me");
+    if (response?.data) user.value = response.data;
+    return user.value;
   };
 
   const login = async (data: TLogin) => {

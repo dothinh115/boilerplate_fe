@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     baseURL: "/api",
     onResponse(res) {
       const d = res.response._data;
-      if (d.data) {
+      if (d?.data) {
         return d.data;
       } else {
         return d;
