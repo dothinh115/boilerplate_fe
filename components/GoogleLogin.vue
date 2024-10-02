@@ -48,4 +48,8 @@ async function handleLoginWithGoogle() {
     loading.value = false;
   }
 }
+
+onMounted(() => {
+  loading.value = false;
+});
 </script>
