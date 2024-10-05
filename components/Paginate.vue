@@ -41,9 +41,9 @@
           '!bg-indigo-600 !bg-opacity-90 !text-white': item === currentPage,
           'paginate ': typeof item === 'number',
           'text-gray-800': typeof item !== 'number',
-          '!text-gray-100 !hover:none !px-1': item === '...',
+          '!text-gray-100 !lg:hover:none !px-1': item === '...',
         }"
-        class="py-1 px-3 rounded-full hover:text-white transition duration-200"
+        class="py-1 px-3 rounded-full lg:hover:text-white transition duration-200"
       >
         {{ item }}
       </NuxtLink>
@@ -91,7 +91,7 @@
           paginate: typeof item === 'number',
           'text-gray-800': typeof item !== 'number',
         }"
-        class="py-1 px-3 rounded-full hover:bg-indigo-500 hover:text-white transition duration-200"
+        class="py-1 px-3 rounded-full lg:hover:bg-indigo-500 lg:hover:text-white transition duration-200"
       >
         {{ item }}
       </button>
