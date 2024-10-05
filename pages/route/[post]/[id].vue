@@ -25,6 +25,7 @@ async function getSchema() {
 async function getData() {
   const params = {
     "filter[id][_eq]": id,
+    full: "*",
   };
   const result: any = await useApi(dataApi, { params });
   data.value = result.data[0];
