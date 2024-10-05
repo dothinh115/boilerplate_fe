@@ -24,7 +24,7 @@
                 thả file của bạn vào đây
               </p>
             </div>
-            <div v-else>
+            <div class="px-2 max-md:text-center" v-else>
               <p class="mb-2 text-sm text-gray-500 dark:text-gray-500">
                 <span class="font-semibold">Click để upload</span> hoặc kéo thả
                 file của bạn vào đây
