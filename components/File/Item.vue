@@ -22,7 +22,7 @@
       <div
         class="text-gray-200 truncate"
         :style="{
-          maxWidth: `${widthData.originalName}px`,
+          width: `${widthData.originalName}px`,
         }"
       >
         {{ fileItem.originalName }}
