@@ -5,7 +5,6 @@ import {
   ACCESS_TOKEN,
   TOKEN_EXPIRED_TIME,
   REFRESH_TOKEN,
-  CLIENT_ID,
 } from "@/utils/constants";
 
 export const isTokenValid = (expTime: string | null) => {

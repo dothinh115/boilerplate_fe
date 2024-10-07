@@ -9,15 +9,14 @@ export default defineEventHandler(async (event) => {
   const realPath = event.node.req.url?.replace(/^\/api\//, "");
 
   if (excludedPath.some((path) => realPath?.startsWith(path))) return;
-
+  let accessToken = getCookie(event, ACCESS_TOKEN);
   if (url?.startsWith("/api/")) {
     const expTime = getCookie(event, TOKEN_EXPIRED_TIME);
     const isValid = isTokenValid(expTime ?? null);
 
-    let accessToken = getCookie(event, ACCESS_TOKEN);
     if (!isValid || !accessToken) {
       accessToken = await refreshTokenFunc(event);
     }
-    event.node.req.headers.authorization = "Bearer " + accessToken;
   }
+  event.node.req.headers.authorization = "Bearer " + accessToken;
 });
