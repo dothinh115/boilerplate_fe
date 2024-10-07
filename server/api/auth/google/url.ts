@@ -1,6 +1,6 @@
 import { joinURL } from "ufo";
 export default defineEventHandler(async (event) => {
-  const { apiUrl } = useRuntimeConfig().public; //lấy api thực từ env
+  const { apiUrl } = useRuntimeConfig().private; //lấy api thực từ env
   const replacedPath = event.path.replace(/^\/api\//, ""); //bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath); //ghép thành api hoàn chỉnh
   const body = await readBody(event);

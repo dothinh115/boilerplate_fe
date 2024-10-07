@@ -3,8 +3,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      apiUrl: process.env.API_URL,
       cookiePath: process.env.COOKIE_PATH,
+    },
+    private: {
+      apiUrl: process.env.API_URL,
     },
   },
   modules: ["@nuxtjs/tailwindcss"],

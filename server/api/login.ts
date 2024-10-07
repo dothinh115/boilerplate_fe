@@ -8,7 +8,8 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 export default defineEventHandler(async (event: H3Event) => {
-  const { apiUrl, cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
+  const { cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
+  const { apiUrl } = useRuntimeConfig().private;
   const replacedPath = event.path.replace(/^\/api\//, ""); // Bỏ prefix /api
   const target = joinURL(apiUrl, replacedPath); // Ghép thành api hoàn chỉnh
   const body = await readBody(event);
