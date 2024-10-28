@@ -18,5 +18,7 @@ export default defineEventHandler(async (event) => {
       accessToken = await refreshTokenFunc(event);
     }
   }
-  event.node.req.headers.authorization = "Bearer " + accessToken;
+  event.node.req.headers.authorization = accessToken
+    ? "Bearer " + accessToken
+    : undefined;
 });
