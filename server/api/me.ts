@@ -8,11 +8,5 @@ export default defineEventHandler(async (event: H3Event) => {
   const accessToken = event.node.req.headers.authorization;
   if (!accessToken) return;
 
-  return await proxyRequest(event, target, {
-    ...(accessToken && {
-      headers: {
-        authorization: accessToken,
-      },
-    }),
-  });
+  return await proxyRequest(event, target);
 });
