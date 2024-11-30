@@ -14,6 +14,7 @@ export default defineEventHandler(async (event: H3Event) => {
   const target = joinURL(apiUrl, replacedPath); // Ghép thành api hoàn chỉnh
   const body = await readBody(event);
   const isRemember = body.remember;
+
   return await proxyRequest(event, target, {
     async onResponse(event, response) {
       const responseBodyStream = response.body;
