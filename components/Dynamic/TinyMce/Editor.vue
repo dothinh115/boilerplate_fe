@@ -128,6 +128,7 @@ import "@/public/tinymce/plugins/code/plugin.min";
 import "@/public/tinymce/plugins/fullscreen/plugin.min";
 import "@/public/tinymce/plugins/media/plugin.min";
 import "@/public/tinymce/plugins/table/plugin.min";
+import { useToast } from "vue-toastification";
 
 type TProps = {
   disabled?: boolean;
@@ -146,6 +147,7 @@ const imgAlt = ref("");
 const imgIdOrPath = ref("");
 const imgWidth = ref(500);
 const imgHeight = ref(500);
+const toast = useToast();
 const { startLoading, finishLoading } = useLoading();
 const data = ref<any>(props.modelValue);
 const editorEl = ref<HTMLDivElement | null>(null);
@@ -334,21 +336,25 @@ async function handleInsertImage() {
   } else {
     //nếu là id trong hệ thống thì kiểm tra hợp lệ
     if (!imgIdOrPath.value) return;
+    try {
+      await useApi(`/asset/${imgIdOrPath.value}`);
 
-    await useApi(`/asset/${imgIdOrPath.value}`);
-    tinyMceEditor.value?.insertContent(
-      `<img src="/api/asset/${imgIdOrPath.value}?format=webp${
-        imgWidth.value ? `&width=${imgWidth.value}` : ""
-      }${imgHeight.value ? `&height=${imgHeight.value}` : ""}" alt="${
-        imgAlt.value
-      }" ${imgWidth.value ? `width="${imgWidth.value}"` : ""} ${
-        imgHeight.value ? `width="${imgHeight.value}"` : ""
-      } />`
-    );
+      tinyMceEditor.value?.insertContent(
+        `<img src="/api/asset/${imgIdOrPath.value}?format=webp${
+          imgWidth.value ? `&width=${imgWidth.value}` : ""
+        }${imgHeight.value ? `&height=${imgHeight.value}` : ""}" alt="${
+          imgAlt.value
+        }" ${imgWidth.value ? `width="${imgWidth.value}"` : ""} ${
+          imgHeight.value ? `width="${imgHeight.value}"` : ""
+        } />`
+      );
 
-    imgIdOrPath.value = "";
-    imgAlt.value = "";
-    uploadModal.value = false;
+      imgIdOrPath.value = "";
+      imgAlt.value = "";
+      uploadModal.value = false;
+    } catch (error: any) {
+      toast.error(error?.data.message);
+    }
   }
 }
 
