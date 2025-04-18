@@ -89,6 +89,7 @@ import type { TFile } from "~/components/File/Item.vue";
 import type { TFolder } from "~/components/Folder/Item.vue";
 
 const route = useRoute();
+
 const isMenuShowed = ref(false);
 const { screenWidth, shouldRevalidate } = useGetState();
 const { startLoading, finishLoading } = useLoading();
