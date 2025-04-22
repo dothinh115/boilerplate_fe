@@ -9,7 +9,8 @@ export default defineNuxtConfig({
     },
     private: {
       apiUrl: process.env.API_URL,
-      google__oauth_secret: process.env.OAUTH_SECRET,
+      google_oauth_secret: process.env.OAUTH_SECRET,
+      google_callback_uri: process.env.OAUTH_CALLBACK_URI,
     },
   },
 

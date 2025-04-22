@@ -9,7 +9,8 @@ export default defineEventHandler(async (event) => {
   const { state, code } = getQuery(event);
   const { cookiePath } = useRuntimeConfig().public; // Lấy api thực từ env
   const client_id = useRuntimeConfig().public.google_client_id;
-  const client_secret = useRuntimeConfig().private.google__oauth_secret;
+  const client_secret = useRuntimeConfig().private.google_oauth_secret;
+  const callback_uri = useRuntimeConfig().private.google_callback_uri;
   const apiUrl = useRuntimeConfig().private.apiUrl;
   const { redirectTo } = JSON.parse(state as string);
   try {
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
         client_secret,
         code,
         grant_type: "authorization_code",
-        redirect_uri: "https://cp.truyenhot.info/api/auth/google/callback",
+        redirect_uri: callback_uri,
       },
     });
 
