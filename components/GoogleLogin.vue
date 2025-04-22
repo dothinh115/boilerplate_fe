@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 const route = useRoute();
 const loading = ref(false);
-const { google_client_id } = await useRuntimeConfig().public;
+const google_client_id = useRuntimeConfig().public.google_client_id;
 const href = computed(() => {
   let nextUrl: string | null = null;
   try {
