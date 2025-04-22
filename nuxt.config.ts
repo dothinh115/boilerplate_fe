@@ -1,21 +1,44 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   runtimeConfig: {
     public: {
       cookiePath: process.env.COOKIE_PATH,
+      google_client_id: process.env.OAUTH_CLIENT_ID,
     },
     private: {
       apiUrl: process.env.API_URL,
+      google__oauth_secret: process.env.OAUTH_SECRET,
     },
   },
+
   modules: ["@nuxtjs/tailwindcss"],
+
   tailwindcss: {
     cssPath: "@/assets/scss/global.scss",
     configPath: "tailwind.config.js",
     viewer: false,
   },
+
   ssr: false,
+
+  //loại bỏ tag name để sử dụng component
+  // vue: {
+  //   compilerOptions: {
+  //     isCustomElement: (tag) => ["ion-icon"].includes(tag),
+  //   },
+  // },
+  //khai báo name để sử dụng nested route
+  // hooks: {
+  //   "pages:extend"(pages) {
+  //     pages.push({
+  //       name: "route-pre-post",
+  //       path: "/route/:pre/:post/:id",
+  //       file: "~/pages/route/[pre]/[post]/[id].vue",
+  //     });
+  //   },
+  // },
   app: {
     head: {
       link: [
@@ -54,20 +77,5 @@ export default defineNuxtConfig({
     },
   },
 
-  //loại bỏ tag name để sử dụng component
-  // vue: {
-  //   compilerOptions: {
-  //     isCustomElement: (tag) => ["ion-icon"].includes(tag),
-  //   },
-  // },
-  //khai báo name để sử dụng nested route
-  // hooks: {
-  //   "pages:extend"(pages) {
-  //     pages.push({
-  //       name: "route-pre-post",
-  //       path: "/route/:pre/:post/:id",
-  //       file: "~/pages/route/[pre]/[post]/[id].vue",
-  //     });
-  //   },
-  // },
+  compatibilityDate: "2025-04-22",
 });

@@ -180,7 +180,8 @@ const isShowLockedButton = computed(() => {
   if (
     localSchemaValue.value.disabled &&
     localSchemaKey.value !== "id" &&
-    !props.new &&
+    localSchemaKey.value !== "rootUser" &&
+    localSchemaKey.value !== "isEditedUsername" &&
     !localSchemaValue.value.relation &&
     user.value.rootUser
   )
