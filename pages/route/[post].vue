@@ -168,7 +168,6 @@
       :pagination
       :sortBy
       @sort="handleSort"
-      v-model:selectList="selectList"
     />
   </div>
   <Teleport to="body">
@@ -272,7 +271,7 @@ const { startLoading, finishLoading } = useLoading();
 const searchObject = useState<any>("searchObject", () => ({}));
 const modalFilter = ref(false);
 const isSearching = ref(false);
-const selectList = ref<(string | number)[]>([]);
+const selectList = useGetState().dynamicListSelectList;
 const pagination = ref<(string | number)[]>([]);
 const router = useRouter();
 const toast = useToast();
@@ -338,7 +337,16 @@ async function handleMultiDelete() {
 
     promises.push(handleSingleDelete(id));
   }
-  await Promise.all(promises);
+  startLoading();
+
+  try {
+    await Promise.all(promises);
+    toast.success("Thành công!");
+  } catch (error: any) {
+    toast.error(error?.data.message);
+  } finally {
+    finishLoading();
+  }
   await handleRevalidate();
   selectList.value = [];
 }

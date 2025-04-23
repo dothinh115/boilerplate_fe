@@ -7,10 +7,8 @@
       <div class="space-y-2" v-else>
         <div class="flex space-x-4 items-center border-b border-blue-900 pb-2">
           <InputCheckbox
-            :checked="
-              selectedList.length === fileData.length && fileData.length > 0
-            "
             @change="handleSelectAll"
+            :class="'border-blue-gray-200 before:bg-blue-gray-500 checked:bg-indigo-500 checked:border-gray-300'"
           />
 
           <div class="flex items-center space-x-4 text-gray-100">
@@ -47,8 +45,6 @@
           :key="index"
           :fileItem="item"
           :widthData
-          :selectedList
-          @select="handleSelect"
         >
           {{ item }}
         </FileItem>
@@ -66,18 +62,13 @@ type TProps = {
   totalPages: number;
   currentPage: number;
   pagination: (number | string)[];
-  selectedList: TFile[];
 };
 const props = defineProps<TProps>();
-const emits = defineEmits([
-  "change",
-  "select",
-  "selectAll",
-  "update:currentPage",
-]);
+const emits = defineEmits(["change", "selectAll", "update:currentPage"]);
 const widthData = ref();
 const { $getMaxLength, $widthCalc } = useNuxtApp();
 const { screenWidth } = useGetState();
+const selectedList = useGetState().fileListSelectList;
 const localCurrentPage = ref(props.currentPage);
 watch(
   () => props.currentPage,
@@ -94,13 +85,6 @@ function handleDelete() {
   emits("change");
 }
 
-function handleSelect({ checked, file }: { checked: boolean; file: TFile }) {
-  emits("select", {
-    checked,
-    file,
-  });
-}
-
 watchEffect(() => {
   widthData.value = $widthCalc(
     $getMaxLength({
@@ -110,7 +94,13 @@ watchEffect(() => {
   );
 });
 
-function handleSelectAll(checked: boolean) {
-  emits("selectAll", checked);
+function handleSelectAll(event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+  checked
+    ? (selectedList.value = props.fileData.map((x) => ({
+        file: x,
+        type: "loading",
+      })))
+    : (selectedList.value = []);
 }
 </script>

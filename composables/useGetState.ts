@@ -1,3 +1,5 @@
+import type { TFile } from "~/components/File/Item.vue";
+
 export type TRoute = {
   id: number;
   path: string;
@@ -13,6 +15,16 @@ export default function useGetState() {
   const routes = useState<TRoute>("route", () => []);
   const isFromInside = useState<boolean>("isFromInside", () => false);
   const shouldRevalidate = useState<boolean>("shouldRevalidate", () => false);
+  const dynamicListSelectList = useState<(string | number)[]>(
+    "dynamicListSelectList",
+    () => []
+  );
+  const fileListSelectList = useState<
+    {
+      file: TFile;
+      type: "succeeded" | "failed" | "loading";
+    }[]
+  >("fileListSelectList", () => []);
 
   return {
     screenWidth,
@@ -20,5 +32,7 @@ export default function useGetState() {
     routes,
     isFromInside,
     shouldRevalidate,
+    dynamicListSelectList,
+    fileListSelectList,
   };
 }

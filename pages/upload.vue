@@ -56,10 +56,7 @@
       :totalPages
       :currentPage
       :pagination
-      :selectedList
       @change="handleChange"
-      @select="handleSelect"
-      @selectAll="handleSelectAll"
     />
     <!-- File -->
     <NuxtPage />
@@ -79,7 +76,7 @@
       :closeBtn="true"
       :onUpdate:modelValue="handleClose"
     >
-      <FileResult :list="deleteList" :type="'delete'" />
+      <FileResult :list="selectedList" :type="'delete'" />
     </Modal>
   </Teleport>
 </template>
@@ -99,15 +96,9 @@ const fileSchema = useState("/schema/file");
 const currentPage = ref(Number(route.query.page) || 1);
 const totalPages = ref(0);
 const pagination = ref<(string | number)[]>([]);
-const selectedList = ref<TFile[]>([]);
 const confirmDeleteModal = ref(false);
 const deleteModal = ref(false);
-const deleteList = ref<
-  {
-    file: TFile;
-    type: "succeeded" | "failed" | "loading";
-  }[]
->([]);
+const selectedList = useGetState().fileListSelectList;
 
 const perPage = computed(() => {
   if (screenWidth.value <= 375) return 9; //iphone SE
@@ -117,22 +108,6 @@ const perPage = computed(() => {
     return 14; //iphone XR
   else return 15;
 });
-
-function handleSelect({ checked, file }: { checked: boolean; file: TFile }) {
-  if (checked) {
-    selectedList.value.push(file);
-  } else {
-    selectedList.value = selectedList.value.filter((x) => x !== file);
-  }
-}
-
-function handleSelectAll(checked: boolean) {
-  if (checked) {
-    selectedList.value = fileData.value;
-  } else {
-    selectedList.value = [];
-  }
-}
 
 async function getFolders() {
   const params = {
@@ -172,23 +147,19 @@ async function handleMultipleDelete() {
   deleteModal.value = true;
   const promises = [];
   const handleSingleDelete = async (file: TFile) => {
-    deleteList.value.push({
-      file,
-      type: "loading",
-    });
     try {
       await useApi(`/file/${file.id}`, {
         method: "DELETE",
       });
-      const find = deleteList.value.find((x) => x.file === file);
+      const find = selectedList.value.find((x) => x.file === file);
       if (find) find.type = "succeeded";
     } catch (error: any) {
-      const find = deleteList.value.find((x) => x.file === file);
+      const find = selectedList.value.find((x) => x.file === file);
       if (find) find.type = "failed";
     }
   };
-  for (const file of selectedList.value) {
-    promises.push(handleSingleDelete(file));
+  for (const item of selectedList.value) {
+    promises.push(handleSingleDelete(item.file));
   }
   await Promise.all(promises);
   await getFiles();
@@ -197,7 +168,6 @@ async function handleMultipleDelete() {
 async function handleClose() {
   await fetchAll();
   selectedList.value = [];
-  deleteList.value = [];
 }
 
 watchEffect(() => {

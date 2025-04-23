@@ -19,13 +19,14 @@
   >
     <InputCheckbox
       :class="'border-gray-500 bg-indigo-100 checked:bg-indigo-500 checked:border-gray-300'"
-      @click.stop="handleSelect(props.item)"
+      @click.stop
+      @change="handleSelect"
       :checked="
-        props.selectList.length === props.itemList.length &&
+        selectList.length === props.itemList.length &&
         itemList.length > 0 &&
         !props.item
           ? true
-          : props.item && props.selectList.includes(props.item.id)
+          : props.item && selectList.includes(props.item.id)
           ? true
           : false
       "
@@ -87,13 +88,12 @@ type TProps = {
   width: {
     [key: string]: number;
   };
-  selectList: any[];
   itemList: any[];
 };
 const route = useRoute();
 const props = defineProps<TProps>();
-const emits = defineEmits(["handleSort", "handleSelect"]);
-const selectAll = ref(false);
+const emits = defineEmits(["handleSort"]);
+const selectList = useGetState().dynamicListSelectList;
 const width = ref<{
   [key: string]: number;
 }>({});
@@ -103,9 +103,20 @@ function handleSort(field: string) {
   emits("handleSort", field);
 }
 
-function handleSelect(item: any) {
-  if (!props.item) return;
-  emits("handleSelect", item.id);
+function handleSelect(event: Event) {
+  const target = event.target as HTMLInputElement;
+
+  if (!props.item) {
+    target.checked
+      ? (selectList.value = props.itemList.map((x) => x.id))
+      : (selectList.value = []);
+  } else {
+    target.checked
+      ? (selectList.value = [...selectList.value, props.item.id])
+      : (selectList.value = selectList.value.filter(
+          (x) => x !== props.item.id
+        ));
+  }
 }
 
 watchEffect(() => {

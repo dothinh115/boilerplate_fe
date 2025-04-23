@@ -3,7 +3,9 @@
     class="flex items-center pb-2 last:border-b-0 border-b border-blue-900 space-x-4"
   >
     <InputCheckbox
-      :checked="selectedList.find((x) => x.id === fileItem.id) ? true : false"
+      :checked="
+        selectedList.find((x) => x.file.id === fileItem.id) ? true : false
+      "
       @change="handleSelect"
       :class="'border-blue-gray-200 before:bg-blue-gray-500 checked:bg-indigo-500 checked:border-gray-300'"
     />
@@ -129,13 +131,13 @@ export type TFile = {
 type TProps = {
   fileItem: TFile;
   widthData: any;
-  selectedList: TFile[];
 };
 const props = defineProps<TProps>();
-const emits = defineEmits(["delete", "select"]);
+const emits = defineEmits(["delete"]);
 const isMenuShowed = ref(false);
 const confirmDeleteModal = ref(false);
 const { screenWidth } = useGetState();
+const selectedList = useGetState().fileListSelectList;
 const toast = useToast();
 const menuButtonRef = ref<HTMLButtonElement | null>(null);
 const copiedToClipboard = ref(false);
@@ -157,11 +159,15 @@ function handleOutsideClick(event: MouseEvent) {
   isMenuShowed.value = false;
 }
 
-function handleSelect(checked: boolean) {
-  emits("select", {
-    checked,
-    file: props.fileItem,
-  });
+function handleSelect(event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+  if (checked) {
+    selectedList.value.push({ file: props.fileItem, type: "loading" });
+  } else {
+    selectedList.value = selectedList.value.filter(
+      (x) => x.file.id !== props.fileItem.id
+    );
+  }
 }
 
 function handleCopyLink() {

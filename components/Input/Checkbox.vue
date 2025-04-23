@@ -38,11 +38,11 @@ type TProps = {
 };
 const props = defineProps<TProps>();
 const localModel = ref(props.modelValue);
-const emits = defineEmits(["change", "update:modelValue"]);
+const emits = defineEmits(["change", "update:modelValue", "change"]);
 function change(event: Event) {
   const target = event.target as HTMLInputElement;
   const checked = target.checked;
-  emits("change", checked);
+  emits("change", event);
   emits("update:modelValue", checked);
 }
 </script>
