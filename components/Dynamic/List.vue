@@ -10,6 +10,9 @@
         :sortBy="sortBy"
         @handleSort="handleSort"
         :width="width"
+        @change="handleSelectAll"
+        :selectList="props.selectList"
+        :itemList="data"
       />
     </div>
     <DynamicListItem
@@ -19,6 +22,9 @@
       :sortBy="sortBy"
       :item="item"
       :width="width"
+      @handle-select="handleSelect"
+      :selectList="props.selectList"
+      :itemList="data"
     />
     <div class="p-2 bg-gray-100" v-if="data.length === 0">
       Chưa có record nào ở đây...
@@ -35,13 +41,14 @@ type TProps = {
   currentPage: number;
   pagination: (number | string)[];
   sortBy: string;
+  selectList: (string | number)[];
 };
 const props = defineProps<TProps>();
 const width = ref<{
   [key: string]: number;
 }>({});
 const { $getMaxLength } = useNuxtApp();
-const emits = defineEmits(["sort", "update:currentPage"]);
+const emits = defineEmits(["sort", "update:currentPage", "update:selectList"]);
 const localCurrentPage = ref(props.currentPage);
 watch(
   () => props.currentPage,
@@ -56,6 +63,27 @@ watch(localCurrentPage, (newVal) => {
 
 function handleSort(key: string) {
   emits("sort", key);
+}
+
+function handleSelect(id: string | number) {
+  if (!props.selectList.includes(id)) {
+    const newList = [...props.selectList, id];
+    emits("update:selectList", newList);
+  } else {
+    const newList = props.selectList.filter((x) => x !== id);
+    emits("update:selectList", newList);
+  }
+}
+
+function handleSelectAll(event: Event) {
+  if ((event.target as HTMLInputElement).checked) {
+    emits(
+      "update:selectList",
+      props.data.map((x) => x.id)
+    );
+  } else {
+    emits("update:selectList", []);
+  }
 }
 
 watchEffect(() => {

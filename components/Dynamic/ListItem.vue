@@ -17,6 +17,19 @@
         : undefined
     "
   >
+    <InputCheckbox
+      :class="'border-gray-500 bg-indigo-100 checked:bg-indigo-500 checked:border-gray-300'"
+      @click.stop="handleSelect(props.item)"
+      :checked="
+        props.selectList.length === props.itemList.length &&
+        itemList.length > 0 &&
+        !props.item
+          ? true
+          : props.item && props.selectList.includes(props.item.id)
+          ? true
+          : false
+      "
+    />
     <template v-for="(field, index) in Object.keys(props.schema)" :key="index">
       <div
         :style="{
@@ -73,10 +86,13 @@ type TProps = {
   width: {
     [key: string]: number;
   };
+  selectList: any[];
+  itemList: any[];
 };
 const route = useRoute();
 const props = defineProps<TProps>();
-const emits = defineEmits(["handleSort"]);
+const emits = defineEmits(["handleSort", "handleSelect"]);
+const selectAll = ref(false);
 const width = ref<{
   [key: string]: number;
 }>({});
@@ -84,6 +100,11 @@ const { $widthCalc } = useNuxtApp();
 
 function handleSort(field: string) {
   emits("handleSort", field);
+}
+
+function handleSelect(item: any) {
+  if (!props.item) return;
+  emits("handleSelect", item.id);
 }
 
 watchEffect(() => {

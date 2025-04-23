@@ -5,6 +5,7 @@
     <InputCheckbox
       :checked="selectedList.find((x) => x.id === fileItem.id) ? true : false"
       @change="handleSelect"
+      :class="'border-blue-gray-200 before:bg-blue-gray-500 checked:bg-indigo-500 checked:border-gray-300'"
     />
     <NuxtLink
       class="flex space-x-4 items-center flex-grow"

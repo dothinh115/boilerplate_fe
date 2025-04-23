@@ -135,6 +135,13 @@
             </div>
           </div>
         </div>
+        <button
+          class="h-[40px] aspect-1 bg-red-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-red-800 disabled:opacity-50"
+          :disabled="selectList.length === 0"
+          @click="deleteConfirmModal = true"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
         <NuxtLink
           :to="{
             name: 'route-post-new',
@@ -160,6 +167,7 @@
       :pagination
       :sortBy
       @sort="handleSort"
+      v-model:selectList="selectList"
     />
   </div>
   <Teleport to="body">
@@ -230,11 +238,23 @@
       </div>
     </Modal>
   </Teleport>
+  <Teleport to="body">
+    <Confirm
+      :message="'Bạn có chắc muốn xoá những mục đã chọn?'"
+      v-model="deleteConfirmModal"
+      :handle="handleMultiDelete"
+    >
+      <template #icon>
+        <i class="fa-solid fa-trash text-[40px] text-red-500"></i>
+      </template>
+    </Confirm>
+  </Teleport>
   <NuxtPage />
 </template>
 <script setup lang="ts">
 import qs from "qs";
 import { useToast } from "vue-toastification";
+const deleteConfirmModal = ref(false);
 const route = useRoute();
 const dataApi = `/${route.params.post}`;
 const schemaApi = `/schema/${route.params.post}`;
@@ -251,6 +271,7 @@ const { startLoading, finishLoading } = useLoading();
 const searchObject = useState<any>("searchObject", () => ({}));
 const modalFilter = ref(false);
 const isSearching = ref(false);
+const selectList = ref<(string | number)[]>([]);
 const pagination = ref<(string | number)[]>([]);
 const router = useRouter();
 const toast = useToast();
@@ -300,6 +321,26 @@ const isFiltering = computed(() => {
   }
   return false;
 });
+
+async function handleMultiDelete() {
+  const promises = [];
+
+  for (const id of selectList.value) {
+    const api = `${dataApi}/${id}`;
+    const handleSingleDelete = async (id: string | number) => {
+      await Promise.all([
+        useApi(api, {
+          method: "DELETE",
+        }),
+      ]);
+    };
+
+    promises.push(handleSingleDelete(id));
+  }
+  await Promise.all(promises);
+  await handleRevalidate();
+  selectList.value = [];
+}
 
 async function handleRevalidate() {
   startLoading();
