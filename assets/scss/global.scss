@@ -1,14 +1,14 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import "./components/button";
-@import "./components/spinner";
-@import "./components/scrollbar";
-@import "./components/input";
-@import "./components/box";
-@import "./components/paginate";
-@import "./components/fade";
-@import "./components/loader";
+@use "tailwindcss/base";
+@use "tailwindcss/components";
+@use "tailwindcss/utilities";
+@use "./components/button";
+@use "./components/spinner";
+@use "./components/scrollbar";
+@use "./components/input";
+@use "./components/box";
+@use "./components/paginate";
+@use "./components/fade";
+@use "./components/loader";
 @layer base {
 }
 
