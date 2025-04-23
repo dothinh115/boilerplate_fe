@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
         const perChar = 10;
         for (const [key, value] of Object.entries(widthObj)) {
           let w = value * perChar;
-          if (w < 80) w = 80;
+          if (w < 40) w = 40;
           else if (w > 250) {
             if (key === "id") w = 120;
             else if (screenWidth.value <= 320) {

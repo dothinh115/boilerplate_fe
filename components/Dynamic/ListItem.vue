@@ -29,6 +29,7 @@
           ? true
           : false
       "
+      v-if="$roleCheck('DELETE', route.params.post as string)"
     />
     <template v-for="(field, index) in Object.keys(props.schema)" :key="index">
       <div

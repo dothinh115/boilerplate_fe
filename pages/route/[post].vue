@@ -139,6 +139,7 @@
           class="h-[40px] aspect-1 bg-red-700 flex items-center justify-center text-gray-50 rounded-full duration-200 hover:bg-red-800 disabled:opacity-50"
           :disabled="selectList.length === 0"
           @click="deleteConfirmModal = true"
+          v-if="$roleCheck('DELETE', route.params.post as string)"
         >
           <i class="fa-solid fa-trash"></i>
         </button>
@@ -238,7 +239,7 @@
       </div>
     </Modal>
   </Teleport>
-  <Teleport to="body">
+  <Teleport to="body" v-if="$roleCheck('DELETE', route.params.post as string)">
     <Confirm
       :message="'Bạn có chắc muốn xoá những mục đã chọn?'"
       v-model="deleteConfirmModal"
