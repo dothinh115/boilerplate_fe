@@ -9,6 +9,7 @@
           <InputCheckbox
             @change="handleSelectAll"
             :class="'border-blue-gray-200 before:bg-blue-gray-500 checked:bg-indigo-500 checked:border-gray-300'"
+            :checked="selectedList.length === fileData.length"
           />
 
           <div class="flex items-center space-x-4 text-gray-100">
