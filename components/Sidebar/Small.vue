@@ -9,6 +9,7 @@
         <button
           class="h-full text-gray-50 w-full aspect-1 lg:hover:text-indigo-950"
           @click="handleHideSidebar"
+          aria-label="Aria Toggle"
         >
           <i
             class="fa-solid fa-chevron-left"
@@ -33,6 +34,7 @@
       <button
         class="text-gray-50 w-full aspect-1 bg-gray-500"
         @click="logoutConfirmModal = true"
+        aria-label="Aria Logout"
       >
         <i class="fa-solid fa-right-from-bracket fa-lg rotate-180"></i>
       </button>

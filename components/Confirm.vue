@@ -13,12 +13,14 @@
           <button
             class="btn-icon flex-1 p-2 bg-emerald-600 space-x-2 text-gray-50 lg:hover:bg-emerald-700 duration-200"
             @click="confirm"
+            aria-label="Aria Confirm"
           >
             <i class="fa-solid fa-check"></i><span>Xác nhận</span>
           </button>
           <button
             class="btn-icon flex-1 p-2 bg-red-500 space-x-2 text-gray-50 lg:hover:bg-red-700 duration-200"
             @click="cancel"
+            aria-label="Aria Cancel"
           >
             <i class="fa-solid fa-xmark"></i><span>Huỷ</span>
           </button>
