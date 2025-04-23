@@ -22,6 +22,14 @@ export default defineNuxtConfig({
     viewer: false,
   },
 
+  pages: true,
+  routeRules: {
+    // Mặc định apply cho tất cả các route
+    "/**": {
+      lazy: true,
+    },
+  },
+
   ssr: false,
 
   //loại bỏ tag name để sử dụng component

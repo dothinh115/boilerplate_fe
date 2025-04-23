@@ -119,6 +119,11 @@
 </template>
 <script setup lang="ts">
 import Editor from "@tinymce/tinymce-vue";
+import "@/public/tinymce/tinymce.min";
+import "@/public/tinymce/skins/ui/oxide/skin";
+import "@/public/tinymce/models/dom/model.min";
+import "@/public/tinymce/themes/silver/theme.min";
+import "@/public/tinymce/icons/default/icons.min";
 import "@/public/tinymce/plugins/lists/plugin.min";
 import "@/public/tinymce/plugins/link/plugin.min";
 import "@/public/tinymce/plugins/image/plugin.min";
