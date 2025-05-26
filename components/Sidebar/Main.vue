@@ -9,14 +9,15 @@
     </div>
     <SidebarGroup :title="'Routings'">
       <SidebarGroupItem
-        v-for="(route, index) in routes.filter(
-          (x) =>
-            x.method === 'GET' &&
-            !x.isHidden &&
-            (x.roles.includes(user.role) ||
-              x.isProtected === false ||
-              user.rootUser)
-        )"
+        v-for="(route, index) in routes.filter((x) => {
+          const isGet = x.method === 'GET';
+          const isVisible = !x.isHidden;
+          const canAccess =
+            (user.role && (x.roles.includes(user.role) || !x.isProtected)) ||
+            (!user.role && !x.isProtected);
+          const isRootUser = user.rootUser;
+          return isGet && ((isVisible && canAccess) || isRootUser);
+        })"
         :key="route.id"
         :to="'/route' + route.path"
         :title="route.path"
@@ -53,6 +54,7 @@ async function handleFetchRoute() {
     limit: 0,
   };
   const fetchRoute: any = await useApi("/route", { params });
+  console.log(fetchRoute.data);
   routes.value = fetchRoute.data;
 }
 
